@@ -23,6 +23,7 @@ public class Chest extends Pickup
 		this.solidWhenDead = true;
 		this.lootRange = 0.2f;
 		this.dropLootOnDeath = true;
+		this.isVulnerable = false;
 		this.lootValue = 40 + (int)(Math.random() * 100);
 	}
 
