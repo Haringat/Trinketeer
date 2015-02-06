@@ -7,39 +7,101 @@ import org.lwjgl.util.vector.Vector3f;
 public class Element
 {
 	public static HashMap<String, Element> elements = new HashMap<>();
-	public HashMap<String, String> values = new HashMap<String, String>();
+	
+	private float red;
+	private float green;
+	private float blue;
+	private float brightness;
+	private float density;
+	private boolean breakonimpact;
+	private float damage;
+	private String texture;
+	@SuppressWarnings("unused")
+	private float manamod;
+	@SuppressWarnings("unused")
+	private float sizemod;
+	
+	public Element(float r, float g, float b, float brightness, float density,
+			boolean boi, float dmg, String tex, float manamod, float sizemod){
+		red = r;
+		green = g;
+		blue = b;
+		this.density = density;
+		this.brightness = brightness;
+		breakonimpact = boi;
+		texture = tex;
+		this.manamod = manamod;
+		this.sizemod = sizemod;
+	}
+	
+	public void setColor(float r, float g, float b){
+		red = r;
+		green = g;
+		blue = b;
+	}
+	
+	public void setColor(Vector3f c){
+		red = c.x;
+		green = c.y;
+		blue = c.z;
+	}
+	
+	public void setBrightness(float b){
+		brightness = b;
+	}
+	
+	public void setDensity(float d){
+		density = d;
+	}
+	
+	public void setBreakOnImpact(boolean b){
+		breakonimpact = b;
+	}
+	
+	public void setDamage(float dmg){
+		damage = dmg;
+	}
+	
+	public void setTexture(String tex){
+		texture = tex;
+	}
+	
+	public void setManaMod(float f){
+		manamod = f;
+	}
+	
+	public void setSizeMod(float f){
+		sizemod = f;
+	}
 	
 	public Vector3f getColor()
 	{
-		float r = Float.valueOf(values.get("color_red"));
-		float g = Float.valueOf(values.get("color_green"));
-		float b = Float.valueOf(values.get("color_blue"));
-		return new Vector3f(r, g, b);
+		return new Vector3f(red, green, blue);
 	}
 	
 	public float getDensity()
 	{
-		return Float.valueOf(values.get("density"));
+		return density;
 	}
 	
 	public boolean shouldBreakOnImpact()
 	{
-		return Boolean.valueOf(values.get("break_on_impact"));
+		return breakonimpact;
 	}
 	
 	public float getBaseDamage()
 	{
-		return Float.valueOf(values.get("damage"));
+		return damage;
 	}
 	
 	public float getBrightness()
 	{
-		return Float.valueOf(values.get("brightness"));
+		return brightness;
 	}
 	
 	public String getTexture()
 	{
-		return (String)values.get("texture");
+		return texture;
 	}
 	
 	public float getManaMod()

@@ -21,17 +21,25 @@ public class DataLoader
 			JSONArray a = elements.getJSONArray("elements");
 			for (int i = 0; i < a.length(); i++)
 			{
-				JSONObject elementJSON = (JSONObject) a.get(i);
-				Element elementGame = new Element();
-				String name = elementJSON.getString("name");
+				JSONObject e = (JSONObject) a.get(i);
+				Element elementGame = new Element((float) e.getDouble("color_red"),
+						(float) e.getDouble("color_green"),
+						(float) e.getDouble("color_blue"),
+						(float) e.getDouble("brightness"),
+						(float) e.getDouble("density"),
+						e.getBoolean("break_on_impact"),
+						(float) e.getDouble("damage"),
+						e.getString("texture"),
+						0f, 0f);
+				String name = e.getString("name");
 				
-				@SuppressWarnings("unchecked")
-				Iterator<String> iterator = elementJSON.keys();
+				/*@SuppressWarnings("unchecked")
+				Iterator<String> iterator = e.keys();
 				while (iterator.hasNext())
 				{
 					String field = iterator.next();
-					elementGame.values.put(field, elementJSON.getString(field));
-				}
+					elementGame.values.put(field, e.getString(field));
+				}*/
 				
 				Element.elements.put(name, elementGame);
 			}
