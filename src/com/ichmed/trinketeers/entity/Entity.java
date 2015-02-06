@@ -10,7 +10,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.ichmed.trinketeers.Game;
 import com.ichmed.trinketeers.ai.Behaviour;
-import com.ichmed.trinketeers.ai.Waypoint;
+import com.ichmed.trinketeers.ai.waypoint.Waypoint;
 import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
 import com.ichmed.trinketeers.util.Loot;
 import com.ichmed.trinketeers.util.render.GLHelper;
