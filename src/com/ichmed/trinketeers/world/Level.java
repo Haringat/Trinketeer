@@ -84,8 +84,9 @@ public class Level
 		for (int i = 0; i < 5; i++)
 		{
 			spawn((new Wall()).setCenter(new Vector2f(-0.2f + i / 10f, 1.3f)), false, false);
-//			spawn((new Wall()).setCenter(new Vector2f(-0.2f + i / 10f, -1.3f)), false, false);
+			spawn((new Wall()).setCenter(new Vector2f(-0.2f + i / 10f, -1.3f)), false, false);
 		}
+		
 		world.spawn((new Torch()).setCenter(new Vector2f(-0.1f, 0.8f)));
 		world.spawn((new Torch()).setCenter(new Vector2f(0.1f, 0.8f)));
 		world.spawn((new Torch()).setCenter(new Vector2f(-0.1f, -0.8f)));

@@ -29,6 +29,8 @@ public class World
 	List<IGraphic> uiGraphics = new ArrayList<>();
 	public Level currentLevel;
 	public int level = 0;
+	
+	public final String name = "world_0";
 
 	public World()
 	{
