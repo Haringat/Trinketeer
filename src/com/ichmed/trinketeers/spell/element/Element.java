@@ -23,6 +23,7 @@ public class Element
 	
 	public Element(float r, float g, float b, float brightness, float density,
 			boolean boi, float dmg, String tex, float manamod, float sizemod){
+		damage = dmg;
 		red = r;
 		green = g;
 		blue = b;
