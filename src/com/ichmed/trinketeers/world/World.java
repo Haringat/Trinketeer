@@ -34,8 +34,8 @@ public class World
 	{
 		currentLevel = new Level(this, level);
 		currentLevel.init();
-		// LightRenderer.setAmbientLight(0.5f, 0.5f, 0.5f);
-		LightRenderer.setAmbientLight(0.0f, 0.0f, 0.0f);
+		 LightRenderer.setAmbientLight(1f, 1f, 1f);
+//		LightRenderer.setAmbientLight(0.0f, 0.0f, 0.0f);
 		spawn(player);
 
 		uiGraphics.add(new IGraphic()
@@ -162,10 +162,11 @@ public class World
 
 	public void render()
 	{
-		GLHelper.renderBackground(this);
+//		GLHelper.renderBackground(this);
 		glPushMatrix();
 		Vector2f v = player.getCenter();
 		glTranslatef(-v.x, -v.y, 0);
+		renderChunks();
 		currentLevel.worldGraphics.sort(new GraphicSorterYAxis());
 		for (IWorldGraphic g : currentLevel.worldGraphics)
 		{
@@ -175,6 +176,17 @@ public class World
 		LightRenderer.renderLights(this, currentLevel.lights);
 		for (IGraphic g : uiGraphics)
 			g.render();
+	}
+
+	private void renderChunks()
+	{
+		for(int i = -1; i < 17; i++)
+			for(int j = -1; j < 17; j++)
+			{
+				int x = i + (int)((player.getCenter().x) * 8);
+				int y = j + (int)((player.getCenter().y) * 8);
+				Tile.tiles[Chunk.getTile(x, y)].render(x, y);
+			}
 	}
 
 	public boolean removeEntity(Entity e)
