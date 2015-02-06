@@ -7,26 +7,22 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
-import java.util.ArrayList;
 //import java.io.BufferedReader;
-//import java.io.FileWriter;
-//import java.io.IOException;
-//import java.io.InputStreamReader;
-import java.util.HashMap;
 //import java.util.Iterator;
-import java.util.List;
+
+import java.util.Collection;
+import java.util.Iterator;
 
 import javax.swing.JColorChooser;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.WindowConstants;
-import javax.swing.filechooser.FileFilter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.ichmed.trinketeers.spell.element.Element;
 import com.ichmed.trinketeers.savefile.DataLoader;
 import com.ichmed.trinketeers.spell.element.Element;
 
@@ -34,56 +30,29 @@ public class Editor implements MouseListener
 {
 	//BufferedReader reader;
 	boolean run = true;
-	public HashMap<String, String> defaultValues = new HashMap<>();
 
 	public Editor()
 	{
-		defaultValues.put("damage", "10.0");
-
-		defaultValues.put("color_red", "1.0");
-		defaultValues.put("color_green", "1.0");
-		defaultValues.put("color_blue", "1.0");
-
-		defaultValues.put("break_on_impact", "true");
-		defaultValues.put("density", "0.001");
-
-		defaultValues.put("brightness", "0");
-
-		defaultValues.put("texture", "defaultSpell.png");
+		Element defaultValues = new Element();
 
 		JFrame editor = new JFrame();
-
-/*		JFileChooser fc = new JFileChooser();
-
-
-		fc.setFileFilter(new FileFilter(){
-
-			@Override
-			public boolean accept(File f) {
-				if(f.isDirectory())
-					return true;
-				int index = f.getName().lastIndexOf('.');
-				if(index == -1)
-					return false;
-				if(f.getName().substring(index).equalsIgnoreCase(".json"))
-					return true;
-				else
-					return false;
-			}
-
-			@Override
-			public String getDescription() {
-				return "JSON file (.json)";
-			}
-			
-		});
-		int returnVal = fc.showOpenDialog(editor);*/
+		
 		DataLoader.loadElements();
 		editor.addMouseListener(this);
 		GridBagLayout l = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
 		editor.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		JColorChooser cc = new JColorChooser();
+
+		Element[] elements = (Element[]) Element.elements.values().toArray();
+		
+		JPanel[] rows = new JPanel[elements.length];
+
+		for(int i = 0; i < elements.length; i++){
+			JPanel preview = new JPanel();
+			
+			rows[i].add(new JPanel());
+		}
 	}
 
 	@Override

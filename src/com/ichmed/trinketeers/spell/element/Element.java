@@ -34,6 +34,10 @@ public class Element
 		this.sizemod = sizemod;
 	}
 	
+	public Element(){
+		this(1.0f, 1.0f, 1.0f, 0.0f, 0.001f, true, 10.0f, "defaultSpell.png", 0.0f, 0.0f);
+	}
+	
 	public void setColor(float r, float g, float b){
 		red = r;
 		green = g;
