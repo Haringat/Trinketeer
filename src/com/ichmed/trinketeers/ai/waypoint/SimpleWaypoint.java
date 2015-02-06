@@ -1,4 +1,4 @@
-package com.ichmed.trinketeers.ai;
+package com.ichmed.trinketeers.ai.waypoint;
 
 import org.lwjgl.util.vector.Vector2f;
 

@@ -2,6 +2,7 @@ package com.ichmed.trinketeers.ai;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import com.ichmed.trinketeers.ai.waypoint.SimpleWaypoint;
 import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.world.World;
 
