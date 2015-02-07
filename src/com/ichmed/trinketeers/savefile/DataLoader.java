@@ -7,6 +7,7 @@ import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.util.List;
 
 import javax.swing.JDialog;
 
@@ -39,7 +40,6 @@ public class DataLoader
 			tracker.waitForAll();
 		} catch (InterruptedException e) {}
 		if(tracker.isErrorAny()){
-			new JDialog();
 			return null;
 		}
 		BufferedImage img = new BufferedImage(tempimg.getWidth(observer), tempimg.getHeight(observer), BufferedImage.TYPE_INT_ARGB);
@@ -57,7 +57,8 @@ public class DataLoader
 			for (int i = 0; i < a.length(); i++)
 			{
 				JSONObject e = (JSONObject) a.get(i);
-				Element elementGame = new Element((float) e.getDouble("color_red"),
+				Element elementGame = new Element(e.getString("name"),
+						(float) e.getDouble("color_red"),
 						(float) e.getDouble("color_green"),
 						(float) e.getDouble("color_blue"),
 						(float) e.getDouble("brightness"),
@@ -82,5 +83,10 @@ public class DataLoader
 		{
 			e.printStackTrace();
 		}
+	}
+
+	public static void saveElements(List<Element> elements) {
+		// TODO Auto-generated method stub
+		
 	}
 }

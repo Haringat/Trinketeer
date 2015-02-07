@@ -8,6 +8,7 @@ public class Element
 {
 	public static HashMap<String, Element> elements = new HashMap<>();
 	
+	private String name;
 	private float red;
 	private float green;
 	private float blue;
@@ -21,8 +22,9 @@ public class Element
 	@SuppressWarnings("unused")
 	private float sizemod;
 	
-	public Element(float r, float g, float b, float brightness, float density,
+	public Element(String name, float r, float g, float b, float brightness, float density,
 			boolean boi, float dmg, String tex, float manamod, float sizemod){
+		this.setName(name);
 		damage = dmg;
 		red = r;
 		green = g;
@@ -36,7 +38,7 @@ public class Element
 	}
 	
 	public Element(){
-		this(1.0f, 1.0f, 1.0f, 0.0f, 0.001f, true, 10.0f, "defaultSpell.png", 0.0f, 0.0f);
+		this("new element", 1.0f, 1.0f, 1.0f, 0.0f, 0.001f, true, 10.0f, "defaultSpell.png", 0.0f, 0.0f);
 	}
 	
 	public void setColor(float r, float g, float b){
@@ -84,6 +86,10 @@ public class Element
 		return new Vector3f(red, green, blue);
 	}
 	
+	public float getDamage(){
+		return damage;
+	}
+	
 	public float getDensity()
 	{
 		return density;
@@ -117,5 +123,13 @@ public class Element
 	public float getSizeMod()
 	{
 		return 1.0f;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

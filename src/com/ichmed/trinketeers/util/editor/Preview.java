@@ -23,7 +23,11 @@ public class Preview extends JComponent implements MouseListener{
 	String path;
 
 	public Preview(String path) {
-		setSize(32,32);
+		setMinimumSize(new Dimension(32,32));
+		setPreferredSize(new Dimension(32,32));
+		setMaximumSize(new Dimension(32,32));
+		setBackground(new Color(255,0,255));
+		setOpaque(true);
 		setToolTipText("change spell texture");
 		addMouseListener(this);
 		this.path = path;
@@ -42,14 +46,9 @@ public class Preview extends JComponent implements MouseListener{
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		setBackground(new Color(255,0,255));
-		setOpaque(true);
-		setMinimumSize(new Dimension(16,16));
-		setPreferredSize(new Dimension(32,32));
-		setMaximumSize(new Dimension(256,256));
-		System.out.printf("Size: %dx%d\n", getWidth(), getHeight());
+		g.setColor(new Color(255,0,255));
+		g.fillRect(0, 0, getWidth(), getHeight());
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
-		System.out.printf("Size: %dx%d\n", getWidth(), getHeight());
 	}
 
 	@Override

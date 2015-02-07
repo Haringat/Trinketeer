@@ -1,98 +1,163 @@
 package com.ichmed.trinketeers.util.editor;
 
-import static com.ichmed.trinketeers.util.DataRef.elementsFile;
-import static com.ichmed.trinketeers.util.JSONUtil.*;
+import static java.awt.GridBagConstraints.*;
 
+import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-//import java.io.BufferedReader;
-//import java.util.Iterator;
-
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JColorChooser;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JTextField;
 import javax.swing.WindowConstants;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.ichmed.trinketeers.spell.element.Element;
 import com.ichmed.trinketeers.savefile.DataLoader;
 
-public class Editor implements MouseListener
+public class Editor implements MouseListener, ActionListener
 {
-	//BufferedReader reader;
-	boolean run = true;
 	
-	List<JPanel> panels = new ArrayList<JPanel>();
-	List<BufferedImage> icons = new ArrayList<BufferedImage>();
-		
+	private List<BufferedImage> icons = new ArrayList<BufferedImage>();
+	private List<Element> elements;
+	private JFrame editorframe = new JFrame();
+	private Container editor;
+	
+	private JButton add;
+	private JButton save;
+	private JButton edittl;
 
-	public Editor()
-	{
-		JFrame editor = new JFrame();
-		
+	public Editor(){
+		edittl = new JButton("edit texturelib");
+		edittl.addActionListener(this);
+		add = new JButton("+");
+		add.addActionListener(this);
+		save = new JButton("save");
+		save.addActionListener(this);
+		editor = editorframe.getContentPane();
 		DataLoader.loadElements();
 		editor.addMouseListener(this);
 		editor.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
-		editor.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		JColorChooser cc = new JColorChooser();
-
-		Element[] elements = new Element[Element.elements.size()];
-		elements = (Element[]) Element.elements.values().toArray(new Element[elements.length]);
-		//JPanel spacer = new JPanel();
-		//spacer.setSize(5, 5);
-		c.gridwidth = 15;
-		c.gridheight = elements.length + 1;
+		editorframe.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		
+		elements = new ArrayList<Element>(Element.elements.values());
 		c.insets = new Insets(5,5,5,5);
-		for(int i = 0; i < elements.length; i++){
-			c.gridy = i;
-			c.gridx = 0;
-			Preview preview = new Preview(elements[i].getTexture());
-			preview.setVisible(true);
-			preview.repaint();
-			editor.add(preview, c);
+		for(int i = 0; i < elements.size(); i++){
+			addRow(elements.get(i),i);
 		}
-		editor.setVisible(true);
-		editor.pack();
-		editor.setVisible(true);
+		editorframe.pack();
+		editorframe.setVisible(true);
 	}
 
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
+	private void addRow(){
+		elements.add(new Element());
+		addRow(elements.get(elements.size()-1), elements.size()-1);
+	}
+
+	private void addRow(Element e, int i) {
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(5,5,5,5);
+		c.gridy = i;
+		Preview preview = new Preview(elements.get(i).getTexture());
+		preview.setVisible(true);
+		preview.repaint();
+		editor.add(preview, c);
 		
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
+		c.gridx = 1;
+		//c.fill = HORIZONTAL;
+		editor.add(new JTextField(e.getName(), 10), c);
 		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
+		c.gridx = 2;
+		editor.add(new JTextField(String.valueOf(e.getDamage()), 4), c);
 		
+		c.gridx = 3;
+		ColorField colorfield = new ColorField(e.getColor());
+		editor.add(colorfield, c);
+		
+		c.gridx = 4;
+		JScrollBar brightness;
+		if(e.getBrightness() * 1000 < 1000){
+			brightness = new JScrollBar(JScrollBar.HORIZONTAL,
+					(int) (e.getBrightness() * 1000), 1, 0, 1001);
+		} else {
+			brightness = new JScrollBar(JScrollBar.HORIZONTAL,
+					(int) e.getBrightness(), 1, 0, 1001);
+		}
+		brightness.setSize(100, brightness.getHeight());
+		editor.add(brightness, c);
+		
+		c.gridx = 5;
+		editor.add(new JCheckBox("", e.shouldBreakOnImpact()), c);
+		
+		c.gridx = 6;
+		JScrollBar density;
+		if(e.getDensity() * 1000 < 1000){
+			density = new JScrollBar(JScrollBar.HORIZONTAL,
+					(int) (e.getDensity() * 1000), 1, 0, 1001);
+		}else{
+			density = new JScrollBar(JScrollBar.HORIZONTAL,
+				(int) e.getDensity(), 1, 0, 1001);
+		}
+		density.setSize(100, density.getHeight());
+		editor.add(density, c);
+		
+		c.gridx = 0;
+		c.gridy = elements.size();
+		c.fill = BOTH;
+		c.anchor = SOUTH;
+		c.gridx = 0;
+		editor.add(add,c);
+		
+		c.gridx = 1;
+		
+		c.gridwidth = REMAINDER;
+		editor.add(save,c);
+		
+		editorframe.pack();
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
+	public void mouseClicked(MouseEvent e) {}
 
 	@Override
-	public void mouseExited(MouseEvent e) {
+	public void mousePressed(MouseEvent e) {}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+
+	@Override
+	public void mouseExited(MouseEvent e) {}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() instanceof JButton
+				&& e.getSource().equals(add)){
+			addRow();
+		}
+		if(e.getSource() instanceof JButton
+				&& e.getSource().equals(save)){
+			DataLoader.saveElements(elements);
+		}
+		if(e.getSource() instanceof JButton
+				&& e.getSource().equals(edittl)){
+			edittl();
+		}
+	}
+
+	private void edittl() {
 		// TODO Auto-generated method stub
 		
 	}
