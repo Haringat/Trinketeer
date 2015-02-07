@@ -59,13 +59,13 @@ public class World
 
 				if (b1)
 				{
-					TextureLibrary.bindTexture("resc/textures/spells/" + player.currentSpellLeft.texture);
+					TextureLibrary.bindTexture(player.currentSpellLeft.texture);
 					GLHelper.drawRect(-0.975f, 0.825f, 0.15f, 0.15f);
 				}
 
 				if (b2)
 				{
-					TextureLibrary.bindTexture("resc/textures/spells/" + player.currentSpellRight.texture);
+					TextureLibrary.bindTexture(player.currentSpellRight.texture);
 					GLHelper.drawRect(0.825f, 0.825f, 0.15f, 0.15f);
 				}
 				if (b1)
