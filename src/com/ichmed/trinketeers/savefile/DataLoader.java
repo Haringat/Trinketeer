@@ -22,9 +22,6 @@ import static com.ichmed.trinketeers.util.DataRef.*;
 
 public class DataLoader
 {
-	
-	
-	
 	/**
 	 * loads an image from the file at <code>path</code>.
 	 * @param path the path to the image file

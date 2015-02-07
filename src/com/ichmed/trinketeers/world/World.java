@@ -59,13 +59,13 @@ public class World
 
 				if (b1)
 				{
-					TextureLibrary.bindTexture("resc/textures/spells/" + player.currentSpellLeft.texture);
+					TextureLibrary.bindTexture(player.currentSpellLeft.texture);
 					GLHelper.drawRect(-0.975f, 0.825f, 0.15f, 0.15f);
 				}
 
 				if (b2)
 				{
-					TextureLibrary.bindTexture("resc/textures/spells/" + player.currentSpellRight.texture);
+					TextureLibrary.bindTexture(player.currentSpellRight.texture);
 					GLHelper.drawRect(0.825f, 0.825f, 0.15f, 0.15f);
 				}
 				if (b1)
@@ -168,26 +168,28 @@ public class World
 		glPushMatrix();
 		Vector2f v = player.getCenter();
 		glTranslatef(-v.x, -v.y, 0);
-		renderChunks();
+		renderChunks(false);
 		currentLevel.worldGraphics.sort(new GraphicSorterYAxis());
 		for (IWorldGraphic g : currentLevel.worldGraphics)
 		{
 			g.render(this);
 		}
+		renderChunks(true);
 		glPopMatrix();
 		LightRenderer.renderLights(this, currentLevel.lights);
 		for (IGraphic g : uiGraphics)
 			g.render();
 	}
 
-	private void renderChunks()
+	private void renderChunks(boolean b)
 	{
 		for(int i = -1; i < 17; i++)
 			for(int j = -1; j < 17; j++)
 			{
 				int x = i + (int)((player.getCenter().x - 1) * 8);
 				int y = j + (int)((player.getCenter().y - 1) * 8);
-				Tile.tiles[Chunk.getTile(x, y, currentHeight)].render(x, y);
+				Tile t = Tile.tiles[Chunk.getTile(x, y, currentHeight)];
+				if(t.renderInFront == b)t.render(x, y);
 			}
 	}
 

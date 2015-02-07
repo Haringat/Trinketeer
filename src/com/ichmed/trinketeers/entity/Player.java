@@ -32,7 +32,7 @@ public class Player extends Entity
 		this.position = new Vector2f(-0.25f, 0);
 		this.speed = 0.01f;
 		this.preferredSpeed = 0.01f;
-		this.texture = "player.png";
+		this.texture = "resc/textures/" + "player.png";
 		this.maxDamageCooldown = 30;
 		this.maxHealth = this.health = 25;
 	}

@@ -166,7 +166,7 @@ public class Entity implements IWorldGraphic, Waypoint
 
 	protected void actualRender(World w)
 	{
-		TextureLibrary.bindTexture("resc/textures/" + this.getTexture(w));
+		TextureLibrary.bindTexture(this.getTexture(w));
 		AxisAllignedBoundingBox renderArea = this.getRenderArea();
 		glPushMatrix();
 		glColor3f(this.color.x, this.color.y, this.color.z);

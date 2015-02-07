@@ -18,7 +18,7 @@ public class Torch extends Pickup
 	{
 		this.size = new Vector2f(0.01f, 0.01f);
 		this.speed = 0;
-		this.texture = "torch.png";
+		this.texture = "resc/textures/torch.png";
 		this.isSolid = true;
 		this.isVulnerable = false;
 	}

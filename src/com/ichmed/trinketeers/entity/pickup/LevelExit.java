@@ -30,7 +30,7 @@ public class LevelExit extends Pickup
 	@Override
 	public String getTexture(World w)
 	{
-		return this.canBePickedUp(w) ? "hatch_open.png" : "hatch_closed.png";
+		return "resc/textures/" +  (this.canBePickedUp(w) ? "hatch_open.png" : "hatch_closed.png");
 	}
 
 	@Override

@@ -17,7 +17,7 @@ public class SpellScroll extends Pickup
 	public SpellScroll(Spell s)
 	{
 		this.spell = s;
-		this.texture = "resc/textures/spells/" + s.texture;
+		this.texture = s.texture;
 		this.pickupRange = 0.15f;
 	}
 

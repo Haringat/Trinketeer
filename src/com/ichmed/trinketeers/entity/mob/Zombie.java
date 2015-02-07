@@ -21,7 +21,7 @@ public class Zombie extends Entity
 		this.size = new Vector2f(.075f, .075f);
 		this.speed = 0.005f;
 		this.preferredSpeed = 0.005f;
-		this.texture = "zombie.png";
+		this.texture = "resc/textures/" + "zombie.png";
 		this.despawnCountDown = 8000;
 		this.renderWhenDead = true;
 		this.lootRange = 0.1f;
@@ -35,7 +35,7 @@ public class Zombie extends Entity
 	@Override
 	public String getTexture(World w)
 	{
-		return this.isDead ? "zombie_dead.png" : "zombie.png";
+		return "resc/textures/" + (this.isDead ?  "zombie_dead.png" : "zombie.png");
 	}
 
 	@Override
