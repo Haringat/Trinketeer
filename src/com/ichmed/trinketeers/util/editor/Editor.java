@@ -5,13 +5,16 @@ import static com.ichmed.trinketeers.util.JSONUtil.*;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 //import java.io.BufferedReader;
 //import java.util.Iterator;
 
-import java.util.Collection;
-import java.util.Iterator;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
@@ -24,35 +27,45 @@ import org.json.JSONObject;
 
 import com.ichmed.trinketeers.spell.element.Element;
 import com.ichmed.trinketeers.savefile.DataLoader;
-import com.ichmed.trinketeers.spell.element.Element;
 
 public class Editor implements MouseListener
 {
 	//BufferedReader reader;
 	boolean run = true;
+	
+	List<JPanel> panels = new ArrayList<JPanel>();
+	List<BufferedImage> icons = new ArrayList<BufferedImage>();
+		
 
 	public Editor()
 	{
-		Element defaultValues = new Element();
-
 		JFrame editor = new JFrame();
 		
 		DataLoader.loadElements();
 		editor.addMouseListener(this);
-		GridBagLayout l = new GridBagLayout();
+		editor.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		editor.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		JColorChooser cc = new JColorChooser();
 
-		Element[] elements = (Element[]) Element.elements.values().toArray();
-		
-		JPanel[] rows = new JPanel[elements.length];
-
+		Element[] elements = new Element[Element.elements.size()];
+		elements = (Element[]) Element.elements.values().toArray(new Element[elements.length]);
+		//JPanel spacer = new JPanel();
+		//spacer.setSize(5, 5);
+		c.gridwidth = 15;
+		c.gridheight = elements.length + 1;
+		c.insets = new Insets(5,5,5,5);
 		for(int i = 0; i < elements.length; i++){
-			JPanel preview = new JPanel();
-			
-			rows[i].add(new JPanel());
+			c.gridy = i;
+			c.gridx = 0;
+			Preview preview = new Preview(elements[i].getTexture());
+			preview.setVisible(true);
+			preview.repaint();
+			editor.add(preview, c);
 		}
+		editor.setVisible(true);
+		editor.pack();
+		editor.setVisible(true);
 	}
 
 	@Override
