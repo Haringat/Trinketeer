@@ -1,5 +1,7 @@
 package com.ichmed.trinketeers.util.editor;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
@@ -11,45 +13,61 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
 import com.ichmed.trinketeers.savefile.DataLoader;
+import com.ichmed.trinketeers.spell.element.Element;
 
 public class Preview extends JComponent implements MouseListener{
 	
 	private static final long serialVersionUID = 4743724722914037048L;
 
 	Image image;
+	String path;
 
 	public Preview(String path) {
-		setSize( 32, 32 );
-		this.setToolTipText("Spell texture");
+		setSize(32,32);
+		setToolTipText("change spell texture");
 		addMouseListener(this);
-		setImage(path);
+		this.path = path;
+		setImage(this.path);
 	}
 
 	public void setImage(String path) throws NullPointerException{
 		image = DataLoader.loadImage(path, this);
 		if(image == null){
-			throw new NullPointerException();
+			image = DataLoader.loadImage(new Element().getTexture(), this);
 		}
-		this.repaint();
+		System.out.printf("Size: %dx%d\n", getWidth(), getHeight());
+		repaint();
 	}
 
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		setBackground(new Color(255,0,255));
+		setOpaque(true);
+		setMinimumSize(new Dimension(16,16));
+		setPreferredSize(new Dimension(32,32));
+		setMaximumSize(new Dimension(256,256));
+		System.out.printf("Size: %dx%d\n", getWidth(), getHeight());
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+		System.out.printf("Size: %dx%d\n", getWidth(), getHeight());
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if(e.getButton() == MouseEvent.BUTTON1 && this.contains(e.getPoint())){
 			JFileChooser file = new JFileChooser();
+			file.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			file.setSelectedFile(new File(path).getAbsoluteFile());
 			file.setFileFilter(new FileFilter(){
 
 				@Override
 				public boolean accept(File f) {
 					if(f.isDirectory())
 						return true;
-					if(f.getName().substring(f.getName().lastIndexOf('.')).equalsIgnoreCase(".png"))
+					int index = f.getName().lastIndexOf('.'); 
+					if( index == -1)
+						return false;
+					if(f.getName().substring(index).equalsIgnoreCase(".png"))
 						return true;
 					return false;
 				}
@@ -61,7 +79,8 @@ public class Preview extends JComponent implements MouseListener{
 			});
 			file.setMultiSelectionEnabled(false);
 			if(file.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
-				setImage(file.getSelectedFile().getPath());
+				setImage(new File(".").getAbsoluteFile().toURI().relativize(
+						file.getSelectedFile().toURI()).getPath());
 			}
 		}
 		

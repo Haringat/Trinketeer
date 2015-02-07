@@ -6,7 +6,7 @@
         "brightness":"1000",
         "density":"0.001",
         "color":"blue",
-        "texture":"fireballRed.png",
+        "texture":"resc/textures/spells/fireballRed.png",
         "name":"Fire",
         "color_green":"0.4",
         "break_on_impact":"true"
@@ -16,8 +16,9 @@
         "color_red":"1.0",
         "brightness":"0",
         "density":"0.001",
-        "texture":"waterBubble.png",
-        "name":"Water","color_green":"1.0",
+        "texture":"resc/textures/spells/waterBubble.png",
+        "name":"Water",
+        "color_green":"1.0",
         "break_on_impact":"true"
     },{
         "color_blue":"1.0",
@@ -25,8 +26,9 @@
         "color_red":"1.0",
         "brightness":"0",
         "density":"0.001",
-        "texture":"earthLump.png",
-        "name":"Earth","color_green":"1.0",
+        "texture":"resc/textures/spells/earthLump.png",
+        "name":"Earth",
+        "color_green":"1.0",
         "break_on_impact":"true"
     },{
         "color_blue":"1.0",
@@ -34,7 +36,7 @@
         "color_red":"1.0",
         "brightness":"0",
         "density":"0.005",
-        "texture":"windGust.png",
+        "texture":"resc/textures/spells/windGust.png",
         "name":"Air",
         "color_green":"1.0",
         "break_on_impact":"false"
@@ -44,7 +46,7 @@
         "color_red":"1.0",
         "brightness":"0",
         "density":"0.001",
-        "texture":"steamPuff.png",
+        "texture":"resc/textures/spells/steamPuff.png",
         "name":"Steam",
         "color_green":"1.0",
         "break_on_impact":"true"
@@ -54,7 +56,7 @@
         "color_red":"1.0",
         "brightness":"0",
         "density":"0.001",
-        "texture":"mudBall.png",
+        "texture":"resc/textures/spells/mudBall.png",
         "name":"Mud",
         "color_green":"1.0",
         "break_on_impact":"true"

@@ -5,12 +5,14 @@ import static com.ichmed.trinketeers.util.JSONUtil.*;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 //import java.io.BufferedReader;
 //import java.util.Iterator;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,35 +43,28 @@ public class Editor implements MouseListener
 		
 		DataLoader.loadElements();
 		editor.addMouseListener(this);
-		GridBagLayout l = new GridBagLayout();
-		editor.setLayout(l);
+		editor.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		editor.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		JColorChooser cc = new JColorChooser();
 
-		Element[] elements = new Element[Element.elements.size()]; 
+		Element[] elements = new Element[Element.elements.size()];
 		elements = (Element[]) Element.elements.values().toArray(new Element[elements.length]);
-		JPanel spacer = new JPanel();
-		spacer.setSize(5, 5);
-		int i;
-		for(i = 0; i < elements.length; i++){
-			c.gridy = i * 2 + 1;
+		//JPanel spacer = new JPanel();
+		//spacer.setSize(5, 5);
+		c.gridwidth = 15;
+		c.gridheight = elements.length + 1;
+		c.insets = new Insets(5,5,5,5);
+		for(int i = 0; i < elements.length; i++){
+			c.gridy = i;
 			c.gridx = 0;
-			editor.add(spacer, c);
-			c.gridx = 2;
-			editor.add(spacer, c);
-			c.gridy = i * 2 + 2;
-			c.gridx = 1;
 			Preview preview = new Preview(elements[i].getTexture());
+			preview.setVisible(true);
+			preview.repaint();
 			editor.add(preview, c);
 		}
-		c.gridx = 0;
-		c.gridy = i * 2 + 3;
-		editor.add(spacer, c);
-		c.gridx = 2;
-		editor.add(spacer, c);
+		editor.setVisible(true);
 		editor.pack();
-		//editor.setSize(32, elements.length*32);
 		editor.setVisible(true);
 	}
 
