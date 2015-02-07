@@ -9,12 +9,14 @@ public class Tile
 {
 	public final String texturePath;
 	public final boolean breakable, massive;
+	public boolean renderInFront = false;
 	public static Tile[] tiles = new Tile[128];
 
 	static
 	{
 		tiles[0] = new Tile(null, false, false);
 		tiles[1] = new Tile("resc/textures/floorMud.png", false, false);
+		tiles[2] = new Tile("resc/textures/floorMud.png", false, false).setRenderInFront(true);
 	}
 
 	public Tile(String texturePath, boolean breakable, boolean massive)
@@ -23,6 +25,12 @@ public class Tile
 		this.texturePath = texturePath;
 		this.breakable = breakable;
 		this.massive = massive;
+	}
+	
+	public Tile setRenderInFront(boolean b)
+	{
+		this.renderInFront= b;
+		return this;
 	}
 
 	public void render(int x, int y)
