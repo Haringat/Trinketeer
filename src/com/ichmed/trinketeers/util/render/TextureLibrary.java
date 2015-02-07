@@ -69,7 +69,11 @@ public class TextureLibrary
 			File outputFileData = new File(path + ".tld");
 			StringBuilder stringBuilder = new StringBuilder();
 			for (String s : t.textureCoords.keySet())
-				stringBuilder.append("[" + s + ":" + t.textureCoords.get(s) + "]");
+			{
+				stringBuilder.append(s + ": ");
+				Vector4f v = t.textureCoords.get(s);
+				stringBuilder.append(v.x + " " + v.y + " " + v.z + " " + v.w + "|"); 
+			}
 			FileWriter fw = new FileWriter(outputFileData);
 			fw.append(stringBuilder);
 			fw.close();
