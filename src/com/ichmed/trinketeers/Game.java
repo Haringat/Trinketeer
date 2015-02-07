@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import org.lwjgl.opengl.GLContext;
 import com.ichmed.trinketeers.savefile.ChunkSave;
 import com.ichmed.trinketeers.savefile.DataLoader;
 import com.ichmed.trinketeers.util.editor.Editor;
+import com.ichmed.trinketeers.util.render.TextureLibrary;
 import com.ichmed.trinketeers.world.Chunk;
 import com.ichmed.trinketeers.world.World;
 
@@ -47,11 +49,20 @@ public class Game
 		{
 			init();
 			world = new World();
+			ArrayList<String[]> l = new ArrayList<>();
+			l.add(new String[]{"resc/textures/default.png", "default"});
+			l.add(new String[]{"resc/textures/zombie.png", "zombie"});
+			l.add(new String[]{"resc/textures/zombie_dead.png", "zombie_dead"});
+			TextureLibrary.generateTextureLibrary("resc/textures/test", l);
 			loop();
 
 			// Release window and window callbacks
 			glfwDestroyWindow(window);
 			keyCallback.release();
+		} catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} finally
 		{
 			// Terminate GLFW and release the GLFWerrorfun
@@ -93,7 +104,7 @@ public class Game
 //				if (key == GLFW_KEY_Z && action == GLFW_RELEASE) world.nextLevel();
 				if (key == GLFW_KEY_F3 && action == GLFW_RELEASE) renderHitBoxes = !renderHitBoxes;
 				if (key == GLFW_KEY_F5 && action == GLFW_RELEASE) ChunkSave.saveChunkClusterToDisk(world, 0, 0, 0);
-				if (key == GLFW_KEY_T && action == GLFW_RELEASE) Chunk.setTile((int)(world.player.position.x * 8), (int)(world.player.position.y * 8), world.currentHeight, 1);
+				if (key == GLFW_KEY_T && action == GLFW_RELEASE) Chunk.setTile((int)(world.player.position.x * 8), (int)(world.player.position.y * 8), world.currentHeight, 2);
 				if (key == GLFW_KEY_KP_ADD && action == GLFW_RELEASE) zoom += 0.25;
 				if (key == GLFW_KEY_KP_SUBTRACT && action == GLFW_RELEASE) zoom -= 0.25;
 

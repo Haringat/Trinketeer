@@ -4,8 +4,10 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +30,7 @@ public class TextureLibrary
 	private static String currentTexture = "";
 
 	public static final int LIBRARY_SIZE = 1024;
+	private Graphics2D destGraphics;
 
 	public static boolean bindTexture(String path)
 	{
@@ -50,18 +53,26 @@ public class TextureLibrary
 		return true;
 	}
 
-	public TextureLibrary(String path, List<String[]> data) throws Exception
+	public static void generateTextureLibrary(String path, List<String[]> data) throws Exception
 	{
+		TextureLibrary t = new TextureLibrary();
 		BufferedImage imgLib = new BufferedImage(LIBRARY_SIZE, LIBRARY_SIZE, BufferedImage.TYPE_INT_ARGB);
-		imgLib.getGraphics().setColor(new Color(255, 0, 255, 255));
-		imgLib.getGraphics().fillRect(0, 0, LIBRARY_SIZE, LIBRARY_SIZE);
-		if(!placeTextureRecursive(data, imgLib))
-			if(!placeTextureRecursiveSkipFirst(data, imgLib))
-				throw new Exception("Could not create Texture Library, LIBRARY_SIZE might be to small");
-		File outputFile = new File(path + ".png");
+		t.destGraphics = imgLib.createGraphics();
+		t.destGraphics.setColor(new Color(255, 0, 255, 255));
+		t.destGraphics.setBackground(new Color(0, 0, 0, 0));
+		t.destGraphics.fillRect(0, 0, LIBRARY_SIZE, LIBRARY_SIZE);
+		if (!t.placeTextureRecursive(data, imgLib)) if (!t.placeTextureRecursiveSkipFirst(data, imgLib)) throw new Exception("Could not create Texture Library, LIBRARY_SIZE might be to small");
 		try
 		{
-			ImageIO.write(imgLib, "png", outputFile);
+			File outputFileImage = new File(path + ".png");
+			ImageIO.write(imgLib, "png", outputFileImage);
+			File outputFileData = new File(path + ".tld");
+			StringBuilder stringBuilder = new StringBuilder();
+			for (String s : t.textureCoords.keySet())
+				stringBuilder.append("[" + s + ":" + t.textureCoords.get(s) + "]");
+			FileWriter fw = new FileWriter(outputFileData);
+			fw.append(stringBuilder);
+			fw.close();
 		} catch (IOException e)
 		{
 			e.printStackTrace();
@@ -75,7 +86,8 @@ public class TextureLibrary
 		{
 			BufferedImage img = (BufferedImage) DataLoader.loadImage(temp.get(i)[0], new Component()
 			{
-				private static final long serialVersionUID = 1L;});
+				private static final long serialVersionUID = 1L;
+			});
 			String name = data.get(i)[1];
 			if (tryToPlaceImage(img, dest, temp.get(i)[1]))
 			{
@@ -95,7 +107,8 @@ public class TextureLibrary
 		{
 			BufferedImage img = (BufferedImage) DataLoader.loadImage(temp.get(i)[0], new Component()
 			{
-				private static final long serialVersionUID = 1L;});
+				private static final long serialVersionUID = 1L;
+			});
 			String name = data.get(i)[1];
 			if (tryToPlaceImage(img, dest, temp.get(i)[1]))
 			{
@@ -125,15 +138,15 @@ public class TextureLibrary
 
 	public void removeImage(BufferedImage src, int x, int y, BufferedImage dest)
 	{
-		dest.getGraphics().setColor(new Color(255, 0, 255, 255));
-		dest.getGraphics().drawRect(x, y, src.getWidth(), src.getHeight());
+		destGraphics.setColor(new Color(255, 0, 255, 255));
+		destGraphics.drawRect(x, y, src.getWidth(), src.getHeight());
 
 	}
 
 	public void putImage(BufferedImage src, int x, int y, BufferedImage dest)
 	{
-		dest.getGraphics().clearRect(x, y, src.getWidth(), src.getHeight());
-		dest.getGraphics().drawImage(src, x, y, null);
+		destGraphics.clearRect(x, y, src.getWidth(), src.getHeight());
+		destGraphics.drawImage(src, x, y, null);
 	}
 
 	public boolean isSpaceEmpty(int x, int y, int width, int height, BufferedImage bfrdImg)
