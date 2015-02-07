@@ -58,6 +58,18 @@ public class Level
 	public void init()
 	{
 		world.player.setCenter(new Vector2f(0, -1.2f));
+		for (int i = -8; i < 8; i++)
+			for(int j = -8; j < 8; j++)
+			{
+				Chunk.setTile(i, j, level, 1);
+			}
+		for (int i = 0; i < 4; i++)
+				for(int j = 0; j < 3; j++)
+				{
+					Chunk.setTile(-2 + i, 8 + j, level, 1);
+					Chunk.setTile(-2 + i, -11 + j, level, 1);
+					
+				}
 		for (int i = -10; i < -1; i++)
 		{
 			spawn((new Wall()).setCenter(new Vector2f(i / 10f, 1f)), false, false);

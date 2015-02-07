@@ -19,6 +19,7 @@ import org.lwjgl.opengl.GLContext;
 import com.ichmed.trinketeers.savefile.ChunkSave;
 import com.ichmed.trinketeers.savefile.DataLoader;
 import com.ichmed.trinketeers.util.editor.Editor;
+import com.ichmed.trinketeers.world.Chunk;
 import com.ichmed.trinketeers.world.World;
 
 public class Game
@@ -92,6 +93,7 @@ public class Game
 //				if (key == GLFW_KEY_Z && action == GLFW_RELEASE) world.nextLevel();
 				if (key == GLFW_KEY_F3 && action == GLFW_RELEASE) renderHitBoxes = !renderHitBoxes;
 				if (key == GLFW_KEY_F5 && action == GLFW_RELEASE) ChunkSave.saveChunkClusterToDisk(world, 0, 0, 0);
+				if (key == GLFW_KEY_T && action == GLFW_RELEASE) Chunk.setTile((int)(world.player.position.x * 8), (int)(world.player.position.y * 8), world.currentHeight, 1);
 				if (key == GLFW_KEY_KP_ADD && action == GLFW_RELEASE) zoom += 0.25;
 				if (key == GLFW_KEY_KP_SUBTRACT && action == GLFW_RELEASE) zoom -= 0.25;
 

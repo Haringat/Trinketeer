@@ -1,7 +1,5 @@
 package com.ichmed.trinketeers.savefile;
 
-import java.util.Iterator;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

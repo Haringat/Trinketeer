@@ -26,8 +26,30 @@ public class Chunk
 	{
 		return x + "x" + y + "x" + z;
 	}
+	
+	public static void setTile(int x, int y, int z, int id)
+	{
 
-	public static int getTile(int x, int y)
+		int chunkX = x / chunkSize;
+		int chunkY = y / chunkSize;
+
+		if (x < 0) chunkX--;
+		if (y < 0) chunkY--;
+
+		Chunk c = getChunk(chunkX, chunkY, z);
+		int xTemp = x % chunkSize;
+		if (xTemp < 0) xTemp += chunkSize;
+		int yTemp = y % chunkSize;
+		if (yTemp < 0) yTemp += chunkSize;
+		c.setTileInChunk(xTemp, yTemp, id);
+	}
+
+	private void setTileInChunk(int x, int y, int id)
+	{
+		this.tiles[chunkSize * y + x] = id;
+	}
+
+	public static int getTile(int x, int y, int z)
 	{
 		int chunkX = x / chunkSize;
 		int chunkY = y / chunkSize;
@@ -35,18 +57,18 @@ public class Chunk
 		if (x < 0) chunkX--;
 		if (y < 0) chunkY--;
 
-		if (chunks.get(getHashString(chunkX, chunkY, 0)) == null) createNewChunk(chunkX, chunkY, 0);
+		if (chunks.get(getHashString(chunkX, chunkY, z)) == null) createNewChunk(chunkX, chunkY, 0);
 
 		int xTemp = x % chunkSize;
 		if (xTemp < 0) xTemp += chunkSize;
 		int yTemp = y % chunkSize;
 		if (yTemp < 0) yTemp += chunkSize;
-		return chunks.get(getHashString(chunkX, chunkY, 0)).getTileFromChunk(xTemp, yTemp);
+		return getChunk(chunkX, chunkY, z).getTileFromChunk(xTemp, yTemp);
 	}
 
 	private int getTileFromChunk(int x, int y)
 	{
-		return tiles[chunkSize * y + x];
+		return this.tiles[chunkSize * y + x];
 	}
 
 	public static Chunk getChunk(int x, int y, int z)

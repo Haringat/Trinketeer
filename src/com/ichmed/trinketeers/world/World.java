@@ -28,16 +28,16 @@ public class World
 	public Player player = new Player();
 	List<IGraphic> uiGraphics = new ArrayList<>();
 	public Level currentLevel;
-	public int level = 0;
+	public int currentHeight = 0;
 	
 	public final String name = "world_0";
 
 	public World()
 	{
-		currentLevel = new Level(this, level);
+		currentLevel = new Level(this, currentHeight);
 		currentLevel.init();
-		 LightRenderer.setAmbientLight(1f, 1f, 1f);
-//		LightRenderer.setAmbientLight(0.0f, 0.0f, 0.0f);
+//		 LightRenderer.setAmbientLight(1f, 1f, 1f);
+		LightRenderer.setAmbientLight(0.0f, 0.0f, 0.0f);
 		spawn(player);
 
 		uiGraphics.add(new IGraphic()
@@ -119,8 +119,8 @@ public class World
 
 	public void nextLevel()
 	{
-		this.level++;
-		this.currentLevel = new Level(this, this.level);
+		this.currentHeight++;
+		this.currentLevel = new Level(this, this.currentHeight);
 		this.currentLevel.init();
 		spawn(player);
 	}
@@ -185,9 +185,9 @@ public class World
 		for(int i = -1; i < 17; i++)
 			for(int j = -1; j < 17; j++)
 			{
-				int x = i + (int)((player.getCenter().x) * 8);
-				int y = j + (int)((player.getCenter().y) * 8);
-				Tile.tiles[Chunk.getTile(x, y)].render(x, y);
+				int x = i + (int)((player.getCenter().x - 1) * 8);
+				int y = j + (int)((player.getCenter().y - 1) * 8);
+				Tile.tiles[Chunk.getTile(x, y, currentHeight)].render(x, y);
 			}
 	}
 
