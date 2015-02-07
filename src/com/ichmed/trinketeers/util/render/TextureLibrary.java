@@ -7,11 +7,13 @@ import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 
@@ -26,6 +28,8 @@ public class TextureLibrary
 {
 	private static HashMap<String, Texture> libraryTextures = new HashMap<>();
 	private HashMap<String, Vector4f> textureCoords = new HashMap<>();
+	public static TextureLibrary textureLibrary;
+	private String textureName;
 
 	private static String currentTexture = "";
 
@@ -51,6 +55,28 @@ public class TextureLibrary
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		return true;
+	}
+	
+	public static void loadTextureLibrary(String path)
+	{
+		textureLibrary = new TextureLibrary();
+		textureLibrary.textureName = path + ".png";
+		bindTexture(textureLibrary.textureName);
+		File f = new File(path + ".tld");
+		try
+		{
+			@SuppressWarnings({ "unused", "resource" })
+			String content = new Scanner(f).useDelimiter("\\Z").next();
+			for(String s : content.split("|"))
+				if(s != "")
+				{
+					String floats = s.split(":")[1];
+					textureLibrary.textureCoords.put(s.split(":")[0], new Vector4f(Float.valueOf(floats.split(" ")[0]), Float.valueOf(floats.split(" ")[1]), Float.valueOf(floats.split(" ")[2]), Float.valueOf(floats.split(" ")[3])));
+				}
+		} catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public static void generateTextureLibrary(String path, List<String[]> data) throws Exception
