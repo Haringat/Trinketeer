@@ -39,7 +39,6 @@ public class Preview extends JComponent implements MouseListener{
 		if(image == null){
 			image = DataLoader.loadImage(new Element().getTexture(), this);
 		}
-		System.out.printf("Size: %dx%d\n", getWidth(), getHeight());
 		repaint();
 	}
 
