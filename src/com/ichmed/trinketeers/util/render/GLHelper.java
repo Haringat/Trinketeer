@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import java.awt.Font;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector4f;
 
 import com.ichmed.trinketeers.world.World;
 
@@ -17,6 +18,20 @@ public class GLHelper
 	public static void drawRect(float width, float height)
 	{
 		drawRect(0, 0, width, height);
+	}
+	
+	public static void renderTexturedQuad(float x, float y, float width, float height, Vector4f v)
+	{
+		glBegin(GL11.GL_QUADS);
+		glTexCoord2d(v.x, v.y + v.w);
+		glVertex2f(x, y);
+		glTexCoord2d(v.x + v.z, v.y + v.w);
+		glVertex2f(x + width, y);
+		glTexCoord2d(v.x + v.z, 0);
+		glVertex2f(x + width, y + height);
+		glTexCoord2d(v.x, v.y);
+		glVertex2f(x, y + height);
+		glEnd();		
 	}
 
 	public static void drawRect(float x, float y, float width, float height)

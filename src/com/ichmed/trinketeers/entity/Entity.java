@@ -49,6 +49,7 @@ public class Entity implements IWorldGraphic, Waypoint
 	public Waypoint currentWaypoint;
 	public float visionRange = 0.7f;
 	public int attackCooldown, maxAttackcooldown;
+	public String name = "test";
 
 	public void tick(World world)
 	{
@@ -166,7 +167,7 @@ public class Entity implements IWorldGraphic, Waypoint
 
 	protected void actualRender(World w)
 	{
-		TextureLibrary.bindTexture(this.getTexture(w));
+		TextureLibrary.bindTexture(TextureLibrary.textureLibrary.textureName);
 		AxisAllignedBoundingBox renderArea = this.getRenderArea();
 		glPushMatrix();
 		glColor3f(this.color.x, this.color.y, this.color.z);
@@ -174,7 +175,7 @@ public class Entity implements IWorldGraphic, Waypoint
 		glTranslated(renderArea.size.x / 2, renderArea.size.x / 2, 0);
 		glRotated(this.rotation, 0, 0, 1);
 		glTranslated(-renderArea.size.x / 2, -renderArea.size.y / 2, 0);
-		GLHelper.drawRect(renderArea.size.x, renderArea.size.y);
+		GLHelper.renderTexturedQuad(0, 0, renderArea.size.x, renderArea.size.y, TextureLibrary.getTextureVector(this.name));
 		glColor3f(1, 1, 1);
 		glPopMatrix();
 	}

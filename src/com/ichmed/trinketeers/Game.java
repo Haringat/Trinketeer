@@ -6,7 +6,6 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,15 +48,17 @@ public class Game
 		{
 			init();
 			world = new World();
-			ArrayList<String[]> l = new ArrayList<>();
-			l.add(new String[]{"resc/textures/default.png", "default"});
-			l.add(new String[]{"resc/textures/zombie.png", "zombie"});
-			l.add(new String[]{"resc/textures/zombie_dead.png", "zombie_dead"});
-			TextureLibrary.generateTextureLibrary("resc/textures/test", l);
+			TextureLibrary.loadTextureLibrary("resc/textures/test");
+//			ArrayList<String[]> l = new ArrayList<>();
+//			l.add(new String[]{"resc/textures/default.png", "default"});
+//			l.add(new String[]{"resc/textures/zombie.png", "zombie"});
+//			l.add(new String[]{"resc/textures/zombie_dead.png", "zombie_dead"});
+//			TextureLibrary.generateTextureLibrary("resc/textures/test", l);
 			loop();
 
 			// Release window and window callbacks
 			glfwDestroyWindow(window);
+			TextureLibrary.textureLibrary.cleanUp();
 			keyCallback.release();
 		} catch (Exception e)
 		{

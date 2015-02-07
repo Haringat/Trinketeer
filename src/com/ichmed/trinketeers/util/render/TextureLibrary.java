@@ -29,12 +29,43 @@ public class TextureLibrary
 	private static HashMap<String, Texture> libraryTextures = new HashMap<>();
 	private HashMap<String, Vector4f> textureCoords = new HashMap<>();
 	public static TextureLibrary textureLibrary;
-	private String textureName;
+	public String textureName;
 
 	private static String currentTexture = "";
 
 	public static final int LIBRARY_SIZE = 1024;
 	private Graphics2D destGraphics;
+	private List<String> nonExistentTextures = new ArrayList<>();
+
+	public static Vector4f getTextureVector(String name)
+	{
+		Vector4f v = textureLibrary.textureCoords.get(name);
+		if (v == null)
+		{
+			textureLibrary.nonExistentTextures.add(name);
+			v = new Vector4f(0, 0, 16, 16);
+		}
+		return (Vector4f) v.scale(1f / LIBRARY_SIZE);
+	}
+
+	public void cleanUp()
+	{
+		if (this.nonExistentTextures.size() > 0)
+		{
+			try
+			{
+				String p = textureName.split("\\.")[0].split("/")
+						[textureName.split("\\.")[0].split("/").length - 1];
+				FileWriter writer = new FileWriter(p + "_Textures_Not_Found.tef");
+				for (String s : this.nonExistentTextures)
+					writer.append(s);
+				writer.close();
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
 
 	public static boolean bindTexture(String path)
 	{
@@ -56,7 +87,7 @@ public class TextureLibrary
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		return true;
 	}
-	
+
 	public static void loadTextureLibrary(String path)
 	{
 		textureLibrary = new TextureLibrary();
@@ -65,13 +96,14 @@ public class TextureLibrary
 		File f = new File(path + ".tld");
 		try
 		{
-			@SuppressWarnings({ "unused", "resource" })
+			@SuppressWarnings({ "resource" })
 			String content = new Scanner(f).useDelimiter("\\Z").next();
-			for(String s : content.split("|"))
-				if(s != "")
+			for (String s : content.split("\\|"))
+				if (!s.equals(""))
 				{
-					String floats = s.split(":")[1];
-					textureLibrary.textureCoords.put(s.split(":")[0], new Vector4f(Float.valueOf(floats.split(" ")[0]), Float.valueOf(floats.split(" ")[1]), Float.valueOf(floats.split(" ")[2]), Float.valueOf(floats.split(" ")[3])));
+					String floats = s.split(":")[1].trim();
+					textureLibrary.textureCoords.put(s.split(":")[0],
+							new Vector4f(Float.valueOf(floats.split(" ")[0]), Float.valueOf(floats.split(" ")[1]), Float.valueOf(floats.split(" ")[2]), Float.valueOf(floats.split(" ")[3])));
 				}
 		} catch (FileNotFoundException e)
 		{
@@ -98,7 +130,7 @@ public class TextureLibrary
 			{
 				stringBuilder.append(s + ": ");
 				Vector4f v = t.textureCoords.get(s);
-				stringBuilder.append(v.x + " " + v.y + " " + v.z + " " + v.w + "|"); 
+				stringBuilder.append(v.x + " " + v.y + " " + v.z + " " + v.w + "|");
 			}
 			FileWriter fw = new FileWriter(outputFileData);
 			fw.append(stringBuilder);
