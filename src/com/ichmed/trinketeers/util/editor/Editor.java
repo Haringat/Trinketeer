@@ -12,6 +12,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
@@ -42,7 +44,7 @@ import com.ichmed.trinketeers.spell.element.Element;
 import com.ichmed.trinketeers.savefile.DataLoader;
 import com.ichmed.trinketeers.util.render.TextureLibrary;
 
-public class Editor extends JFrame implements MouseListener, ActionListener, ItemListener, DocumentListener, ChangeListener
+public class Editor extends JFrame implements MouseListener, ActionListener, FocusListener, ChangeListener
 {
 	private static final long serialVersionUID = -1549438543620749797L;
 	private JPanel editor;
@@ -163,13 +165,13 @@ public class Editor extends JFrame implements MouseListener, ActionListener, Ite
 		
 			c.gridx = 1;
 			comps[1] = new JTextField(e.getName(), 10);
-			((JTextField) comps[1]).getDocument().addDocumentListener(this);
 			comps[1].setName("name");
+			comps[1].addFocusListener(this);
 			editor.add(comps[1], c);
 		
 			c.gridx = 2;
 			comps[2] = new JTextField(String.valueOf(e.getDamage()), 4);
-			((JTextField) comps[2]).getDocument().addDocumentListener(this);
+			comps[2].addFocusListener(this);
 			comps[2].setName("damage");
 			editor.add(comps[2], c);
 		
@@ -181,7 +183,7 @@ public class Editor extends JFrame implements MouseListener, ActionListener, Ite
 		
 			c.gridx = 4;
 			comps[4] = new JTextField(String.valueOf(e.getBrightness()),5);
-			((JTextField) comps[4]).getDocument().addDocumentListener(this);
+			comps[4].addFocusListener(this);
 			comps[4].setName("brightness");
 			editor.add(comps[4], c);
 		
@@ -193,7 +195,7 @@ public class Editor extends JFrame implements MouseListener, ActionListener, Ite
 		
 			c.gridx = 6;
 			comps[6] = new JTextField(String.valueOf(e.getDensity()),5);
-			((JTextField) comps[6]).getDocument().addDocumentListener(this);
+			comps[6].addFocusListener(this);
 			comps[6].setName("density");
 			editor.add(comps[6], c);
 		
@@ -355,32 +357,23 @@ public class Editor extends JFrame implements MouseListener, ActionListener, Ite
 	}
 
 	@Override
-	public void itemStateChanged(ItemEvent e) {
-		refreshHashmap();
-		
-	}
-
-	@Override
-	public void insertUpdate(DocumentEvent e) {
-		refreshHashmap();
-		
-	}
-
-	@Override
-	public void removeUpdate(DocumentEvent e) {
-		refreshHashmap();
-		
-	}
-
-	@Override
-	public void changedUpdate(DocumentEvent e) {
-		refreshHashmap();
-		
-	}
-
-	@Override
 	public void stateChanged(ChangeEvent e) {
 		refreshHashmap();
 		
+	}
+
+	@Override
+	public void focusGained(FocusEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void focusLost(FocusEvent e) {
+		try{
+			refreshHashmap();
+		} catch(NumberFormatException e1){
+			((JTextField) e.getSource()).setText("0.0");
+		}
 	}
 }
