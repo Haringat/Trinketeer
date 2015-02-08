@@ -19,7 +19,12 @@ public class GLHelper
 	{
 		drawRect(0, 0, width, height);
 	}
+
 	
+	public static void renderTexturedQuad(float x, float y, float width, float height, String s)
+	{
+		renderTexturedQuad(x, y, width, height, TextureLibrary.getTextureVector(s));
+	}
 	public static void renderTexturedQuad(float x, float y, float width, float height, Vector4f v)
 	{
 		TextureLibrary.bindTexture(TextureLibrary.textureLibrary.textureName);

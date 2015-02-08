@@ -250,7 +250,7 @@ public class TextureLibrary
 	public static void rebind()
 	{
 //		System.out.println(currentTexture);
-		bindTexture("resc/textures/wall.png");
+		bindTexture("resc/textures/shadow.png");
 		libraryTextures.get(currentTexture).bind();
 	}
 }

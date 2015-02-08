@@ -16,7 +16,7 @@ public class HealthBottle extends Pickup
 
 	public HealthBottle()
 	{
-		this.texture = "resc/textures/" + "healthBottle.png";
+		this.name = "healthBottle";
 		this.size.x = this.size.y = 0.05f;
 	}
 

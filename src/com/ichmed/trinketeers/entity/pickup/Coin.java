@@ -7,7 +7,7 @@ public class Coin extends Pickup
 {
 	public Coin()
 	{
-		this.texture = "resc/textures/goldCoin.png";
+		this.name = "coin";
 		this.size.x = this.size.y = 0.035f;
 		this.movementDelay = 25;
 	}

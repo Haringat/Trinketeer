@@ -24,7 +24,6 @@ public class FlameElemental extends Entity
 		this.size = new Vector2f(.075f, .075f);
 		this.speed = 0.005f;
 		this.preferredSpeed = 0.005f;
-		this.texture = "resc/textures/" + "zombie.png";
 		this.despawnCountDown = 1;
 		this.renderWhenDead = true;
 		this.lootRange = 0.1f;

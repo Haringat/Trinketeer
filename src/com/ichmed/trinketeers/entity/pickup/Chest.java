@@ -14,7 +14,6 @@ public class Chest extends Pickup
 
 	public Chest()
 	{
-		this.texture = "resc/textures/" + "chest_closed";
 		this.renderWhenDead = true;
 		this.despawnCountDown = 100000;
 		this.size = new Vector2f(0.2f, 0.1f);
@@ -45,7 +44,7 @@ public class Chest extends Pickup
 	@Override
 	public String getTextureForState(World w)
 	{
-		return this.isDead ? "chest_open" : "chest_closed";
+		return this.isDead ? "chestOpen" : "chestClosed";
 	}
 
 	@Override

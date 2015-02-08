@@ -9,7 +9,6 @@ import com.ichmed.trinketeers.ai.BehaviourWander;
 import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.entity.Player;
 import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
-import com.ichmed.trinketeers.world.World;
 
 public class Zombie extends Entity
 {
@@ -21,7 +20,6 @@ public class Zombie extends Entity
 		this.size = new Vector2f(.075f, .075f);
 		this.speed = 0.005f;
 		this.preferredSpeed = 0.005f;
-		this.texture = "resc/textures/" + "zombie.png";
 		this.despawnCountDown = 8000;
 		this.renderWhenDead = true;
 		this.lootRange = 0.1f;

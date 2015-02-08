@@ -15,7 +15,6 @@ import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
 import com.ichmed.trinketeers.util.Loot;
 import com.ichmed.trinketeers.util.render.GLHelper;
 import com.ichmed.trinketeers.util.render.IWorldGraphic;
-import com.ichmed.trinketeers.util.render.TextureLibrary;
 import com.ichmed.trinketeers.util.render.light.ILight;
 import com.ichmed.trinketeers.world.World;
 
@@ -39,7 +38,6 @@ public class Entity implements IWorldGraphic, Waypoint
 	public int lifespan = -1;
 	public float rotation = 0;
 	public ILight light;
-	public String texture = "default.png";
 	public boolean isMoveable = true;
 	public int ticksExisted = 0;
 	public boolean renderWhenDead = false, solidWhenDead = false, dropLootOnDeath = false;
@@ -175,7 +173,7 @@ public class Entity implements IWorldGraphic, Waypoint
 		glRotated(this.rotation, 0, 0, 1);
 		glTranslated(-renderArea.size.x / 2, -renderArea.size.y / 2, 0);
 //		GLHelper.drawRect(this.size.x, this.size.y);
-		GLHelper.renderTexturedQuad(0, 0, renderArea.size.x, renderArea.size.y, TextureLibrary.getTextureVector(this.getTextureForState(w)));
+		GLHelper.renderTexturedQuad(0, 0, renderArea.size.x, renderArea.size.y, this.getTextureForState(w));
 		glColor3f(1, 1, 1);
 		glPopMatrix();
 	}
@@ -183,7 +181,7 @@ public class Entity implements IWorldGraphic, Waypoint
 	public String getTextureForState(World w)
 	{
 		if(this.isDead)return this.name + "Dead";
-		if(this.speed > 0)return this.name + "Walking";
+		if(this.speed > 0)return this.name + "Moving";
 		return this.name + "Idle";
 	}
 
