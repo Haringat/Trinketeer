@@ -7,9 +7,9 @@ import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.util.HashMap;
 import java.util.List;
-
-import javax.swing.JDialog;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -82,8 +82,29 @@ public class DataLoader
 		}
 	}
 
-	public static void saveElements(List<Element> elements) {
-		// TODO Auto-generated method stub
+	public static void saveElements(HashMap<String, Element> elements) {
+		try{
+			JSONObject root = new JSONObject();
+			JSONArray a = new JSONArray();
+			for(String key: elements.keySet().toArray(new String[0])){
+				JSONObject e = new JSONObject();
+				e.put("color_red", elements.get(key).getColor().getX());
+				e.put("color_green", elements.get(key).getColor().getY());
+				e.put("color_blue", elements.get(key).getColor().getZ());
+				e.put("brightness", elements.get(key).getBrightness());
+				e.put("density", elements.get(key).getDensity());
+				e.put("break_on_impact", elements.get(key).shouldBreakOnImpact());
+				e.put("damage", elements.get(key).getDamage());
+				e.put("texture", elements.get(key).getTexture());
+				e.put("manamod", elements.get(key).getManaMod());
+				e.put("sizemod", elements.get(key).getSizeMod());
+				e.put("name", elements.get(key).getName());
+				a.put(e);
+			}
+			root.put("elements", a);
+			JSONUtil.putJSONObjectIntoFile(elementsFile, root);
+			
+		}catch(JSONException e){}
 		
 	}
 }

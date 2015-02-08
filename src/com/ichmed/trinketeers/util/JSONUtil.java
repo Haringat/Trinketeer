@@ -2,6 +2,9 @@ package com.ichmed.trinketeers.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Scanner;
 
 import org.json.JSONArray;
@@ -38,6 +41,19 @@ public class JSONUtil
 		}
 
 		return null;
+	}
+	
+	public static void putJSONObjectIntoFile(File f, JSONObject src){
+		FileWriter w;
+		try {
+			String res = src.toString();
+			if(res != null){
+				w = new FileWriter(f);
+				w.write(res);
+				w.close();
+			}
+		}catch(IOException e){}
+		
 	}
 
 }
