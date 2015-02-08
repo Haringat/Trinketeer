@@ -31,6 +31,8 @@ public class World
 	List<IGraphic> uiGraphics = new ArrayList<>();
 	public Level currentLevel;
 	public int currentHeight = 0;
+	
+	public static final Vector3f LIGHT_DAYTIME = new Vector3f(0.5f, 0.5f, 0.65f), LIGHT_FULL_DARK = new Vector3f();
 
 	public final String name = "world_0";
 
@@ -147,6 +149,8 @@ public class World
 
 	public void tick()
 	{
+		if(currentHeight == 0) LightRenderer.setAmbientLight(LIGHT_DAYTIME);
+		else LightRenderer.setAmbientLight(LIGHT_FULL_DARK);
 		if (currentLevel.entities.size() > 0) currentLevel.entitiesNextTick = new ArrayList<Entity>(currentLevel.entities);
 		for (Entity e : currentLevel.entities)
 			e.tick(this);

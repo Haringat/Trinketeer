@@ -44,6 +44,7 @@ public class BehaviourCastSpellAtTarget extends Behaviour
 			this.cooldown = spell.cooldown;
 			return true;
 		}
+		else if(this.cooldown < spell.cooldown / 2 && e != null) performer.behaviourString = "Casting";
 		return false;
 	}
 

@@ -59,11 +59,11 @@ public class Level
 		world.player.setCenter(new Vector2f(0, -1.2f));
 		for (int i = -8; i < 8; i++)
 		{
-			Chunk.setTile(i, -8, level, 3);
+			if (level != 0) Chunk.setTile(i, -8, level, 3);
 			for (int j = -7; j < 8; j++)
-			{
+
 				Chunk.setTile(i, j, level, 1);
-			}
+
 		}
 		for (int i = 0; i < 4; i++)
 		{
@@ -73,7 +73,7 @@ public class Level
 				Chunk.setTile(-2 + i, 7 + j, level, 1);
 				Chunk.setTile(-2 + i, -11 + j, level, 1);
 			}
-			Chunk.setTile(-2 + i, -11, level, 3);
+			if (level != 0) Chunk.setTile(-2 + i, -11, level, 3);
 		}
 		world.spawn((new Torch()).setCenter(new Vector2f(-0.1f, 0.8f)));
 		world.spawn((new Torch()).setCenter(new Vector2f(0.1f, 0.8f)));
@@ -88,8 +88,6 @@ public class Level
 		{
 			for (int i = 0; i < 5; i++)
 				spawn((new SpellScroll()).setCenter(new Vector2f(-0.8f + (i / 10f) * 4, 0f)), false, false);
-			for (int i = 0; i < 4; i++)
-				spawn((new Torch()).setCenter(new Vector2f(-0.6f + (i / 10f) * 4, 0f)), false, false);
 
 		}
 	}

@@ -4,6 +4,7 @@ import org.lwjgl.util.vector.Vector2f;
 
 import com.ichmed.trinketeers.ai.BehaviourAttackTarget;
 import com.ichmed.trinketeers.ai.BehaviourFollowTarget;
+import com.ichmed.trinketeers.ai.BehaviourHiveMindFollowTarget;
 import com.ichmed.trinketeers.ai.BehaviourTurnToCurrentWaypoint;
 import com.ichmed.trinketeers.ai.BehaviourWander;
 import com.ichmed.trinketeers.entity.Entity;
@@ -27,8 +28,9 @@ public class Zombie extends Entity
 		this.name = "zombie";
 		this.behaviours.add(new BehaviourTurnToCurrentWaypoint());
 		this.behaviours.add(new BehaviourFollowTarget(0.005f, Player.class));
-		this.behaviours.add(new BehaviourWander(0.001f));
+		this.behaviours.add(new BehaviourWander(0.001f, 110, 30));
 		this.behaviours.add(new BehaviourAttackTarget(2f, 0.1f, Player.class));
+		this.behaviours.add(new BehaviourHiveMindFollowTarget(Player.class, Zombie.class, this.visionRange * 2.5f, 0.005f));
 	}
 	
 	@Override

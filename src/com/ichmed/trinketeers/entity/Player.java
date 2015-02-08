@@ -72,7 +72,7 @@ public class Player extends Entity
 		shotCooldownLeft--;
 		shotCooldownRight--;
 
-		if (world.getListOfIntersectingEntities(this, true).size() > 0) System.out.println("Yay, I intersect! Wait... what? I totally should not be doing that!");
+		if (!this.isDead && world.getListOfIntersectingEntities(this, true).size() > 0) System.out.println("Yay, I intersect! Wait... what? I totally should not be doing that!");
 
 		if (this.currentSpellLeft != null && glfwGetMouseButton(Game.window, GLFW_MOUSE_BUTTON_1) == 1 && shotCooldownLeft <= 0 && this.mana >= currentSpellLeft.getManaCost())
 		{

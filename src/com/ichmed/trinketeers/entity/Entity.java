@@ -48,9 +48,11 @@ public class Entity implements IWorldGraphic, Waypoint
 	public float visionRange = 0.7f;
 	public int attackCooldown, maxAttackcooldown;
 	public String name = "test";
+	public String behaviourString = null;
 
 	public void tick(World world)
 	{
+		behaviourString = null;
 		if (this.getLight() != null) this.getLight().setPosition(this.getCenter());
 		if (direction.length() > 0) direction.normalise();
 		if (this.isDead) despawnCountDown--;
@@ -180,9 +182,10 @@ public class Entity implements IWorldGraphic, Waypoint
 	
 	public String getTextureForState(World w)
 	{
+		if( this.behaviourString != null) return this.name + behaviourString;
 		if(this.isDead)return this.name + "Dead";
 		if(this.speed > 0)return this.name + "Moving";
-		return this.name + "Idle";
+		return this.name + "Idle_" + (this.ticksExisted % 240) / 60;
 	}
 
 	protected void renderHitBox(World w)

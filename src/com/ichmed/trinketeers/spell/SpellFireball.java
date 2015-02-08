@@ -16,11 +16,11 @@ public class SpellFireball extends Spell
 		amount = 1;
 		formation = new Single();
 		size = new Vector2f(0.1f, 0.1f);
-		speed = 0.01f;
+		speed = 0.02f;
 		lifespan = 100;
 		lifespanVar = 0;
 		wobble = 0.1f;
-		cooldown = 25;
+		cooldown = 50;
 		texture = "fireballRed.png";
 
 		args.put("Spray", 0.7f);

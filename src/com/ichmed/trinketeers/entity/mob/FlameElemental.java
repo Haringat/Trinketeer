@@ -32,9 +32,9 @@ public class FlameElemental extends Entity
 		this.name = "flameElemental";
 		this.behaviours.add(new BehaviourTurnToCurrentWaypoint());
 		this.behaviours.add(new BehaviourFollowTarget(0.008f, Player.class));
-		this.behaviours.add(new BehaviourWander(0.003f));
-		this.behaviours.add(new BehaviourHoldDistanceToTarget(0.5f, Player.class));
-		this.behaviours.add(new BehaviourCastSpellAtTarget(new SpellFireball(), 0.5f, Player.class));
+		this.behaviours.add(new BehaviourWander(0.003f, 0, 0));
+		this.behaviours.add(new BehaviourHoldDistanceToTarget(0.45f, Player.class));
+		this.behaviours.add(new BehaviourCastSpellAtTarget(new SpellFireball(), 0.55f, Player.class));
 		this.behaviours.add(new BehaviourAttackTarget(1f, 0.01f, Player.class));
 	}
 	

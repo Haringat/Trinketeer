@@ -11,7 +11,7 @@ public class ManaBubble extends Pickup
 {
 	public ManaBubble(float min, float max)
 	{
-		this.name = "manBubble";
+		this.name = "manaBubble";
 		this.mana = min + (float) Math.random() * (max - min);
 		this.size.x = this.size.y = (float) (Math.sqrt(this.mana)) / 100f;
 		this.movementDelay = 5;

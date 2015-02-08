@@ -186,4 +186,9 @@ public class LightRenderer
 		glValidateProgram(shaderProgram);
 		glEnable(GL_STENCIL_TEST);
 	}
+
+	public static void setAmbientLight(Vector3f light)
+	{
+		setAmbientLight(light.x, light.y, light.z);
+	}
 }

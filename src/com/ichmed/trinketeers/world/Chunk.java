@@ -9,10 +9,19 @@ public class Chunk
 	public static final int chunkSize = 16;
 	public static final int clusterSize = 4;
 	public int[] tiles = new int[chunkSize * chunkSize];
+	
+	public int posX, posY, posZ;
+
+	public Chunk(int x, int y, int z)
+	{
+		this.posX = x;
+		this.posY = y;
+		this.posZ = z;
+	}
 
 	public static Chunk createNewChunk(int x, int y, int z)
 	{
-		Chunk c = new Chunk();
+		Chunk c = new Chunk(x, y, z);
 		c.populate();
 		chunks.put(getHashString(x, y, z), c);
 		return c;
@@ -20,7 +29,8 @@ public class Chunk
 
 	public void populate()
 	{
-		for(int i =0; i < chunkSize * chunkSize; i++) tiles[i] = 2;
+		if(this.posZ == 0) for(int i =0; i < chunkSize * chunkSize; i++) tiles[i] = 4;
+		else for(int i =0; i < chunkSize * chunkSize; i++) tiles[i] = 2;
 	}
 
 	public static String getHashString(int x, int y, int z)
