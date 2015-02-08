@@ -7,7 +7,6 @@ import org.lwjgl.util.vector.Vector2f;
 
 import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.entity.Torch;
-import com.ichmed.trinketeers.entity.Wall;
 import com.ichmed.trinketeers.entity.pickup.Chest;
 import com.ichmed.trinketeers.entity.pickup.LevelExit;
 import com.ichmed.trinketeers.entity.pickup.SpellScroll;
@@ -59,46 +58,23 @@ public class Level
 	{
 		world.player.setCenter(new Vector2f(0, -1.2f));
 		for (int i = -8; i < 8; i++)
-			for(int j = -8; j < 8; j++)
+		{
+			Chunk.setTile(i, -8, level, 3);
+			for (int j = -7; j < 8; j++)
 			{
 				Chunk.setTile(i, j, level, 1);
 			}
+		}
 		for (int i = 0; i < 4; i++)
-				for(int j = 0; j < 3; j++)
-				{
-					Chunk.setTile(-2 + i, 8 + j, level, 1);
-					Chunk.setTile(-2 + i, -11 + j, level, 1);
-					
-				}
-		for (int i = -10; i < -1; i++)
 		{
-			spawn((new Wall()).setCenter(new Vector2f(i / 10f, 1f)), false, false);
-			spawn((new Wall()).setCenter(new Vector2f(i / 10f, -1f)), false, false);
-		}
-		for (int i = 2; i < 11; i++)
-		{
-			spawn((new Wall()).setCenter(new Vector2f(i / 10f, 1f)), false, false);
-			spawn((new Wall()).setCenter(new Vector2f(i / 10f, -1f)), false, false);
-		}
-		for (int i = -9; i < 10; i++)
-		{
-			spawn((new Wall()).setCenter(new Vector2f(1, i / 10f)), false, false);
-			spawn((new Wall()).setCenter(new Vector2f(-1, i / 10f)), false, false);
 
+			for (int j = 0; j < 4; j++)
+			{
+				Chunk.setTile(-2 + i, 7 + j, level, 1);
+				Chunk.setTile(-2 + i, -11 + j, level, 1);
+			}
+			Chunk.setTile(-2 + i, -11, level, 3);
 		}
-		for (int i = 0; i < 3; i++)
-		{
-			spawn((new Wall()).setCenter(new Vector2f(-0.2f, 1.1f + i / 10f)), false, false);
-			spawn((new Wall()).setCenter(new Vector2f(0.2f, 1.1f + i / 10f)), false, false);
-			spawn((new Wall()).setCenter(new Vector2f(-0.2f, -1.1f - i / 10f)), false, false);
-			spawn((new Wall()).setCenter(new Vector2f(0.2f, -1.1f - i / 10f)), false, false);
-		}
-		for (int i = 0; i < 5; i++)
-		{
-			spawn((new Wall()).setCenter(new Vector2f(-0.2f + i / 10f, 1.3f)), false, false);
-			spawn((new Wall()).setCenter(new Vector2f(-0.2f + i / 10f, -1.3f)), false, false);
-		}
-		
 		world.spawn((new Torch()).setCenter(new Vector2f(-0.1f, 0.8f)));
 		world.spawn((new Torch()).setCenter(new Vector2f(0.1f, 0.8f)));
 		world.spawn((new Torch()).setCenter(new Vector2f(-0.1f, -0.8f)));

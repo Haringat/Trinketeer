@@ -20,6 +20,7 @@ public class Chunk
 
 	public void populate()
 	{
+		for(int i =0; i < chunkSize * chunkSize; i++) tiles[i] = 2;
 	}
 
 	public static String getHashString(int x, int y, int z)

@@ -6,7 +6,6 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,7 +48,6 @@ public class Game
 		{
 			init();
 			world = new World();
-			ArrayList<String[]> l = new ArrayList<>();
 			TextureLibrary.loadTextureLibrary("resc/textures/defaultLibrary");
 			loop();
 

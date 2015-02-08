@@ -123,7 +123,7 @@ public class Entity implements IWorldGraphic, Waypoint
 		float speedMod = (float) Math.pow(2, iteration);
 		Vector2f iteratedSpeed = new Vector2f((this.direction.x / speedMod) * this.speed, 0);
 		AxisAllignedBoundingBox predictedPosition = new AxisAllignedBoundingBox(position.x + iteratedSpeed.x, position.y + iteratedSpeed.y, size.x, size.y);
-		if (world.getListOfIntersectingEntities(predictedPosition, exclude, true).size() == 0)
+		if (world.getListOfIntersectingEntities(predictedPosition, exclude, true).size() == 0 && !world.isPositionStuckInGeometry(predictedPosition, world.currentHeight))
 		{
 			this.position.translate(iteratedSpeed.x, iteratedSpeed.y);
 			return true;
@@ -142,7 +142,7 @@ public class Entity implements IWorldGraphic, Waypoint
 		float speedMod = (float) Math.pow(2, iteration);
 		Vector2f iteratedSpeed = new Vector2f(0, (this.direction.y / speedMod) * this.speed);
 		AxisAllignedBoundingBox predictedPosition = new AxisAllignedBoundingBox(position.x + iteratedSpeed.x, position.y + iteratedSpeed.y, size.x, size.y);
-		if (world.getListOfIntersectingEntities(predictedPosition, exclude, true).size() == 0)
+		if (world.getListOfIntersectingEntities(predictedPosition, exclude, true).size() == 0 && !world.isPositionStuckInGeometry(predictedPosition, world.currentHeight))
 		{
 			this.position.translate(iteratedSpeed.x, iteratedSpeed.y);
 			return true;

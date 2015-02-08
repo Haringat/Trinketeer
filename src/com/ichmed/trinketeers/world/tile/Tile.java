@@ -3,7 +3,6 @@ package com.ichmed.trinketeers.world.tile;
 import org.lwjgl.opengl.GL11;
 
 import com.ichmed.trinketeers.util.render.GLHelper;
-import com.ichmed.trinketeers.util.render.TextureLibrary;
 import com.ichmed.trinketeers.world.World;
 
 public class Tile
@@ -17,8 +16,8 @@ public class Tile
 	{
 		tiles[0] = new Tile(null, false, false);
 		tiles[1] = new Tile("floorMud", false, false);
-		tiles[2] = new Tile("wallBrick", true, true);
-		tiles[2] = new Tile("wallTop", true, false).setRenderInFront(true);
+		tiles[2] = new TileWallBrick("wallBrick", true, true);
+		tiles[3] = new TileWallTop("wallTop", true, false).setRenderInFront(true);
 	}
 
 	public Tile(String texture, boolean breakable, boolean massive)
@@ -27,6 +26,11 @@ public class Tile
 		this.texture = texture;
 		this.breakable = breakable;
 		this.massive = massive;
+	}
+	
+	public boolean renderInFront(World w, int x, int y)
+	{
+		return this.renderInFront;
 	}
 
 	public Tile setRenderInFront(boolean b)
@@ -42,7 +46,7 @@ public class Tile
 
 	public void render(World w, int x, int y)
 	{
-		if (this.texture != null) GLHelper.renderTexturedQuad((.125f * x), (.125f * y), .125f, .125f, TextureLibrary.getTextureVector(texture));
+		if (this.getTexture(w, x, y) != null) GLHelper.renderTexturedQuad((.125f * x), (.125f * y), .125f, .125f, this.getTexture(w, x, y));
 		else
 		{
 			GL11.glDisable(GL11.GL_TEXTURE_2D);

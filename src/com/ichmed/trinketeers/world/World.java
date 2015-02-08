@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.entity.Player;
@@ -38,8 +38,8 @@ public class World
 	{
 		currentLevel = new Level(this, currentHeight);
 		currentLevel.init();
-		// LightRenderer.setAmbientLight(1f, 1f, 1f);
-		LightRenderer.setAmbientLight(0.0f, 0.0f, 0.0f);
+//		LightRenderer.setAmbientLight(1f, 1f, 1f);
+		 LightRenderer.setAmbientLight(0.0f, 0.0f, 0.0f);
 		spawn(player);
 
 		uiGraphics.add(new IGraphic()
@@ -180,7 +180,7 @@ public class World
 				int x = i + (int) ((player.getCenter().x - 1) * 8);
 				int y = j + (int) ((player.getCenter().y - 1) * 8);
 				Tile t = Tile.tiles[Chunk.getTile(x, y, currentHeight)];
-				if (t.renderInFront == b) t.render(this, x, y);
+				if (t.renderInFront(this, x, y) == b) t.render(this, x, y);
 			}
 	}
 
@@ -257,5 +257,40 @@ public class World
 		for (Entity e : l)
 			if (!e.isDead && entityClass.isAssignableFrom(e.getClass())) return e;
 		return null;
+	}
+
+	public boolean isPositionStuckInGeometry(AxisAllignedBoundingBox predictedPosition, int height)
+	{
+		int x1 = (int) (predictedPosition.pos.x * 8);
+		int x2 = (int) ((predictedPosition.pos.x + predictedPosition.size.x) * 8);
+		int y1 = (int) (predictedPosition.pos.y * 8);
+		int y2 = (int) ((predictedPosition.pos.y + predictedPosition.size.y) * 8);
+
+		if (predictedPosition.pos.x <= 0) x1--;
+		if ((predictedPosition.pos.x + predictedPosition.size.x) > 0) x2++;
+		if (predictedPosition.pos.y < 0) y1--;
+		if((predictedPosition.pos.y + predictedPosition.size.y) > 0)y2++;
+
+		int i = x1;
+		do
+		{
+			int j = y1;
+			do
+			{
+
+				if (isPointStuckInGeometry(new Vector3f(i, j, height))) return true;
+				j++;
+			} while (j < y2);
+			i++;
+		} while (i < x2);
+
+		return false;
+	}
+
+	public boolean isPointStuckInGeometry(Vector3f point)
+	{
+		int pointX = (int) (point.x);
+		int pointY = (int) (point.y);
+		return Tile.tiles[Chunk.getTile(pointX, pointY, (int) point.z)].massive;
 	}
 }
