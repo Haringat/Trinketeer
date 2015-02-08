@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -21,6 +22,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
@@ -33,25 +35,42 @@ public class Editor implements MouseListener, ActionListener
 	private List<Element> elements;
 	private JFrame editorframe = new JFrame();
 	private JPanel editor;
-	
 	private JButton add;
 	private JButton save;
 	private JButton edittl;
-	
 	private JScrollPane sp;
+	
+	private HashMap<Integer, int[]> id = new HashMap<Integer, int[]>();
 
 	public Editor(){
+		editorframe.setResizable(false);
 		DataLoader.loadElements();
+		editor = new JPanel();
+		GridBagConstraints c = new GridBagConstraints();
 		elements = new ArrayList<Element>(Element.elements.values());
 		Container pane = editorframe.getContentPane();
-		editor = new JPanel();
-		sp = new JScrollPane(editor,VERTICAL_SCROLLBAR_AS_NEEDED,HORIZONTAL_SCROLLBAR_NEVER);
+		pane.setLayout(new GridBagLayout());
+		c.gridx = 2;
+		c.gridy = 0;
+		c.gridheight = 3;
+		c.fill = VERTICAL;
+		c.anchor = EAST;
+		JScrollBar vbar = new JScrollBar(JScrollBar.VERTICAL);
+		vbar.setToolTipText("hallo");
+		pane.add(vbar);
+		vbar.setVisible(true);
+		sp = new JScrollPane(editor);
+		sp.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);
+		sp.setVerticalScrollBar(vbar);
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridwidth = 2;
+		c.gridheight = 3;
 		pane.add(sp);
+		//pane.add(editor);
 		editorframe.setMaximumSize(new Dimension(
 				(int)Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2,
 				(int)Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2));
-		
-		
 		edittl = new JButton("edit texturelib");
 		edittl.addActionListener(this);
 		add = new JButton("+");
@@ -79,94 +98,157 @@ public class Editor implements MouseListener, ActionListener
 
 	private void addHeaders(){
 		GridBagConstraints c = new GridBagConstraints();
+		int[] numbers = new int[8];
+		int current = editor.getComponentCount();
+		//id.put("labels", )
 		c.insets = new Insets(5,5,5,5);
-		c.gridy = -1;
-		c.gridx= 0;
+		c.gridy = 0;
 		c.anchor = NORTH;
 		
 		c.gridx = 0;
-		editor.add(new JLabel("texture"), c);
+		numbers[0] = current;
+		editor.add(new JLabel("texture"), c, current);
 		
 		c.gridx = 1;
-		editor.add(new JLabel("name"), c);
+		current++;
+		numbers[1] = current;
+		editor.add(new JLabel("name"), c, current);
 		
 		c.gridx = 2;
-		editor.add(new JLabel("damage"), c);
+		current++;
+		numbers[2] = current;
+		editor.add(new JLabel("damage"), c, current);
 		
 		c.gridx = 3;
-		editor.add(new JLabel("color"), c);
+		current++;
+		numbers[3] = current;
+		editor.add(new JLabel("color"), c, current);
 		
 		c.gridx = 4;
-		editor.add(new JLabel("brightness"), c);
+		current++;
+		numbers[4] = current;
+		editor.add(new JLabel("brightness"), c, current);
 		
 		c.gridx = 5;
-		editor.add(new JLabel("breaks on impact"), c);
+		current++;
+		numbers[5] = current;
+		editor.add(new JLabel("breaks on impact"), c, current);
 		
 		c.gridx = 6;
-		editor.add(new JLabel("density"), c);
+		current++;
+		numbers[6] = current;
+		editor.add(new JLabel("density"), c, current);
 		
 		c.gridx = 7;
-		editor.add(new JLabel("remove"), c);
+		current++;
+		numbers[7] = current;
+		editor.add(new JLabel("remove"), c, current);
+		
+		id.put(new Integer(0), numbers);
 	}
 
 	private void addRow(){
-		elements.add(new Element());
-		addRow(elements.get(elements.size()-1), elements.size());
+		if(elements.size() == 0){
+			editor.removeAll();
+			addHeaders();
+			elements.add(new Element());
+			editorframe.invalidate();
+			addRow(elements.get(elements.size()-1), elements.size());
+			//addButtons();
+		} else {
+			elements.add(new Element());
+			addRow(elements.get(elements.size()-1), elements.size());
+		}
 	}
 
 	private void addRow(Element e, int i) {
+		editor.remove(add);
+		editor.remove(save);
+		editor.remove(edittl);
+		int[] numbers = new int[8];
+		int current = editor.getComponentCount();
 		GridBagConstraints c = new GridBagConstraints();
+		
 		c.insets = new Insets(5,5,5,5);
-		c.gridy = i;
+		c.gridy = i+1;
+		c.gridx = 0;
 		c.anchor = CENTER;
-		Preview preview = new Preview(elements.get(i-1).getTexture());
+		Preview preview = new Preview(e.getTexture());
 		preview.setVisible(true);
 		preview.repaint();
-		editor.add(preview, c);
+		numbers[0] = current;
+		editor.add(preview, c, current);
 		
 		c.gridx = 1;
 		//c.fill = HORIZONTAL;
-		editor.add(new JTextField(e.getName(), 10), c);
+		current++;
+		numbers[1] = current;
+		editor.add(new JTextField(e.getName(), 10), c, current);
 		
 		c.gridx = 2;
-		editor.add(new JTextField(String.valueOf(e.getDamage()), 4), c);
+		current++;
+		numbers[2] = current;
+		editor.add(new JTextField(String.valueOf(e.getDamage()), 4), c, current);
 		
 		c.gridx = 3;
 		ColorField colorfield = new ColorField(e.getColor());
-		editor.add(colorfield, c);
+		current++;
+		numbers[3] = current;
+		editor.add(colorfield, c, current);
 		
 		c.gridx = 4;
 		JTextField brightness = new JTextField(String.valueOf(e.getBrightness()),5);
-		editor.add(brightness, c);
+		current++;
+		numbers[4] = current;
+		editor.add(brightness, c, current);
 		
 		c.gridx = 5;
-		editor.add(new JCheckBox("", e.shouldBreakOnImpact()), c);
+		current++;
+		numbers[5] = current;
+		editor.add(new JCheckBox("", e.shouldBreakOnImpact()), c, current);
 		
 		c.gridx = 6;
 		JTextField density = new JTextField(String.valueOf(e.getDensity()),5);
-		editor.add(density, c);
+		current++;
+		numbers[6] = current;
+		editor.add(density, c, current);
 		
 		c.gridx = 7;
 		JButton remove = new JButton("X");
 		remove.setName("remove "+String.valueOf(i-1));
+		addButtons();
 		remove.addActionListener(this);
-		editor.add(remove, c);
+		current++;
+		numbers[7] = current;
+		editor.add(remove, c, current);
+		editorframe.pack();
+		id.put(new Integer(i+1), numbers);
 	}
 	
 	private void addButtons(){
 		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = 0;
-		c.gridy = elements.size()+1;
-		c.fill = BOTH;
+		c.gridy = elements.size()+2;
+		c.fill = HORIZONTAL;
 		c.anchor = SOUTH;
 		c.gridx = 0;
 		editor.add(add,c);
 		
 		c.gridx = 1;
+		editor.add(edittl,c);
 		
+		c.gridx = 2;
 		c.gridwidth = REMAINDER;
 		editor.add(save,c);
 		editorframe.pack();
+	}
+
+	private void removeRow(int i){
+		System.out.println("deleting line "+String.valueOf(i));
+		for(int a : id.get(new Integer(i+1))){
+			System.out.println("removing component at "+String.valueOf(a));
+			editor.remove(a);
+		}
+		editor.repaint();
 	}
 
 	@Override
@@ -203,14 +285,16 @@ public class Editor implements MouseListener, ActionListener
 				&& ((JButton) e.getSource()).getName().contains("remove")){
 			int index = Integer.valueOf(((JButton) e.getSource()).getName().substring(
 					((JButton) e.getSource()).getName().indexOf(" ")+1));
-			elements.remove(index);
+			/*elements.remove(index);
 			editorframe.setIgnoreRepaint(true);
 			editor.removeAll();
 			addHeaders();
 			addRows();
 			addButtons();
 			editorframe.setIgnoreRepaint(false);
-			editorframe.repaint();
+			editorframe.repaint();*/
+			elements.remove(index);
+			removeRow(index);
 		}
 	}
 
@@ -218,127 +302,4 @@ public class Editor implements MouseListener, ActionListener
 		// TODO Auto-generated method stub
 		
 	}
-
-	/*public void start()
-	{
-		String s = getInput();
-
-		if (s.equals("quit")) run = false;
-		else if (s.startsWith("edit elements")) editElements();
-	}*/
-
-	/*private void editElements(File file)
-	{
-		boolean b = true;
-		JSONObject elements = getJSONObjectFromFile(file);
-		while (b)
-		{
-			System.out.println("-- Editor -- [Hub > Elements]");
-			String s = getInput();
-			if (s.equals("list"))
-			{
-				try
-				{
-					JSONArray a = elements.getJSONArray("elements");
-					for (int i = 0; i < a.length(); i++)
-					{
-						System.out.println(((JSONObject) a.get(i)).get("name"));
-					}
-				} catch (JSONException e)
-				{
-					e.printStackTrace();
-				}
-			} else if (s.equals("save"))
-			{
-				try
-				{
-					FileWriter o = new FileWriter(elementsFile);
-					o.write(elements.toString());
-					o.flush();
-					o.close();
-					out(">> Saved data to " + elementsFile.getAbsolutePath() + "\n");
-				} catch (IOException e)
-				{
-					e.printStackTrace();
-				}
-			} else if (s.startsWith("quit")) b = false;
-			else if (s.equals("create"))
-			{
-				try
-				{
-					out("Enter Name: ");
-					String name = getInput();
-					JSONObject newElement = new JSONObject();
-					newElement.put("name", name);
-
-					for (String key : defaultValues.keySet())
-						newElement.put(key, defaultValues.get(key));
-
-					JSONArray a = elements.getJSONArray("elements");
-					a.put(newElement);
-					elements.put("elements", a);
-
-					out("Creted new element " + name + "\n");
-				} catch (JSONException e)
-				{}
-			} else if (s.startsWith("edit"))
-			{
-				try
-				{
-					out("Enter name: ");
-					String name = getInput();
-
-					JSONObject element = getForNameFromArray(name, elements.getJSONArray("elements"));
-					if (element != null)
-					{
-						boolean editB = true;
-						while (editB)
-						{
-							out("-- Editor -- [Hub > Elements > " + name + "]\n");
-							String com = getInput();
-							if (com.equals("quit")) editB = false;
-							else if (com.startsWith("put "))constraints
-							{
-								String key = com.split(" ")[1].toLowerCase();
-								String value = com.split(" ")[2];
-								element.put(key, value);
-							} else if (com.equals("list"))
-							{
-								@SuppressWarnings("rawtypes")
-								Iterator i = element.keys();
-								while (i.hasNext())
-								{
-									String field = (String) i.next();
-									System.out.println(field + ": " + element.get(field));
-								}
-							}
-						}
-					}
-					else out("Element \"" + name + "\" does not exist\n");
-
-				} catch (JSONException e)
-				{
-					e.printStackTrace();
-				}
-
-			} else out("Unknown command \"" + s + "\"\n");
-		}
-	}
-
-
-	/*public String getInput()
-	{
-		try
-		{
-			return reader.readLine();
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		return "";
-	}
-	public void out(String s)
-	{
-		System.out.print(s);
-	}*/
 }
