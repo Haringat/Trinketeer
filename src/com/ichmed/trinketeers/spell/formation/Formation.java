@@ -29,7 +29,6 @@ public abstract class Formation
 
 		p.lifespan = spell.getLifespan();
 		p.trailDelay = p.maxTrailDelay = spell.trailDelay;
-		p.texture = spell.texture;
 		p.travelBeforeStandStill = spell.travelBeforeStandStill;
 		p.destroyOnImpact = spell.destroyOnImpact;
 

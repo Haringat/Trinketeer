@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 
 import com.ichmed.trinketeers.entity.Entity;
@@ -50,24 +51,20 @@ public class World
 				boolean b1 = player.currentSpellLeft != null;
 				boolean b2 = player.currentSpellRight != null;
 
-				TextureLibrary.bindTexture("resc/textures/scroll.png");
-				if (b1) GLHelper.drawRect(-1, 0.8f, 0.2f, 0.2f);
-				if (b2) GLHelper.drawRect(0.8f, 0.8f, 0.2f, 0.2f);
+				if (b1) GLHelper.renderTexturedQuad(-1, 0.8f, 0.2f, 0.2f, "scroll");
+				if (b2) GLHelper.renderTexturedQuad(0.8f, 0.8f, 0.2f, 0.2f, "scroll");
 
-				TextureLibrary.bindTexture("resc/textures/spellCooldownBar.png");
-				if (b1) GLHelper.drawRect(-0.79f, 0.8f, 0.02f, 0.2f - Math.max(0, ((float) player.shotCooldownLeft / (float) player.currentSpellLeft.cooldown) * 0.2f));
-				if (b2) GLHelper.drawRect(0.78f, 0.8f, 0.02f, 0.2f - Math.max(0, ((float) player.shotCooldownRight / (float) player.currentSpellRight.cooldown) * 0.2f));
+				if (b1) GLHelper.renderTexturedQuad(-0.79f, 0.8f, 0.02f, 0.2f - Math.max(0, ((float) player.shotCooldownLeft / (float) player.currentSpellLeft.cooldown) * 0.2f), "spellCooldownBar");
+				if (b2) GLHelper.renderTexturedQuad(0.78f, 0.8f, 0.02f, 0.2f - Math.max(0, ((float) player.shotCooldownRight / (float) player.currentSpellRight.cooldown) * 0.2f), "spellCooldownBar");
 
 				if (b1)
 				{
-					TextureLibrary.bindTexture(player.currentSpellLeft.texture);
-					GLHelper.drawRect(-0.975f, 0.825f, 0.15f, 0.15f);
+					GLHelper.renderTexturedQuad(-0.975f, 0.825f, 0.15f, 0.15f, player.currentSpellLeft.element.toLowerCase() + "Projectile");
 				}
 
 				if (b2)
 				{
-					TextureLibrary.bindTexture(player.currentSpellRight.texture);
-					GLHelper.drawRect(0.825f, 0.825f, 0.15f, 0.15f);
+					GLHelper.renderTexturedQuad(0.825f, 0.825f, 0.15f, 0.15f, player.currentSpellRight.element.toLowerCase() + "Projectile");
 				}
 				if (b1)
 				{
@@ -89,12 +86,10 @@ public class World
 			@Override
 			public void render()
 			{
-				float mana = 10 * (player.mana / player.maxMana);
+				float mana = player.mana / player.maxMana;
 				float start = -0.5f;
-				TextureLibrary.bindTexture("resc/textures/manaBarEmpty.png");
-				GLHelper.renderBar(start, 0.92f, 10, 1);
-				TextureLibrary.bindTexture("resc/textures/manaBarFull.png");
-				GLHelper.renderBar(start + (10 - mana) / 20, 0.92f, mana, 1);
+				GLHelper.renderTexturedQuad(start, 0.92f, 1, 0.05f, "manaBarEmpty");
+				GLHelper.renderTexturedQuad(start + (1 - mana) / 2f, 0.92f, mana, 0.05f, "manaBarFull");
 				GLHelper.renderText(0, 0.9f, "" + (int) player.mana, 0.002f, 0.002f, TrueTypeFont.ALIGN_CENTER);
 			}
 		});
@@ -105,15 +100,11 @@ public class World
 			@Override
 			public void render()
 			{
-				float health = 10 * (player.health / player.maxHealth);
+				float health = (player.health / player.maxHealth);
 				float start = -0.5f;
-				TextureLibrary.bindTexture("resc/textures/healthBarEmpty.png");
-				GLHelper.renderBar(start, 0.84f, 10, 1);
-				TextureLibrary.bindTexture("resc/textures/healthBarFull.png");
-				GLHelper.renderBar(start + (10 - health) / 20, 0.84f, health, 1);
-				GLHelper.renderText(0, 0.82f, "" + (int) player.health, 0.002f, 0.002f, TrueTypeFont.ALIGN_CENTER);
-
-				GLHelper.renderText(0, -0.82f, "" + "Coins: " + player.coins, 0.002f, 0.002f, TrueTypeFont.ALIGN_CENTER);
+				GLHelper.renderTexturedQuad(start, 0.85f, 1, 0.05f, "healthBarEmpty");
+				GLHelper.renderTexturedQuad(start + (1 - health) / 2f, 0.85f, health, 0.05f, "healthBarFull");
+				GLHelper.renderText(0, 0.83f, "" + (int) player.health, 0.002f, 0.002f, TrueTypeFont.ALIGN_CENTER);
 			}
 		});
 	}
@@ -167,23 +158,18 @@ public class World
 	{
 		// GLHelper.renderBackground(this);
 		glPushMatrix();
-		TextureLibrary.bindTexture("resc/textures/shadow.png");
 		Vector2f v = player.getCenter();
 		glTranslatef(-v.x, -v.y, 0);
 		renderChunks(false);
 		currentLevel.worldGraphics.sort(new GraphicSorterYAxis());
 		for (IWorldGraphic g : currentLevel.worldGraphics)
-		{
-			if(!(g instanceof Entity))System.out.println(g);
 			g.render(this);
-			
-		}
 		renderChunks(true);
 		glPopMatrix();
 		LightRenderer.renderLights(this, currentLevel.lights);
+		TextureLibrary.rebind();
 		for (IGraphic g : uiGraphics)
 			g.render();
-		TextureLibrary.bindTexture("resc/textures/shadow.png");
 	}
 
 	private void renderChunks(boolean b)

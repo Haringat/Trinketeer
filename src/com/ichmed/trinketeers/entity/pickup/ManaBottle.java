@@ -11,7 +11,7 @@ public class ManaBottle extends Pickup
 {
 	public ManaBottle(float min, float max)
 	{
-		this.texture = "resc/textures/" + "manaBottle.png";
+		this.name = "healthBottle";
 		this.mana = min + (float) Math.random() * (max - min);
 		this.size.x = this.size.y = (float) (Math.sqrt(this.mana)) / 100f;
 		this.movementDelay = 15;

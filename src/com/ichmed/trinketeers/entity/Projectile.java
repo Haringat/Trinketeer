@@ -102,6 +102,14 @@ public class Projectile extends Entity
 	{
 		this.controller = controller;
 	}
+	
+	
+
+	@Override
+	public String getTextureForState(World w)
+	{
+		return this.element.toLowerCase() + "Projectile";
+	}
 
 	@Override
 	protected void onDeath(World world)
