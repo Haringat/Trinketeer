@@ -40,7 +40,7 @@ import com.ichmed.trinketeers.util.render.TextureLibrary;
 public class Editor extends JFrame implements MouseListener, ActionListener
 {
 	private static final long serialVersionUID = -1549438543620749797L;
-	private List<Element> elements;
+	//private List<Element> elements;
 	private JPanel editor;
 	private JButton add;
 	private JButton save;
@@ -48,6 +48,7 @@ public class Editor extends JFrame implements MouseListener, ActionListener
 	private JScrollPane sp;
 	private JViewport vp;
 	
+	private HashMap<String, Element> elements = new HashMap<String, Element>();
 	private HashMap<JButton, Component[]> id = new HashMap<JButton, Component[]>();
 
 	public Editor(){
@@ -55,7 +56,8 @@ public class Editor extends JFrame implements MouseListener, ActionListener
 		DataLoader.loadElements();
 		editor = new JPanel();
 		GridBagConstraints c = new GridBagConstraints();
-		elements = new ArrayList<Element>(Element.elements.values());
+		//elements = new ArrayList<Element>(Element.elements.values());
+		elements = Element.elements;
 		Container pane = this.getContentPane();
 		pane.setLayout(new GridBagLayout());
 		c.gridx = 2;
@@ -72,10 +74,6 @@ public class Editor extends JFrame implements MouseListener, ActionListener
 		c.gridwidth = 2;
 		c.gridheight = 3;
 		pane.add(sp);
-		//pane.add(editor);
-		/*this.setMaximumSize(new Dimension(
-				(int)Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2,
-				(int)Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2));*/
 		edittl = new JButton("edit texturelib");
 		edittl.addActionListener(this);
 		add = new JButton("+");
@@ -96,8 +94,9 @@ public class Editor extends JFrame implements MouseListener, ActionListener
 	}
 
 	private void addRows(){
+		String[] ea = elements.keySet().toArray(new String[0]);
 		for(int i = 1; i <= elements.size(); i++){
-			addRow(elements.get(i-1),i);
+			addRow(elements.get(ea[i-1]),i);
 		}
 	}
 
@@ -133,8 +132,9 @@ public class Editor extends JFrame implements MouseListener, ActionListener
 	}
 
 	private void addRow(){
-			elements.add(new Element());
-			addRow(elements.get(elements.size()-1), elements.size());
+		Element e = new Element();
+		elements.put(e.getName(), e);
+		addRow(e, elements.size());
 	}
 
 	private void addRow(Element e, int i) {
@@ -183,7 +183,7 @@ public class Editor extends JFrame implements MouseListener, ActionListener
 		
 		c.gridx = 7;
 		JButton remove = new JButton("X");
-		remove.setName("remove "+String.valueOf(i-1));
+		remove.setName("remove "+e.getName());
 		addButtons();
 		remove.addActionListener(this);
 		comps[7] = remove;
@@ -265,8 +265,8 @@ public class Editor extends JFrame implements MouseListener, ActionListener
 		if(e.getSource() instanceof JButton
 				&& ((JButton) e.getSource()).getName() != null
 				&& ((JButton) e.getSource()).getName().contains("remove")){
-			int index = Integer.valueOf(((JButton) e.getSource()).getName().substring(
-					((JButton) e.getSource()).getName().indexOf(" ")+1));
+			String index = ((JButton) e.getSource()).getName().substring(
+					((JButton) e.getSource()).getName().indexOf(" ")+1);
 			elements.remove(index);
 			removeRow((JButton)e.getSource());
 		}
