@@ -10,6 +10,8 @@ import java.io.File;
 
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
 import com.ichmed.trinketeers.savefile.DataLoader;
@@ -19,8 +21,9 @@ public class Preview extends JComponent implements MouseListener{
 	
 	private static final long serialVersionUID = 4743724722914037048L;
 
-	Image image;
-	String path;
+	private Image image;
+	private String path;
+    protected transient ChangeEvent changeEvent;
 
 	public Preview(String path) {
 		setMinimumSize(new Dimension(32,32));
@@ -48,6 +51,10 @@ public class Preview extends JComponent implements MouseListener{
 		g.setColor(new Color(255,0,255));
 		g.fillRect(0, 0, getWidth(), getHeight());
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+	}
+	
+	public String getPath(){
+		return path;
 	}
 
 	@Override
@@ -84,6 +91,26 @@ public class Preview extends JComponent implements MouseListener{
 		
 	}
 
+	public void addChangeListener(ChangeListener l){
+		listenerList.add(ChangeListener.class, l);
+	}
+
+	public ChangeListener[] getChangeListeners() {
+        return listenerList.getListeners(ChangeListener.class);
+    }
+	
+	protected void fireStateChanged() {
+        Object[] listeners = listenerList.getListenerList();
+        for (int i = listeners.length-2; i>=0; i-=2) {
+            if (listeners[i]==ChangeListener.class) {
+                // Lazily create the event:
+                if (changeEvent == null)
+                    changeEvent = new ChangeEvent(this);
+                ((ChangeListener)listeners[i+1]).stateChanged(changeEvent);
+            }
+        }
+    }
+	
 	@Override
 	public void mousePressed(MouseEvent e) {}
 

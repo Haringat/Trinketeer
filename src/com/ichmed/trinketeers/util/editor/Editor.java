@@ -3,15 +3,17 @@ package com.ichmed.trinketeers.util.editor;
 import static java.awt.GridBagConstraints.*;
 import static javax.swing.JScrollPane.*;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -26,21 +28,23 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JViewport;
 import javax.swing.WindowConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
 
 import com.ichmed.trinketeers.spell.element.Element;
 import com.ichmed.trinketeers.savefile.DataLoader;
 import com.ichmed.trinketeers.util.render.TextureLibrary;
 
-public class Editor extends JFrame implements MouseListener, ActionListener
+public class Editor extends JFrame implements MouseListener, ActionListener, ItemListener, DocumentListener, ChangeListener
 {
 	private static final long serialVersionUID = -1549438543620749797L;
-	//private List<Element> elements;
 	private JPanel editor;
 	private JButton add;
 	private JButton save;
@@ -49,7 +53,7 @@ public class Editor extends JFrame implements MouseListener, ActionListener
 	private JViewport vp;
 	
 	private HashMap<String, Element> elements = new HashMap<String, Element>();
-	private HashMap<JButton, Component[]> id = new HashMap<JButton, Component[]>();
+	private HashMap<String, Component[]> id = new HashMap<String, Component[]>();
 
 	public Editor(){
 		//this.setResizable(false);
@@ -138,58 +142,74 @@ public class Editor extends JFrame implements MouseListener, ActionListener
 	}
 
 	private void addRow(Element e, int i) {
-		editor.remove(add);
-		editor.remove(save);
-		editor.remove(edittl);
-		Component[] comps = new Component[8];
-		GridBagConstraints c = new GridBagConstraints();
+		if(elements.containsValue(e)){
+			editor.remove(add);
+			editor.remove(save);
+			editor.remove(edittl);
+			Component[] comps = new Component[8];
+			GridBagConstraints c = new GridBagConstraints();
 		
-		c.insets = new Insets(5,5,5,5);
-		c.gridy = i+1;
-		c.gridx = 0;
-		c.anchor = CENTER;
-		Preview preview = new Preview(e.getTexture());
-		preview.setVisible(true);
-		preview.repaint();
-		comps[0] = preview;
-		editor.add(comps[0], c);
+			c.insets = new Insets(5,5,5,5);
+			c.gridy = i+1;
+			c.gridx = 0;
+			c.anchor = CENTER;
+			Preview preview = new Preview(e.getTexture());
+			preview.setVisible(true);
+			preview.repaint();
+			comps[0] = preview;
+			comps[0].setName("texture");
+			preview.addChangeListener(this);
+			editor.add(comps[0], c);
 		
-		c.gridx = 1;
-		comps[1] = new JTextField(e.getName(), 10);
-		editor.add(comps[1], c);
+			c.gridx = 1;
+			comps[1] = new JTextField(e.getName(), 10);
+			((JTextField) comps[1]).getDocument().addDocumentListener(this);
+			comps[1].setName("name");
+			editor.add(comps[1], c);
 		
-		c.gridx = 2;
-		comps[2] = new JTextField(String.valueOf(e.getDamage()), 4);
-		editor.add(comps[2], c);
+			c.gridx = 2;
+			comps[2] = new JTextField(String.valueOf(e.getDamage()), 4);
+			((JTextField) comps[2]).getDocument().addDocumentListener(this);
+			comps[2].setName("damage");
+			editor.add(comps[2], c);
 		
-		c.gridx = 3;
-		ColorField colorfield = new ColorField(e.getColor());
-		comps[3] = colorfield;
-		editor.add(comps[3], c);
+			c.gridx = 3;
+			comps[3] = new ColorField(e.getColor());
+			((ColorField) comps[3]).addChangeListener(this);
+			comps[3].setName("color");
+			editor.add(comps[3], c);
 		
-		c.gridx = 4;
-		JTextField brightness = new JTextField(String.valueOf(e.getBrightness()),5);
-		comps[4] = brightness;
-		editor.add(comps[4], c);
+			c.gridx = 4;
+			comps[4] = new JTextField(String.valueOf(e.getBrightness()),5);
+			((JTextField) comps[4]).getDocument().addDocumentListener(this);
+			comps[4].setName("brightness");
+			editor.add(comps[4], c);
 		
-		c.gridx = 5;
-		comps[5] = new JCheckBox("", e.shouldBreakOnImpact());
-		editor.add(comps[5], c);
+			c.gridx = 5;
+			comps[5] = new JCheckBox("", e.shouldBreakOnImpact());
+			((JCheckBox) comps[5]).addChangeListener(this);
+			comps[5].setName("boi");
+			editor.add(comps[5], c);
 		
-		c.gridx = 6;
-		JTextField density = new JTextField(String.valueOf(e.getDensity()),5);
-		comps[6] = density;
-		editor.add(comps[6], c);
+			c.gridx = 6;
+			comps[6] = new JTextField(String.valueOf(e.getDensity()),5);
+			((JTextField) comps[6]).getDocument().addDocumentListener(this);
+			comps[6].setName("density");
+			editor.add(comps[6], c);
 		
-		c.gridx = 7;
-		JButton remove = new JButton("X");
-		remove.setName("remove "+e.getName());
-		addButtons();
-		remove.addActionListener(this);
-		comps[7] = remove;
-		editor.add(remove, c);
-		this.pack();
-		id.put(remove, comps);
+			c.gridx = 7;
+			JButton remove = new JButton("X");
+			remove.setName("remove "+e.getName());
+			addButtons();
+			remove.addActionListener(this);
+			comps[7] = remove;
+			editor.add(remove, c);
+
+			editor.repaint();
+			
+			//pack();
+			id.put(e.getName(), comps);
+		}
 	}
 	
 	private void addButtons(){
@@ -206,15 +226,17 @@ public class Editor extends JFrame implements MouseListener, ActionListener
 		c.gridx = 2;
 		c.gridwidth = REMAINDER;
 		editor.add(save,c);
-		this.pack();
+		editor.repaint();
+		//this.pack();
 	}
 
-	private void removeRow(JButton index){
+	private void removeRow(String index){
+		elements.remove(index);
 		for(Component a : id.get(index)){
 			editor.remove(a);
 		}
 		editor.repaint();
-		this.pack();
+		//this.pack();
 	}
 
 	@Override
@@ -240,6 +262,7 @@ public class Editor extends JFrame implements MouseListener, ActionListener
 		}
 		if(e.getSource() instanceof JButton
 				&& e.getSource().equals(save)){
+			refreshHashmap();
 			DataLoader.saveElements(elements);
 		}
 		if(e.getSource() instanceof JButton
@@ -267,8 +290,43 @@ public class Editor extends JFrame implements MouseListener, ActionListener
 				&& ((JButton) e.getSource()).getName().contains("remove")){
 			String index = ((JButton) e.getSource()).getName().substring(
 					((JButton) e.getSource()).getName().indexOf(" ")+1);
-			elements.remove(index);
-			removeRow((JButton)e.getSource());
+			removeRow(index);
+		}
+	}
+
+	private void refreshHashmap() {
+		for(String key: elements.keySet().toArray(new String[0])){
+			elements.remove(key);
+		}
+		for(String key: id.keySet().toArray(new String[0])){
+			Component[] comps = id.get(key);
+			for(Component comp: comps){
+				Element e = new Element();
+				switch(comp.getName()){
+				case "texture":
+					e.setTexture(((Preview)comp).getPath());
+					break;
+				case "name":
+					e.setName(((JTextField)comp).getText());
+					break;
+				case "damage":
+					e.setDamage(Float.valueOf(((JTextField)comp).getText()));
+					break;
+				case "color":
+					Color c = ((ColorField)comp).getColor();
+					e.setColor(c.getRed(),c.getGreen(),c.getBlue());
+					break;
+				case "brightness":
+					e.setBrightness(Float.valueOf(((JTextField) comp).getText()));
+					break;
+				case "boi":
+					e.setBreakOnImpact(((JCheckBox) comp).isSelected());
+					break;
+				case "density":
+					e.setDensity(Float.valueOf(((JTextField)comp).getText()));
+				}
+				elements.put(e.getName(), e);
+			}
 		}
 	}
 
@@ -294,5 +352,35 @@ public class Editor extends JFrame implements MouseListener, ActionListener
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public void itemStateChanged(ItemEvent e) {
+		refreshHashmap();
+		
+	}
+
+	@Override
+	public void insertUpdate(DocumentEvent e) {
+		refreshHashmap();
+		
+	}
+
+	@Override
+	public void removeUpdate(DocumentEvent e) {
+		refreshHashmap();
+		
+	}
+
+	@Override
+	public void changedUpdate(DocumentEvent e) {
+		refreshHashmap();
+		
+	}
+
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		refreshHashmap();
+		
 	}
 }
