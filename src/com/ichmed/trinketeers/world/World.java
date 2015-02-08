@@ -22,6 +22,7 @@ import com.ichmed.trinketeers.util.render.TextureLibrary;
 import com.ichmed.trinketeers.util.render.TrueTypeFont;
 import com.ichmed.trinketeers.util.render.light.ILight;
 import com.ichmed.trinketeers.util.render.light.LightRenderer;
+import com.ichmed.trinketeers.world.tile.Tile;
 
 public class World
 {
@@ -193,7 +194,7 @@ public class World
 				int x = i + (int) ((player.getCenter().x - 1) * 8);
 				int y = j + (int) ((player.getCenter().y - 1) * 8);
 				Tile t = Tile.tiles[Chunk.getTile(x, y, currentHeight)];
-				if (t.renderInFront == b) t.render(x, y);
+				if (t.renderInFront == b) t.render(this, x, y);
 			}
 	}
 
