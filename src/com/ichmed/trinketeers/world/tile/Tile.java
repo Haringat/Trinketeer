@@ -40,14 +40,14 @@ public class Tile
 		return this;
 	}
 	
-	public String getTexture(World w, int x, int y)
+	public String getTexture(World w, int x, int y, int z)
 	{
 		return texture;
 	}
 
 	public void render(World w, int x, int y)
 	{
-		if (this.getTexture(w, x, y) != null) GLHelper.renderTexturedQuad((.125f * x), (.125f * y), .125f, .125f, this.getTexture(w, x, y));
+		if (this.getTexture(w, x, y, (int)w.player.position.z) != null) GLHelper.renderTexturedQuad((.125f * x), (.125f * y), .125f, .125f, this.getTexture(w, x, y, (int)w.player.position.z));
 		else
 		{
 			GL11.glDisable(GL11.GL_TEXTURE_2D);

@@ -6,6 +6,7 @@ import java.nio.DoubleBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
 import com.ichmed.trinketeers.Game;
@@ -29,7 +30,7 @@ public class Player extends Entity
 	{
 		super();
 		this.size = new Vector2f(.075f, .075f);
-		this.position = new Vector2f(-0.25f, 0);
+		this.position = new Vector3f(-0.25f, 0, 0);
 		this.speed = 0.01f;
 		this.preferredSpeed = 0.01f;
 		this.name = "player";

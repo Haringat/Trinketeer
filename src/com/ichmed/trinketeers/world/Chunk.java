@@ -1,15 +1,22 @@
 package com.ichmed.trinketeers.world;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import org.lwjgl.util.vector.Vector3f;
+
+import com.ichmed.trinketeers.entity.Entity;
 
 public class Chunk
 {
 	public static HashMap<String, Chunk> chunks = new HashMap<>();
+	public List<Entity> entities = new ArrayList<Entity>();
 
 	public static final int chunkSize = 16;
 	public static final int clusterSize = 4;
 	public int[] tiles = new int[chunkSize * chunkSize];
-	
+
 	public int posX, posY, posZ;
 
 	public Chunk(int x, int y, int z)
@@ -29,15 +36,17 @@ public class Chunk
 
 	public void populate()
 	{
-		if(this.posZ == 0) for(int i =0; i < chunkSize * chunkSize; i++) tiles[i] = 4;
-		else for(int i =0; i < chunkSize * chunkSize; i++) tiles[i] = 2;
+		if (this.posZ == 0) for (int i = 0; i < chunkSize * chunkSize; i++)
+			tiles[i] = 4;
+		else for (int i = 0; i < chunkSize * chunkSize; i++)
+			tiles[i] = 2;
 	}
 
 	public static String getHashString(int x, int y, int z)
 	{
 		return x + "x" + y + "x" + z;
 	}
-	
+
 	public static void setTile(int x, int y, int z, int id)
 	{
 
@@ -81,6 +90,13 @@ public class Chunk
 	{
 		return this.tiles[chunkSize * y + x];
 	}
+	
+	public static Chunk getChunk(Vector3f p)
+	{
+		if(p.x < 0)p.x--;
+		if(p.y < 0)p.y--;
+		return getChunk((int)p.x, (int)p.y, (int)p.z);
+	}
 
 	public static Chunk getChunk(int x, int y, int z)
 	{
@@ -97,5 +113,14 @@ public class Chunk
 				{
 					chunks.put(getHashString(i + x * clusterSize, j + y * clusterSize, k + z * clusterSize), null);
 				}
+	}
+
+	public static List<Entity> getAllLoadedEntities()
+	{
+		ArrayList<Entity> ret = new ArrayList<>();
+		for (String s : chunks.keySet())
+			if (chunks.get(s) != null) for (Entity e : chunks.get(s).entities)
+				if(!ret.contains(e))ret.add(e);
+		return ret;
 	}
 }

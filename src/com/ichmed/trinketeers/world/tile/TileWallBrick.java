@@ -12,16 +12,16 @@ public class TileWallBrick extends Tile
 	}
 
 	@Override
-	public String getTexture(World w, int x, int y)
+	public String getTexture(World w, int x, int y, int z)
 	{
-		if(!tiles[Chunk.getTile(x, y - 1, w.currentHeight)].massive && Chunk.getTile(x, y - 1, w.currentHeight) != 3) return this.texture;
+		if(!tiles[Chunk.getTile(x, y - 1, z)].massive && Chunk.getTile(x, y - 1, (int)w.player.position.z) != 3) return this.texture;
 		return null;
 	}
 	
 	@Override
 	public boolean renderInFront(World w, int x, int y)
 	{
-		return tiles[Chunk.getTile(x, y - 1, w.currentHeight)].massive || Chunk.getTile(x, y - 1, w.currentHeight) == 3;
+		return tiles[Chunk.getTile(x, y - 1, (int)w.player.position.z)].massive || Chunk.getTile(x, y - 1, (int)w.player.position.z) == 3;
 	}
 	
 	

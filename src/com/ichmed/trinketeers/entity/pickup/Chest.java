@@ -29,7 +29,7 @@ public class Chest extends Pickup
 	@Override
 	public boolean pickUp(World w, Player p)
 	{
-		if (Game.isKeyDown(GLFW_KEY_SPACE) && w.currentLevel.getNumberOfEnemies() == 0) return true;
+		if (Game.isKeyDown(GLFW_KEY_SPACE) && w.getNumberOfEnemies() == 0) return true;
 		return false;
 	}
 

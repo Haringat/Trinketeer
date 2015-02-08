@@ -8,9 +8,8 @@ import org.lwjgl.util.vector.Vector2f;
 import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.entity.Torch;
 import com.ichmed.trinketeers.entity.pickup.Chest;
-import com.ichmed.trinketeers.entity.pickup.LevelExit;
+import com.ichmed.trinketeers.entity.pickup.Ladder;
 import com.ichmed.trinketeers.entity.pickup.SpellScroll;
-import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
 import com.ichmed.trinketeers.util.render.IWorldGraphic;
 import com.ichmed.trinketeers.util.render.light.ILight;
 import com.ichmed.trinketeers.util.render.light.IShadow;
@@ -32,31 +31,34 @@ public class Level
 		this.level = level;
 	}
 
-	public int getNumberOfEnemies()
-	{
-		int i = 0;
-		for (Entity e : entities)
-			if (e.isHostile()) i++;
-		return i;
-	}
 
-	public boolean spawn(Entity e, boolean checkForColission, boolean checkSolidsOnly)
+	public static void init(World world, int level)
 	{
-		if (checkForColission)
+		// world.player.setCenter(new Vector2f(0, -1.2f));
+		for (int i = 16; i < 24; i++)
 		{
-			AxisAllignedBoundingBox aabb = e.getColissionBox();
-			if (world.getListOfIntersectingEntities(aabb, checkSolidsOnly).size() > 0) return false;
+			for (int j = 0; j < 8; j++)
+			{
+				Chunk.setTile(i, j, level, 1);
+			}
+			if(level != 0) Chunk.setTile(i, 0, level, 3);
 		}
-		this.entitiesNextTick.add(e);
-		this.worldGraphics.add(e);
-		if (e instanceof IShadow) this.shadows.add((IShadow) e);
-		e.onSpawn(world);
-		return true;
-	}
-
-	public void init()
-	{
-		world.player.setCenter(new Vector2f(0, -1.2f));
+		
+		for (int i = 8; i < 16; i++)
+		{
+			Chunk.setTile(i, 5, level, 1);
+			Chunk.setTile(i, 4, level, 1);
+			if(level != 0) Chunk.setTile(i, 3, level, 3);
+			else  Chunk.setTile(i, 3, level, 1);			
+		}
+		
+		
+		if(level < 0)world.spawn((new Ladder(false)).setCenter(new Vector2f(2.5f, 0.5f)));
+		
+		world.spawn((new Torch()).setCenter(new Vector2f(2.7f, 0.5f)));
+		world.spawn((new Torch()).setCenter(new Vector2f(2.3f, 0.5f)));
+		
+		
 		for (int i = -8; i < 8; i++)
 		{
 			if (level != 0) Chunk.setTile(i, -8, level, 3);
@@ -79,15 +81,15 @@ public class Level
 		world.spawn((new Torch()).setCenter(new Vector2f(0.1f, 0.8f)));
 		world.spawn((new Torch()).setCenter(new Vector2f(-0.1f, -0.8f)));
 		world.spawn((new Torch()).setCenter(new Vector2f(0.1f, -0.8f)));
-		world.spawn((new LevelExit()).setCenter(new Vector2f(0.0f, 1.1f)));
+		world.spawn((new Ladder(true)).setCenter(new Vector2f(0.0f, 1.1f)));
 		world.spawn((new Chest()).setCenter(new Vector2f(0.0f, 0.6f)));
-		world.generateZombies(this.level);
-		world.generateFlameElementals(this.level / 5);
+		world.generateZombies(-level);
+		world.generateFlameElementals(-level / 5);
 
 		if (level == 0)
 		{
 			for (int i = 0; i < 5; i++)
-				spawn((new SpellScroll()).setCenter(new Vector2f(-0.8f + (i / 10f) * 4, 0f)), false, false);
+				world.spawn((new SpellScroll()).setCenter(new Vector2f(-0.8f + (i / 10f) * 4, 0f)), false, false);
 
 		}
 	}

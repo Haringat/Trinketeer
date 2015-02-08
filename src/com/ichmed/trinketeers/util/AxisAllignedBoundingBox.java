@@ -1,6 +1,7 @@
 package com.ichmed.trinketeers.util;
 
 import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 public class AxisAllignedBoundingBox
 {
@@ -11,6 +12,10 @@ public class AxisAllignedBoundingBox
 		this(pos.x, pos.y, size.x, size.y);		
 	}
 	
+	public AxisAllignedBoundingBox(Vector3f pos, Vector2f size)
+	{
+		this(pos.x, pos.y, size.x, size.y);		
+	}
 	public AxisAllignedBoundingBox(float posX, float posY, float sizeX, float sizeY)
 	{
 		this.pos = new Vector2f(posX, posY);

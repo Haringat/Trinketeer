@@ -12,9 +12,9 @@ public class TileWallTop extends Tile
 	}
 	
 	@Override
-	public String getTexture(World w, int x, int y)
+	public String getTexture(World w, int x, int y, int z)
 	{
-		if(!tiles[Chunk.getTile(x, y + 1, w.currentHeight)].massive) return this.texture;
+		if(!tiles[Chunk.getTile(x, y + 1, z)].massive) return this.texture;
 		return null;
 	}
 }

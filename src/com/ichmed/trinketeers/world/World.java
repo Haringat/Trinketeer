@@ -29,8 +29,8 @@ public class World
 {
 	public Player player = new Player();
 	List<IGraphic> uiGraphics = new ArrayList<>();
-	public Level currentLevel;
-	public int currentHeight = 0;
+	List<IWorldGraphic> worldGraphics = new ArrayList<>();
+	List<ILight> lights = new ArrayList<>();
 	
 	public static final Vector3f LIGHT_DAYTIME = new Vector3f(0.5f, 0.5f, 0.65f), LIGHT_FULL_DARK = new Vector3f();
 
@@ -38,10 +38,8 @@ public class World
 
 	public World()
 	{
-		currentLevel = new Level(this, currentHeight);
-		currentLevel.init();
 //		LightRenderer.setAmbientLight(1f, 1f, 1f);
-		 LightRenderer.setAmbientLight(0.0f, 0.0f, 0.0f);
+		LightRenderer.setAmbientLight(0.0f, 0.0f, 0.0f);
 		spawn(player);
 
 		uiGraphics.add(new IGraphic()
@@ -107,18 +105,12 @@ public class World
 				GLHelper.renderTexturedQuad(start, 0.85f, 1, 0.05f, "healthBarEmpty");
 				GLHelper.renderTexturedQuad(start + (1 - health) / 2f, 0.85f, health, 0.05f, "healthBarFull");
 				GLHelper.renderText(0, 0.83f, "" + (int) player.health, 0.002f, 0.002f, TrueTypeFont.ALIGN_CENTER);
+				
+
+				GLHelper.renderText(0,  -1f, "Level: " + player.position.z, 0.002f, 0.002f, TrueTypeFont.ALIGN_CENTER);
 			}
 		});
 	}
-
-	public void nextLevel()
-	{
-		this.currentHeight++;
-		this.currentLevel = new Level(this, this.currentHeight);
-		this.currentLevel.init();
-		spawn(player);
-	}
-
 	public void generateZombies(int amount)
 	{
 		for (int i = 0; i < amount; i++)
@@ -139,22 +131,21 @@ public class World
 
 	public void addLight(ILight l)
 	{
-		if (!currentLevel.lights.contains(l)) currentLevel.lights.add(l);
+		lights.add(l);
 	}
 
 	public void removeLight(ILight l)
 	{
-		currentLevel.lights.remove(l);
+		lights.remove(l);
 	}
 
 	public void tick()
 	{
-		if(currentHeight == 0) LightRenderer.setAmbientLight(LIGHT_DAYTIME);
+		if(player.position.z == 0) LightRenderer.setAmbientLight(LIGHT_DAYTIME);
 		else LightRenderer.setAmbientLight(LIGHT_FULL_DARK);
-		if (currentLevel.entities.size() > 0) currentLevel.entitiesNextTick = new ArrayList<Entity>(currentLevel.entities);
-		for (Entity e : currentLevel.entities)
+		System.out.println(Chunk.getAllLoadedEntities().size());
+		for (Entity e : Chunk.getAllLoadedEntities())	
 			e.tick(this);
-		currentLevel.entities = new ArrayList<>(currentLevel.entitiesNextTick);
 		render();
 	}
 
@@ -165,12 +156,12 @@ public class World
 		Vector2f v = player.getCenter();
 		glTranslatef(-v.x, -v.y, 0);
 		renderChunks(false);
-		currentLevel.worldGraphics.sort(new GraphicSorterYAxis());
-		for (IWorldGraphic g : currentLevel.worldGraphics)
+		worldGraphics.sort(new GraphicSorterYAxis());
+		for (IWorldGraphic g : worldGraphics)
 			g.render(this);
 		renderChunks(true);
 		glPopMatrix();
-		LightRenderer.renderLights(this, currentLevel.lights);
+		LightRenderer.renderLights(this, lights);
 		TextureLibrary.rebind();
 		for (IGraphic g : uiGraphics)
 			g.render();
@@ -183,17 +174,16 @@ public class World
 			{
 				int x = i + (int) ((player.getCenter().x - 1) * 8);
 				int y = j + (int) ((player.getCenter().y - 1) * 8);
-				Tile t = Tile.tiles[Chunk.getTile(x, y, currentHeight)];
+				Tile t = Tile.tiles[Chunk.getTile(x, y, (int)player.position.z)];
 				if (t.renderInFront(this, x, y) == b) t.render(this, x, y);
 			}
 	}
 
 	public boolean removeEntity(Entity e)
 	{
-		currentLevel.entitiesNextTick.remove(e);
-		currentLevel.worldGraphics.remove(e);
-		currentLevel.shadows.remove(e);
-		return currentLevel.entitiesNextTick.contains(e);
+		removeEntityFromChunk(e);
+		worldGraphics.remove(e);
+		return true;
 	}
 
 	public List<Entity> getListOfIntersectingEntities(Entity e, boolean onlySolids)
@@ -209,7 +199,7 @@ public class World
 	public List<Entity> getListOfIntersectingEntities(AxisAllignedBoundingBox aabb, List<Entity> exclude, boolean onlySolids)
 	{
 		ArrayList<Entity> list = new ArrayList<>();
-		for (Entity f : currentLevel.entitiesNextTick)
+		for (Entity f : Chunk.getAllLoadedEntities())
 			if ((exclude == null || !(exclude.contains(f))) && AxisAllignedBoundingBox.doAABBsIntersect(aabb, f.getColissionBox())) if (!onlySolids || f.isSolid) list.add(f);
 		return list;
 	}
@@ -226,12 +216,31 @@ public class World
 
 	public boolean spawn(Entity e, boolean checkForColission, boolean checkSolidsOnly)
 	{
-		return this.currentLevel.spawn(e, checkForColission, checkSolidsOnly);
+		if (checkForColission)
+		{
+			AxisAllignedBoundingBox aabb = e.getColissionBox();
+			if (getListOfIntersectingEntities(aabb, checkSolidsOnly).size() > 0) return false;
+		}
+		this.addEntityToChunk(e);
+		this.worldGraphics.add(e);
+//		if (e instanceof IShadow) this.shadows.add((IShadow) e);
+		e.onSpawn(this);
+		return true;
+	}
+	
+	public void addEntityToChunk(Entity e)
+	{
+		Chunk.getChunk(e.position).entities.add(e);
+	}
+	
+	public void removeEntityFromChunk(Entity e)
+	{
+		Chunk.getChunk(e.position).entities.remove(e);
 	}
 
 	public List<Entity> getEntitiesByDistance(Entity source, float maxDistance)
 	{
-		List<Entity> l = new ArrayList<>(this.currentLevel.entitiesNextTick);
+		List<Entity> l = new ArrayList<>(Chunk.getAllLoadedEntities());
 		l.sort(new Comparator<Entity>()
 		{
 
@@ -261,6 +270,14 @@ public class World
 		for (Entity e : l)
 			if (!e.isDead && entityClass.isAssignableFrom(e.getClass())) return e;
 		return null;
+	}
+	
+	public int getNumberOfEnemies()
+	{
+		int i = 0;
+		for (Entity e : Chunk.getAllLoadedEntities())
+			if (e.isHostile()) i++;
+		return i;
 	}
 
 	public boolean isPositionStuckInGeometry(AxisAllignedBoundingBox predictedPosition, int height)
