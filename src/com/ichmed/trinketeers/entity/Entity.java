@@ -20,7 +20,7 @@ import com.ichmed.trinketeers.world.World;
 
 public class Entity implements IWorldGraphic, Waypoint
 {
-	public Vector2f position = new Vector2f();
+	public Vector3f position = new Vector3f();
 	public Vector2f direction = new Vector2f(1, 0), size = new Vector2f(.1f, .1f);
 	public Vector2f preferredDirection = new Vector2f(1, 0);
 	public float speed = 0f;
@@ -74,8 +74,10 @@ public class Entity implements IWorldGraphic, Waypoint
 		if (this.damageCooldown > 0) this.color = new Vector3f(0.75f, 0.2f, 0.2f);
 		else this.color = this.getColor();
 
+		world.removeEntityFromChunk(this);
 		performRecursiveCollisionX(0, world, exclude);
 		performRecursiveCollisionY(0, world, exclude);
+		world.addEntityToChunk(this);
 
 		if (this.stun <= 0)
 		{
@@ -118,16 +120,16 @@ public class Entity implements IWorldGraphic, Waypoint
 	{
 		if (!this.isSolid)
 		{
-			this.position.translate(direction.x * this.speed, 0);
+			this.position.translate(direction.x * this.speed, 0, 0);
 			return true;
 		}
 		if (iteration >= maxCollisionIterations) return false;
 		float speedMod = (float) Math.pow(2, iteration);
 		Vector2f iteratedSpeed = new Vector2f((this.direction.x / speedMod) * this.speed, 0);
 		AxisAllignedBoundingBox predictedPosition = new AxisAllignedBoundingBox(position.x + iteratedSpeed.x, position.y + iteratedSpeed.y, size.x, size.y);
-		if (world.getListOfIntersectingEntities(predictedPosition, exclude, true).size() == 0 && !world.isPositionStuckInGeometry(predictedPosition, world.currentHeight))
+		if (world.getListOfIntersectingEntities(predictedPosition, exclude, true).size() == 0 && !world.isPositionStuckInGeometry(predictedPosition, (int)world.player.position.z))
 		{
-			this.position.translate(iteratedSpeed.x, iteratedSpeed.y);
+			this.position.translate(iteratedSpeed.x, iteratedSpeed.y, 0);
 			return true;
 		}
 		return performRecursiveCollisionX(iteration + 1, world, exclude);
@@ -137,16 +139,16 @@ public class Entity implements IWorldGraphic, Waypoint
 	{
 		if (!this.isSolid)
 		{
-			this.position.translate(0, direction.y * this.speed);
+			this.position.translate(0, direction.y * this.speed, 0);
 			return true;
 		}
 		if (iteration >= maxCollisionIterations) return false;
 		float speedMod = (float) Math.pow(2, iteration);
 		Vector2f iteratedSpeed = new Vector2f(0, (this.direction.y / speedMod) * this.speed);
 		AxisAllignedBoundingBox predictedPosition = new AxisAllignedBoundingBox(position.x + iteratedSpeed.x, position.y + iteratedSpeed.y, size.x, size.y);
-		if (world.getListOfIntersectingEntities(predictedPosition, exclude, true).size() == 0 && !world.isPositionStuckInGeometry(predictedPosition, world.currentHeight))
+		if (world.getListOfIntersectingEntities(predictedPosition, exclude, true).size() == 0 && !world.isPositionStuckInGeometry(predictedPosition, (int)world.player.position.z))
 		{
-			this.position.translate(iteratedSpeed.x, iteratedSpeed.y);
+			this.position.translate(iteratedSpeed.x, iteratedSpeed.y, 0);
 			return true;
 		}
 		return performRecursiveCollisionY(iteration + 1, world, exclude);
@@ -217,13 +219,13 @@ public class Entity implements IWorldGraphic, Waypoint
 
 	public Entity setCenter(Vector2f v)
 	{
-		this.position = new Vector2f(v.x - this.size.x / 2, v.y - this.size.y / 2);
+		this.position = new Vector3f(v.x - this.size.x / 2, v.y - this.size.y / 2, 0);
 		return this;
 	}
 
 	public Entity setPosition(Vector2f v)
 	{
-		this.position = new Vector2f(v);
+		this.position = new Vector3f(v.x, v.y, this.position.z);
 		return this;
 	}
 
@@ -282,7 +284,7 @@ public class Entity implements IWorldGraphic, Waypoint
 	@Override
 	public Vector2f getPosition()
 	{
-		return this.position;
+		return new Vector2f(this.position.x, this.position.y);
 	}
 
 	public boolean isReached(Entity e)
