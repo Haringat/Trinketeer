@@ -14,12 +14,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -27,14 +30,17 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
+import javax.swing.filechooser.FileFilter;
 
 import com.ichmed.trinketeers.spell.element.Element;
 import com.ichmed.trinketeers.savefile.DataLoader;
+import com.ichmed.trinketeers.util.render.TextureLibrary;
 
-public class Editor implements MouseListener, ActionListener
+public class Editor extends JFrame implements MouseListener, ActionListener
 {
+	private static final long serialVersionUID = -1549438543620749797L;
 	private List<Element> elements;
-	private JFrame editorframe = new JFrame();
+	//private JFrame this = new JFrame();
 	private JPanel editor;
 	private JButton add;
 	private JButton save;
@@ -44,12 +50,12 @@ public class Editor implements MouseListener, ActionListener
 	private HashMap<JButton, Component[]> id = new HashMap<JButton, Component[]>();
 
 	public Editor(){
-		//editorframe.setResizable(false);
+		//this.setResizable(false);
 		DataLoader.loadElements();
 		editor = new JPanel();
 		GridBagConstraints c = new GridBagConstraints();
 		elements = new ArrayList<Element>(Element.elements.values());
-		Container pane = editorframe.getContentPane();
+		Container pane = this.getContentPane();
 		pane.setLayout(new GridBagLayout());
 		c.gridx = 2;
 		c.gridy = 0;
@@ -69,7 +75,7 @@ public class Editor implements MouseListener, ActionListener
 		c.gridheight = 3;
 		pane.add(sp);
 		//pane.add(editor);
-		editorframe.setMaximumSize(new Dimension(
+		this.setMaximumSize(new Dimension(
 				(int)Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2,
 				(int)Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2));
 		edittl = new JButton("edit texturelib");
@@ -80,15 +86,15 @@ public class Editor implements MouseListener, ActionListener
 		save.addActionListener(this);
 		editor.addMouseListener(this);
 		editor.setLayout(new GridBagLayout());
-		editorframe.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		
 		addHeaders();
 		addRows();
 		addButtons();
 		
 		editor.setMaximumSize(new Dimension(editor.getSize().width+10, editor.getSize().height + 10));
-		editorframe.pack();
-		editorframe.setVisible(true);
+		this.pack();
+		this.setVisible(true);
 	}
 
 	private void addRows(){
@@ -133,7 +139,7 @@ public class Editor implements MouseListener, ActionListener
 			editor.removeAll();
 			addHeaders();
 			elements.add(new Element());
-			editorframe.invalidate();
+			this.invalidate();
 			addRow(elements.get(elements.size()-1), elements.size());
 			//addButtons();
 		} else {
@@ -193,7 +199,7 @@ public class Editor implements MouseListener, ActionListener
 		remove.addActionListener(this);
 		comps[7] = remove;
 		editor.add(remove, c);
-		editorframe.pack();
+		this.pack();
 		id.put(remove, comps);
 	}
 	
@@ -211,7 +217,7 @@ public class Editor implements MouseListener, ActionListener
 		c.gridx = 2;
 		c.gridwidth = REMAINDER;
 		editor.add(save,c);
-		editorframe.pack();
+		this.pack();
 	}
 
 	private void removeRow(JButton index){
@@ -219,7 +225,7 @@ public class Editor implements MouseListener, ActionListener
 			editor.remove(a);
 		}
 		editor.repaint();
-		editorframe.pack();
+		this.pack();
 	}
 
 	@Override
@@ -249,7 +255,22 @@ public class Editor implements MouseListener, ActionListener
 		}
 		if(e.getSource() instanceof JButton
 				&& e.getSource().equals(edittl)){
-			edittl();
+			File f = edittl();
+			if(f != null && f.isDirectory() == true){
+				List<String[]> textures = new ArrayList<String[]>();
+				for( File file: f.listFiles()){
+					String[] texture = new String[2];
+					texture[0] = file.getName().subSequence(0, file.getName().lastIndexOf('.')-1).toString();
+					texture[1] = file.getAbsolutePath();
+					textures.add(texture);
+				}
+				try {
+					TextureLibrary.generateTextureLibrary(f.getAbsolutePath(), textures);
+				} catch (Exception e1) {
+					JDialog dia = new JDialog(this, e1.getLocalizedMessage());
+					dia.setVisible(true);
+				}
+			}
 		}
 		if(e.getSource() instanceof JButton
 				&& ((JButton) e.getSource()).getName() != null
@@ -261,8 +282,27 @@ public class Editor implements MouseListener, ActionListener
 		}
 	}
 
-	private void edittl() {
-		new TLEditor();
-		
+	private File edittl() {
+		JFileChooser file = new JFileChooser();
+		file.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		file.setSelectedFile(new File(".").getAbsoluteFile());
+		file.setFileFilter(new FileFilter(){
+			@Override
+			public boolean accept(File f) {
+				if(f.isDirectory())
+					return true;
+				return false;
+			}
+			@Override
+			public String getDescription() {
+				return "Folder";
+			}
+		});
+		file.setMultiSelectionEnabled(false);
+		if(file.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
+			return file.getSelectedFile();
+		} else {
+			return null;
+		}
 	}
 }
