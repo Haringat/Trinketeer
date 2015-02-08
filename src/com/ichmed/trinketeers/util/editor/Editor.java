@@ -260,8 +260,8 @@ public class Editor extends JFrame implements MouseListener, ActionListener
 				List<String[]> textures = new ArrayList<String[]>();
 				for( File file: f.listFiles()){
 					String[] texture = new String[2];
-					texture[0] = file.getName().subSequence(0, file.getName().lastIndexOf('.')-1).toString();
-					texture[1] = file.getAbsolutePath();
+					texture[1] = file.getName().subSequence(0, file.getName().lastIndexOf('.')).toString();
+					texture[0] = file.getAbsolutePath();
 					textures.add(texture);
 				}
 				try {
