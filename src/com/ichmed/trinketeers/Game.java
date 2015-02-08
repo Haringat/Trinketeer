@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,12 +49,20 @@ public class Game
 		{
 			init();
 			world = new World();
+			ArrayList<String[]> l = new ArrayList<>();
+			l.add(new String[]{"resc/textures/default.png", "default"});
+			l.add(new String[]{"resc/textures/zombie.png", "zombie_idle"});
+			l.add(new String[]{"resc/textures/zombie.png", "zombie_walking"});
+			l.add(new String[]{"resc/textures/zombie_dead.png", "zombie_dead"});
+			l.add(new String[]{"resc/textures/chest_open.png", "chest_open"});
+			l.add(new String[]{"resc/textures/chest_closed.png", "chest_closed"});
+			l.add(new String[]{"resc/textures/hatch_open.png", "hatch_open"});
+			l.add(new String[]{"resc/textures/hatch_closed.png", "hatch_closed"});
+			l.add(new String[]{"resc/textures/floorMud.png", "floor_Mud"});
+			l.add(new String[]{"resc/textures/wall2.png", "wall_idle"});
+			l.add(new String[]{"resc/textures/torch.png", "torch_idle"});
+			TextureLibrary.generateTextureLibrary("resc/textures/test", l);
 			TextureLibrary.loadTextureLibrary("resc/textures/test");
-//			ArrayList<String[]> l = new ArrayList<>();
-//			l.add(new String[]{"resc/textures/default.png", "default"});
-//			l.add(new String[]{"resc/textures/zombie.png", "zombie"});
-//			l.add(new String[]{"resc/textures/zombie_dead.png", "zombie_dead"});
-//			TextureLibrary.generateTextureLibrary("resc/textures/test", l);
 			loop();
 
 			// Release window and window callbacks

@@ -11,7 +11,7 @@ public class Wall extends Entity implements IShadow
 	{
 		this.isMoveable = false;
 		this.isVulnerable = false;
-		this.texture = "resc/textures/" + "wall2.png";
+		this.name = "wall";
 	}
 
 	@Override

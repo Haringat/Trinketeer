@@ -182,9 +182,9 @@ public class Entity implements IWorldGraphic, Waypoint
 	
 	public String getTextureForState(World w)
 	{
-		if(this.isDead)return this.name + "_dead";
-		if(this.speed > 0)return this.name + "_walking";
-		return this.name + "_idle";
+		if(this.isDead)return this.name + "Dead";
+		if(this.speed > 0)return this.name + "Walking";
+		return this.name + "Idle";
 	}
 
 	protected void renderHitBox(World w)

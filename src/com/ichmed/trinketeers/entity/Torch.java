@@ -18,7 +18,7 @@ public class Torch extends Pickup
 	{
 		this.size = new Vector2f(0.01f, 0.01f);
 		this.speed = 0;
-		this.texture = "resc/textures/torch.png";
+		this.name = "torch";
 		this.isSolid = true;
 		this.isVulnerable = false;
 	}
@@ -41,7 +41,7 @@ public class Torch extends Pickup
 	@Override
 	public boolean pickUp(World w, Player p)
 	{
-		if(Game.isKeyDown(GLFW_KEY_SPACE))
+		if (Game.isKeyDown(GLFW_KEY_SPACE))
 		{
 			p.fuel = 6000;
 			return true;

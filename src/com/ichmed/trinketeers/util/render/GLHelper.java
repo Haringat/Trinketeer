@@ -23,14 +23,19 @@ public class GLHelper
 	public static void renderTexturedQuad(float x, float y, float width, float height, Vector4f v)
 	{
 		TextureLibrary.bindTexture(TextureLibrary.textureLibrary.textureName);
+		double dx = v.x / (double) TextureLibrary.LIBRARY_SIZE;
+		double dy = v.y / (double) TextureLibrary.LIBRARY_SIZE;
+		double dz = v.z / (double) TextureLibrary.LIBRARY_SIZE;
+		double dw = v.w / (double) TextureLibrary.LIBRARY_SIZE;
+		
 		glBegin(GL11.GL_QUADS);
-		glTexCoord2d(v.x, v.y + v.w);
+		glTexCoord2d(dx, dy + dw);
 		glVertex2f(x, y);
-		glTexCoord2d(v.x + v.z, v.y + v.w);
+		glTexCoord2d(dx + dz, dy + dw);
 		glVertex2f(x + width, y);
-		glTexCoord2d(v.x + v.z, v.y);
+		glTexCoord2d(dx + dz, dy);
 		glVertex2f(x + width, y + height);
-		glTexCoord2d(v.x, v.y);
+		glTexCoord2d(dx, dy);
 		glVertex2f(x, y + height);
 		glEnd();		
 	}

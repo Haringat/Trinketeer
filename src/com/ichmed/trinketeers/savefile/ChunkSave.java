@@ -33,7 +33,7 @@ public class ChunkSave
 					for (int l = 0; l < chunkSize * chunkSize; l++)
 					{
 						data.append(c.tiles[l]);
-						if (l < chunkSize - 1) data.append(",");
+						if (l < chunkSize * chunkSize - 1) data.append(",");
 					}
 					data.append("]");
 				}
