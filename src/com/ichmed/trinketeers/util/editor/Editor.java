@@ -267,6 +267,7 @@ public class Editor extends JFrame implements MouseListener, ActionListener
 				try {
 					TextureLibrary.generateTextureLibrary(f.getAbsolutePath(), textures);
 				} catch (Exception e1) {
+					e1.printStackTrace();
 					JDialog dia = new JDialog(this, e1.getLocalizedMessage());
 					dia.setVisible(true);
 				}
