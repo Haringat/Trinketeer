@@ -40,12 +40,23 @@ public class TextureLibrary
 	public static Vector4f getTextureVector(String name)
 	{
 		Vector4f v = textureLibrary.textureCoords.get(name);
+		if(v == null)
+		{
+			String s = name.split("_")[0];
+			s += "_0";
+			v = textureLibrary.textureCoords.get(s);			
+		}
+		if(v == null)
+		{
+			String s = name.split("_")[0];
+			v = textureLibrary.textureCoords.get(s);			
+		}
 		if (v == null)
 		{
 			if(!textureLibrary.nonExistentTextures.contains(name))textureLibrary.nonExistentTextures.add(name);
 			v = new Vector4f(0, 0, 16, 16);
 		}
-		return (Vector4f) new Vector4f(v).scale(1f / (float)LIBRARY_SIZE);
+		return v;
 	}
 
 	public void cleanUp()
@@ -112,8 +123,6 @@ public class TextureLibrary
 		{
 			e.printStackTrace();
 		}
-		for(String s : textureLibrary.textureCoords.keySet())
-			System.out.println(s + ": " + textureLibrary.textureCoords.get(s));
 	}
 
 	public static void generateTextureLibrary(String path, List<String[]> data) throws Exception
