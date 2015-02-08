@@ -26,18 +26,13 @@ public class Zombie extends Entity
 		this.renderWhenDead = true;
 		this.lootRange = 0.1f;
 		this.dropLootOnDeath = true;
+		this.name = "zombie";
 		this.behaviours.add(new BehaviourTurnToCurrentWaypoint());
 		this.behaviours.add(new BehaviourFollowTarget(0.005f, Player.class));
 		this.behaviours.add(new BehaviourWander(0.001f));
 		this.behaviours.add(new BehaviourAttackTarget(2f, 0.1f, Player.class));
 	}
 	
-	@Override
-	public String getTexture(World w)
-	{
-		return "resc/textures/" + (this.isDead ?  "zombie_dead.png" : "zombie.png");
-	}
-
 	@Override
 	public AxisAllignedBoundingBox getRenderArea()
 	{

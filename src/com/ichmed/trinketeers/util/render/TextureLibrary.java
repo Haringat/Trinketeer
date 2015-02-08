@@ -42,10 +42,10 @@ public class TextureLibrary
 		Vector4f v = textureLibrary.textureCoords.get(name);
 		if (v == null)
 		{
-			textureLibrary.nonExistentTextures.add(name);
+			if(!textureLibrary.nonExistentTextures.contains(name))textureLibrary.nonExistentTextures.add(name);
 			v = new Vector4f(0, 0, 16, 16);
 		}
-		return (Vector4f) v.scale(1f / LIBRARY_SIZE);
+		return (Vector4f) new Vector4f(v).scale(1f / (float)LIBRARY_SIZE);
 	}
 
 	public void cleanUp()
@@ -56,9 +56,11 @@ public class TextureLibrary
 			{
 				String p = textureName.split("\\.")[0].split("/")
 						[textureName.split("\\.")[0].split("/").length - 1];
-				FileWriter writer = new FileWriter(p + "_Textures_Not_Found.tef");
+				File f = new File("resc/error/" + p + "_Textures_Not_Found.tef");
+				f.createNewFile();
+				FileWriter writer = new FileWriter(f);
 				for (String s : this.nonExistentTextures)
-					writer.append(s);
+					writer.append(String.format(s + "%n"));
 				writer.close();
 			} catch (IOException e)
 			{
@@ -83,6 +85,7 @@ public class TextureLibrary
 			}
 		}
 		libraryTextures.get(path).bind();
+		currentTexture = path;
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		return true;
@@ -109,6 +112,8 @@ public class TextureLibrary
 		{
 			e.printStackTrace();
 		}
+		for(String s : textureLibrary.textureCoords.keySet())
+			System.out.println(s + ": " + textureLibrary.textureCoords.get(s));
 	}
 
 	public static void generateTextureLibrary(String path, List<String[]> data) throws Exception
@@ -231,5 +236,12 @@ public class TextureLibrary
 	{
 		Color c = new Color(bfrdImg.getRGB(x, y));
 		return c.getRed() == 255 && c.getBlue() == 255;
+	}
+
+	public static void rebind()
+	{
+//		System.out.println(currentTexture);
+		bindTexture("resc/textures/wall.png");
+		libraryTextures.get(currentTexture).bind();
 	}
 }

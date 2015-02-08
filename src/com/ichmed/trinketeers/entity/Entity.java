@@ -167,7 +167,6 @@ public class Entity implements IWorldGraphic, Waypoint
 
 	protected void actualRender(World w)
 	{
-		TextureLibrary.bindTexture(TextureLibrary.textureLibrary.textureName);
 		AxisAllignedBoundingBox renderArea = this.getRenderArea();
 		glPushMatrix();
 		glColor3f(this.color.x, this.color.y, this.color.z);
@@ -175,9 +174,17 @@ public class Entity implements IWorldGraphic, Waypoint
 		glTranslated(renderArea.size.x / 2, renderArea.size.x / 2, 0);
 		glRotated(this.rotation, 0, 0, 1);
 		glTranslated(-renderArea.size.x / 2, -renderArea.size.y / 2, 0);
-		GLHelper.renderTexturedQuad(0, 0, renderArea.size.x, renderArea.size.y, TextureLibrary.getTextureVector(this.name));
+//		GLHelper.drawRect(this.size.x, this.size.y);
+		GLHelper.renderTexturedQuad(0, 0, renderArea.size.x, renderArea.size.y, TextureLibrary.getTextureVector(this.getTextureForState(w)));
 		glColor3f(1, 1, 1);
 		glPopMatrix();
+	}
+	
+	public String getTextureForState(World w)
+	{
+		if(this.isDead)return this.name + "_dead";
+		if(this.speed > 0)return this.name + "_walking";
+		return this.name + "_idle";
 	}
 
 	protected void renderHitBox(World w)
@@ -259,11 +266,6 @@ public class Entity implements IWorldGraphic, Waypoint
 	@Override
 	public void render()
 	{
-	}
-
-	public String getTexture(World w)
-	{
-		return this.texture;
 	}
 
 	public AxisAllignedBoundingBox getRenderArea()

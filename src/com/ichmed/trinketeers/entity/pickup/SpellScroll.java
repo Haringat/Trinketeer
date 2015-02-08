@@ -74,7 +74,7 @@ public class SpellScroll extends Pickup
 		float f = (float) (Math.sin(this.ticksExisted / 100d) * 0.02f);
 		TextureLibrary.bindTexture("resc/textures/scroll.png");
 		GLHelper.drawRect(this.position.x, this.position.y + f, this.size.x, this.size.y);
-		TextureLibrary.bindTexture(this.getTexture(w));
+		TextureLibrary.bindTexture(this.texture);
 		GLHelper.drawRect(this.position.x, this.position.y + f, this.size.x, this.size.y);
 		if (this.canBePickedUp(w))
 		{

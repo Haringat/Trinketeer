@@ -29,14 +29,14 @@ public class World
 	List<IGraphic> uiGraphics = new ArrayList<>();
 	public Level currentLevel;
 	public int currentHeight = 0;
-	
+
 	public final String name = "world_0";
 
 	public World()
 	{
 		currentLevel = new Level(this, currentHeight);
 		currentLevel.init();
-//		 LightRenderer.setAmbientLight(1f, 1f, 1f);
+		// LightRenderer.setAmbientLight(1f, 1f, 1f);
 		LightRenderer.setAmbientLight(0.0f, 0.0f, 0.0f);
 		spawn(player);
 
@@ -50,8 +50,8 @@ public class World
 				boolean b2 = player.currentSpellRight != null;
 
 				TextureLibrary.bindTexture("resc/textures/scroll.png");
-				if(b1)GLHelper.drawRect(-1, 0.8f, 0.2f, 0.2f);
-				if(b2)GLHelper.drawRect(0.8f, 0.8f, 0.2f, 0.2f);
+				if (b1) GLHelper.drawRect(-1, 0.8f, 0.2f, 0.2f);
+				if (b2) GLHelper.drawRect(0.8f, 0.8f, 0.2f, 0.2f);
 
 				TextureLibrary.bindTexture("resc/textures/spellCooldownBar.png");
 				if (b1) GLHelper.drawRect(-0.79f, 0.8f, 0.02f, 0.2f - Math.max(0, ((float) player.shotCooldownLeft / (float) player.currentSpellLeft.cooldown) * 0.2f));
@@ -164,32 +164,36 @@ public class World
 
 	public void render()
 	{
-//		GLHelper.renderBackground(this);
+		// GLHelper.renderBackground(this);
 		glPushMatrix();
+		TextureLibrary.bindTexture("resc/textures/shadow.png");
 		Vector2f v = player.getCenter();
 		glTranslatef(-v.x, -v.y, 0);
 		renderChunks(false);
 		currentLevel.worldGraphics.sort(new GraphicSorterYAxis());
 		for (IWorldGraphic g : currentLevel.worldGraphics)
 		{
+			if(!(g instanceof Entity))System.out.println(g);
 			g.render(this);
+			
 		}
 		renderChunks(true);
 		glPopMatrix();
 		LightRenderer.renderLights(this, currentLevel.lights);
 		for (IGraphic g : uiGraphics)
 			g.render();
+		TextureLibrary.bindTexture("resc/textures/shadow.png");
 	}
 
 	private void renderChunks(boolean b)
 	{
-		for(int i = -1; i < 17; i++)
-			for(int j = -1; j < 17; j++)
+		for (int i = -1; i < 17; i++)
+			for (int j = -1; j < 17; j++)
 			{
-				int x = i + (int)((player.getCenter().x - 1) * 8);
-				int y = j + (int)((player.getCenter().y - 1) * 8);
+				int x = i + (int) ((player.getCenter().x - 1) * 8);
+				int y = j + (int) ((player.getCenter().y - 1) * 8);
 				Tile t = Tile.tiles[Chunk.getTile(x, y, currentHeight)];
-				if(t.renderInFront == b)t.render(x, y);
+				if (t.renderInFront == b) t.render(x, y);
 			}
 	}
 
@@ -259,7 +263,6 @@ public class World
 	{
 		return getClosestEntityToSource(source, maxDistance, entityClass, true);
 	}
-	
 
 	public Entity getClosestEntityToSource(Entity source, float maxDistance, Class<? extends Entity> entityClass, boolean alliveOnly)
 	{

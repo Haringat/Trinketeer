@@ -22,12 +22,13 @@ public class GLHelper
 	
 	public static void renderTexturedQuad(float x, float y, float width, float height, Vector4f v)
 	{
+		TextureLibrary.bindTexture(TextureLibrary.textureLibrary.textureName);
 		glBegin(GL11.GL_QUADS);
 		glTexCoord2d(v.x, v.y + v.w);
 		glVertex2f(x, y);
 		glTexCoord2d(v.x + v.z, v.y + v.w);
 		glVertex2f(x + width, y);
-		glTexCoord2d(v.x + v.z, 0);
+		glTexCoord2d(v.x + v.z, v.y);
 		glVertex2f(x + width, y + height);
 		glTexCoord2d(v.x, v.y);
 		glVertex2f(x, y + height);
@@ -104,5 +105,6 @@ public class GLHelper
 	public static void renderText(float x, float y, String text, float scaleX, float scaleY, int allignMode)
 	{
 		ttf.drawString(x, y, text, 0, text.length()-1, scaleX, scaleY, allignMode);
+		TextureLibrary.rebind();
 	}
 }

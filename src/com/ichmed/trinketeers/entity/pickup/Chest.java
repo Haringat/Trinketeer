@@ -39,6 +39,14 @@ public class Chest extends Pickup
 	{
 		return new AxisAllignedBoundingBox(position.x, this.position.y, this.size.x, this.size.y + 0.1f);
 	}
+	
+	
+
+	@Override
+	public String getTextureForState(World w)
+	{
+		return this.isDead ? "chest_open" : "chest_closed";
+	}
 
 	@Override
 	public void tick(World world)
@@ -62,12 +70,6 @@ public class Chest extends Pickup
 	public boolean movesTowardPlayer()
 	{
 		return false;
-	}
-
-	@Override
-	public String getTexture(World w)
-	{
-		return "resc/textures/" +  (this.isDead ? "chest_open.png" : "chest_closed.png");
 	}
 
 }

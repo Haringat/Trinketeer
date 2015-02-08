@@ -15,7 +15,6 @@ import com.ichmed.trinketeers.spell.SpellFireball;
 import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
 import com.ichmed.trinketeers.util.render.light.ILight;
 import com.ichmed.trinketeers.util.render.light.SimpleLight;
-import com.ichmed.trinketeers.world.World;
 
 public class FlameElemental extends Entity
 {
@@ -31,6 +30,7 @@ public class FlameElemental extends Entity
 		this.lootRange = 0.1f;
 		this.maxAttackcooldown = 60;
 		this.dropLootOnDeath = true;
+		this.name = "flameElemental";
 		this.behaviours.add(new BehaviourTurnToCurrentWaypoint());
 		this.behaviours.add(new BehaviourFollowTarget(0.008f, Player.class));
 		this.behaviours.add(new BehaviourWander(0.003f));
@@ -39,12 +39,6 @@ public class FlameElemental extends Entity
 		this.behaviours.add(new BehaviourAttackTarget(1f, 0.01f, Player.class));
 	}
 	
-	@Override
-	public String getTexture(World w)
-	{
-		return "resc/textures/" + "flameElemental.png";
-	}
-
 	@Override
 	public ILight createLight()
 	{
