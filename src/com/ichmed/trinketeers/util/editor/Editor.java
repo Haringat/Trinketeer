@@ -3,6 +3,7 @@ package com.ichmed.trinketeers.util.editor;
 import static java.awt.GridBagConstraints.*;
 import static javax.swing.JScrollPane.*;
 
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -40,10 +41,10 @@ public class Editor implements MouseListener, ActionListener
 	private JButton edittl;
 	private JScrollPane sp;
 	
-	private HashMap<Integer, int[]> id = new HashMap<Integer, int[]>();
+	private HashMap<JButton, Component[]> id = new HashMap<JButton, Component[]>();
 
 	public Editor(){
-		editorframe.setResizable(false);
+		//editorframe.setResizable(false);
 		DataLoader.loadElements();
 		editor = new JPanel();
 		GridBagConstraints c = new GridBagConstraints();
@@ -98,53 +99,33 @@ public class Editor implements MouseListener, ActionListener
 
 	private void addHeaders(){
 		GridBagConstraints c = new GridBagConstraints();
-		int[] numbers = new int[8];
-		int current = editor.getComponentCount();
-		//id.put("labels", )
 		c.insets = new Insets(5,5,5,5);
 		c.gridy = 0;
 		c.anchor = NORTH;
 		
 		c.gridx = 0;
-		numbers[0] = current;
-		editor.add(new JLabel("texture"), c, current);
+		editor.add(new JLabel("texture"), c);
 		
 		c.gridx = 1;
-		current++;
-		numbers[1] = current;
-		editor.add(new JLabel("name"), c, current);
+		editor.add(new JLabel("name"), c);
 		
 		c.gridx = 2;
-		current++;
-		numbers[2] = current;
-		editor.add(new JLabel("damage"), c, current);
+		editor.add(new JLabel("damage"), c);
 		
 		c.gridx = 3;
-		current++;
-		numbers[3] = current;
-		editor.add(new JLabel("color"), c, current);
+		editor.add(new JLabel("color"), c);
 		
 		c.gridx = 4;
-		current++;
-		numbers[4] = current;
-		editor.add(new JLabel("brightness"), c, current);
+		editor.add(new JLabel("brightness"), c);
 		
 		c.gridx = 5;
-		current++;
-		numbers[5] = current;
-		editor.add(new JLabel("breaks on impact"), c, current);
+		editor.add(new JLabel("breaks on impact"), c);
 		
 		c.gridx = 6;
-		current++;
-		numbers[6] = current;
-		editor.add(new JLabel("density"), c, current);
+		editor.add(new JLabel("density"), c);
 		
 		c.gridx = 7;
-		current++;
-		numbers[7] = current;
-		editor.add(new JLabel("remove"), c, current);
-		
-		id.put(new Integer(0), numbers);
+		editor.add(new JLabel("remove"), c);
 	}
 
 	private void addRow(){
@@ -165,8 +146,7 @@ public class Editor implements MouseListener, ActionListener
 		editor.remove(add);
 		editor.remove(save);
 		editor.remove(edittl);
-		int[] numbers = new int[8];
-		int current = editor.getComponentCount();
+		Component[] comps = new Component[8];
 		GridBagConstraints c = new GridBagConstraints();
 		
 		c.insets = new Insets(5,5,5,5);
@@ -176,53 +156,45 @@ public class Editor implements MouseListener, ActionListener
 		Preview preview = new Preview(e.getTexture());
 		preview.setVisible(true);
 		preview.repaint();
-		numbers[0] = current;
-		editor.add(preview, c, current);
+		comps[0] = preview;
+		editor.add(comps[0], c);
 		
 		c.gridx = 1;
-		//c.fill = HORIZONTAL;
-		current++;
-		numbers[1] = current;
-		editor.add(new JTextField(e.getName(), 10), c, current);
+		comps[1] = new JTextField(e.getName(), 10);
+		editor.add(comps[1], c);
 		
 		c.gridx = 2;
-		current++;
-		numbers[2] = current;
-		editor.add(new JTextField(String.valueOf(e.getDamage()), 4), c, current);
+		comps[2] = new JTextField(String.valueOf(e.getDamage()), 4);
+		editor.add(comps[2], c);
 		
 		c.gridx = 3;
 		ColorField colorfield = new ColorField(e.getColor());
-		current++;
-		numbers[3] = current;
-		editor.add(colorfield, c, current);
+		comps[3] = colorfield;
+		editor.add(comps[3], c);
 		
 		c.gridx = 4;
 		JTextField brightness = new JTextField(String.valueOf(e.getBrightness()),5);
-		current++;
-		numbers[4] = current;
-		editor.add(brightness, c, current);
+		comps[4] = brightness;
+		editor.add(comps[4], c);
 		
 		c.gridx = 5;
-		current++;
-		numbers[5] = current;
-		editor.add(new JCheckBox("", e.shouldBreakOnImpact()), c, current);
+		comps[5] = new JCheckBox("", e.shouldBreakOnImpact());
+		editor.add(comps[5], c);
 		
 		c.gridx = 6;
 		JTextField density = new JTextField(String.valueOf(e.getDensity()),5);
-		current++;
-		numbers[6] = current;
-		editor.add(density, c, current);
+		comps[6] = density;
+		editor.add(comps[6], c);
 		
 		c.gridx = 7;
 		JButton remove = new JButton("X");
 		remove.setName("remove "+String.valueOf(i-1));
 		addButtons();
 		remove.addActionListener(this);
-		current++;
-		numbers[7] = current;
-		editor.add(remove, c, current);
+		comps[7] = remove;
+		editor.add(remove, c);
 		editorframe.pack();
-		id.put(new Integer(i+1), numbers);
+		id.put(remove, comps);
 	}
 	
 	private void addButtons(){
@@ -242,13 +214,12 @@ public class Editor implements MouseListener, ActionListener
 		editorframe.pack();
 	}
 
-	private void removeRow(int i){
-		System.out.println("deleting line "+String.valueOf(i));
-		for(int a : id.get(new Integer(i+1))){
-			System.out.println("removing component at "+String.valueOf(a));
+	private void removeRow(JButton index){
+		for(Component a : id.get(index)){
 			editor.remove(a);
 		}
 		editor.repaint();
+		editorframe.pack();
 	}
 
 	@Override
@@ -285,21 +256,13 @@ public class Editor implements MouseListener, ActionListener
 				&& ((JButton) e.getSource()).getName().contains("remove")){
 			int index = Integer.valueOf(((JButton) e.getSource()).getName().substring(
 					((JButton) e.getSource()).getName().indexOf(" ")+1));
-			/*elements.remove(index);
-			editorframe.setIgnoreRepaint(true);
-			editor.removeAll();
-			addHeaders();
-			addRows();
-			addButtons();
-			editorframe.setIgnoreRepaint(false);
-			editorframe.repaint();*/
 			elements.remove(index);
-			removeRow(index);
+			removeRow((JButton)e.getSource());
 		}
 	}
 
 	private void edittl() {
-		// TODO Auto-generated method stub
+		new TLEditor();
 		
 	}
 }
