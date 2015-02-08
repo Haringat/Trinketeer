@@ -9,8 +9,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.util.List;
 
-import javax.swing.JDialog;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,7 +81,28 @@ public class DataLoader
 	}
 
 	public static void saveElements(List<Element> elements) {
-		// TODO Auto-generated method stub
+		try{
+			JSONObject root = new JSONObject();
+			JSONArray a = new JSONArray();
+			for(int i = 0; i < elements.size(); i++){
+				JSONObject e = new JSONObject();
+				e.put("color_red", elements.get(i).getColor().getX());
+				e.put("color_green", elements.get(i).getColor().getY());
+				e.put("color_blue", elements.get(i).getColor().getZ());
+				e.put("brightness", elements.get(i).getBrightness());
+				e.put("density", elements.get(i).getDensity());
+				e.put("break_on_impact", elements.get(i).shouldBreakOnImpact());
+				e.put("damage", elements.get(i).getDamage());
+				e.put("texture", elements.get(i).getTexture());
+				e.put("manamod", elements.get(i).getManaMod());
+				e.put("sizemod", elements.get(i).getSizeMod());
+				e.put("name", elements.get(i).getName());
+				a.put(e);
+			}
+			root.put("elements", a);
+			JSONUtil.putJSONObjectIntoFile(elementsFile, root);
+			
+		}catch(JSONException e){}
 		
 	}
 }

@@ -29,6 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.JViewport;
 import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileFilter;
 
@@ -40,12 +41,12 @@ public class Editor extends JFrame implements MouseListener, ActionListener
 {
 	private static final long serialVersionUID = -1549438543620749797L;
 	private List<Element> elements;
-	//private JFrame this = new JFrame();
 	private JPanel editor;
 	private JButton add;
 	private JButton save;
 	private JButton edittl;
 	private JScrollPane sp;
+	private JViewport vp;
 	
 	private HashMap<JButton, Component[]> id = new HashMap<JButton, Component[]>();
 
@@ -62,22 +63,19 @@ public class Editor extends JFrame implements MouseListener, ActionListener
 		c.gridheight = 3;
 		c.fill = VERTICAL;
 		c.anchor = EAST;
-		JScrollBar vbar = new JScrollBar(JScrollBar.VERTICAL);
-		vbar.setToolTipText("hallo");
-		pane.add(vbar);
-		vbar.setVisible(true);
-		sp = new JScrollPane(editor);
+		vp = new JViewport();
+		vp.add(editor);
+		sp = new JScrollPane(vp);
 		sp.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);
-		sp.setVerticalScrollBar(vbar);
 		c.gridx = 0;
 		c.gridy = 0;
 		c.gridwidth = 2;
 		c.gridheight = 3;
 		pane.add(sp);
 		//pane.add(editor);
-		this.setMaximumSize(new Dimension(
+		/*this.setMaximumSize(new Dimension(
 				(int)Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2,
-				(int)Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2));
+				(int)Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2));*/
 		edittl = new JButton("edit texturelib");
 		edittl.addActionListener(this);
 		add = new JButton("+");
@@ -135,17 +133,8 @@ public class Editor extends JFrame implements MouseListener, ActionListener
 	}
 
 	private void addRow(){
-		if(elements.size() == 0){
-			editor.removeAll();
-			addHeaders();
-			elements.add(new Element());
-			this.invalidate();
-			addRow(elements.get(elements.size()-1), elements.size());
-			//addButtons();
-		} else {
 			elements.add(new Element());
 			addRow(elements.get(elements.size()-1), elements.size());
-		}
 	}
 
 	private void addRow(Element e, int i) {
