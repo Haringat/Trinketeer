@@ -1,5 +1,6 @@
 package com.ichmed.trinketeers.entity.pickup;
 
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector4f;
 
 import com.ichmed.trinketeers.entity.Player;
@@ -42,7 +43,7 @@ public class ManaBubble extends Pickup
 	public ILight createLight()
 	{
 		SimpleLight l = new SimpleLight();
-		l.setPosition(this.getCenter());
+		l.setPosition(new Vector2f(this.getCenter()));
 		l.setColor(new Vector4f(.14f, .14f, .6f, 1));
 		return l;
 	}

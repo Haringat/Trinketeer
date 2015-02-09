@@ -82,7 +82,7 @@ public class Player extends Entity
 			glfwGetCursorPos(Game.window, b1, b2);
 
 			Vector2f v = (Vector2f) new Vector2f((float) b1.get(0) - Game.WIDTH / 2, Game.HEIGHT / 2 - (float) b2.get(0)).normalise(null);
-			Vector2f v2 = this.getCenter();
+			Vector3f v2 = this.getCenter();
 			currentSpellLeft.cast(world, this, v2.x, v2.y, v);
 			shotCooldownLeft = currentSpellLeft.cooldown;
 			mana -= currentSpellLeft.getManaCost();
@@ -95,7 +95,7 @@ public class Player extends Entity
 			glfwGetCursorPos(Game.window, b1, b2);
 
 			Vector2f v = (Vector2f) new Vector2f((float) b1.get(0) - Game.WIDTH / 2, Game.HEIGHT / 2 - (float) b2.get(0)).normalise(null);
-			Vector2f v2 = this.getCenter();
+			Vector3f v2 = this.getCenter();
 			currentSpellRight.cast(world, this, v2.x, v2.y, v);
 			shotCooldownRight = currentSpellRight.cooldown;
 			mana -= currentSpellRight.getManaCost();

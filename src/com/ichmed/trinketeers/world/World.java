@@ -143,8 +143,7 @@ public class World
 	{
 		if(player.position.z == 0) LightRenderer.setAmbientLight(LIGHT_DAYTIME);
 		else LightRenderer.setAmbientLight(LIGHT_FULL_DARK);
-		System.out.println(Chunk.getAllLoadedEntities().size());
-		for (Entity e : Chunk.getAllLoadedEntities())	
+		for (Entity e : Chunk.getAllLoadedEntitiesForLayer((int)player.position.z))	
 			e.tick(this);
 		render();
 	}
@@ -153,7 +152,7 @@ public class World
 	{
 		// GLHelper.renderBackground(this);
 		glPushMatrix();
-		Vector2f v = player.getCenter();
+		Vector3f v = player.getCenter();
 		glTranslatef(-v.x, -v.y, 0);
 		renderChunks(false);
 		worldGraphics.sort(new GraphicSorterYAxis());
@@ -174,7 +173,7 @@ public class World
 			{
 				int x = i + (int) ((player.getCenter().x - 1) * 8);
 				int y = j + (int) ((player.getCenter().y - 1) * 8);
-				Tile t = Tile.tiles[Chunk.getTile(x, y, (int)player.position.z)];
+				Tile t = Tile.tiles[Chunk.getTile(this, x, y, (int)player.position.z)];
 				if (t.renderInFront(this, x, y) == b) t.render(this, x, y);
 			}
 	}
@@ -230,17 +229,17 @@ public class World
 	
 	public void addEntityToChunk(Entity e)
 	{
-		Chunk.getChunk(e.position).entities.add(e);
+		Chunk.getChunk(this, new Vector3f(e.position)).entities.add(e);
 	}
 	
 	public void removeEntityFromChunk(Entity e)
 	{
-		Chunk.getChunk(e.position).entities.remove(e);
+		Chunk.getChunk(this, new Vector3f(e.position)).entities.remove(e);
 	}
 
 	public List<Entity> getEntitiesByDistance(Entity source, float maxDistance)
 	{
-		List<Entity> l = new ArrayList<>(Chunk.getAllLoadedEntities());
+		List<Entity> l = new ArrayList<>(Chunk.getAllLoadedEntitiesForLayer((int)source.position.z));
 		l.sort(new Comparator<Entity>()
 		{
 
@@ -312,6 +311,6 @@ public class World
 	{
 		int pointX = (int) (point.x);
 		int pointY = (int) (point.y);
-		return Tile.tiles[Chunk.getTile(pointX, pointY, (int) point.z)].massive;
+		return Tile.tiles[Chunk.getTile(this, pointX, pointY, (int) point.z)].massive;
 	}
 }

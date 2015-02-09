@@ -28,7 +28,7 @@ public class ChunkSave
 			for (int j = 0; j < clusterSize; j++)
 				for (int k = 0; k < clusterSize; k++)
 				{
-					Chunk c = getChunk(i + x * clusterSize, j + y * clusterSize, k + z * clusterSize);
+					Chunk c = getChunk(w, i + x * clusterSize, j + y * clusterSize, k + z * clusterSize);
 					data.append("[" + i + "x" + j + "x" + k + "{");
 					for (int l = 0; l < chunkSize * chunkSize; l++)
 					{

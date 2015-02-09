@@ -1,11 +1,10 @@
 package com.ichmed.trinketeers.entity.pickup;
 
-import org.lwjgl.util.vector.Vector2f;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
+
+import org.lwjgl.util.vector.Vector3f;
 
 import com.ichmed.trinketeers.Game;
-
-import static org.lwjgl.glfw.GLFW.*;
-
 import com.ichmed.trinketeers.entity.Player;
 import com.ichmed.trinketeers.util.render.GLHelper;
 import com.ichmed.trinketeers.util.render.TrueTypeFont;
@@ -49,7 +48,7 @@ public class Ladder extends Pickup
 	protected void actualRender(World w)
 	{
 		super.actualRender(w);
-		Vector2f v = this.getCenter();
+		Vector3f v = this.getCenter();
 		if(w.getNumberOfEnemies() == 0)
 			GLHelper.renderText(v.x, v.y + 0.05f, "Prees SPACE to enter", 0.001f, 0.001f, TrueTypeFont.ALIGN_CENTER);
 		else if(Game.isKeyDown(GLFW_KEY_SPACE) && isPlayerInPickupRange(w.player) && w.getNumberOfEnemies() > 0) 
