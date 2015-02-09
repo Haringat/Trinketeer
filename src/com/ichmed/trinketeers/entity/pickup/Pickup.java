@@ -2,6 +2,7 @@ package com.ichmed.trinketeers.entity.pickup;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.entity.Player;
@@ -35,8 +36,8 @@ public abstract class Pickup extends Entity
 			if (this.movesTowardPlayer() && this.movementDelay <= 0)
 			{
 				this.speed = 0.02f;
-				Vector2f p = world.player.getCenter();
-				Vector2f z = this.getCenter();
+				Vector3f p = world.player.getCenter();
+				Vector3f z = this.getCenter();
 				this.preferredDirection = (Vector2f) new Vector2f(p.x - z.x, p.y - z.y);
 			} else this.speed = 0;
 

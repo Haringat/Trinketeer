@@ -7,6 +7,7 @@ import java.util.List;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.ichmed.trinketeers.entity.Entity;
+import com.ichmed.trinketeers.world.generator.WorldGenerator;
 
 public class Chunk
 {
@@ -26,11 +27,12 @@ public class Chunk
 		this.posZ = z;
 	}
 
-	public static Chunk createNewChunk(int x, int y, int z)
+	public static Chunk createNewChunk(World world, int x, int y, int z)
 	{
 		Chunk c = new Chunk(x, y, z);
 		c.populate();
 		chunks.put(getHashString(x, y, z), c);
+		WorldGenerator.generateChunk(world, x, y, z);
 		return c;
 	}
 
@@ -47,7 +49,7 @@ public class Chunk
 		return x + "x" + y + "x" + z;
 	}
 
-	public static void setTile(int x, int y, int z, int id)
+	public static void setTile(World w, int x, int y, int z, int id)
 	{
 
 		int chunkX = x / chunkSize;
@@ -56,7 +58,7 @@ public class Chunk
 		if (x < 0) chunkX--;
 		if (y < 0) chunkY--;
 
-		Chunk c = getChunk(chunkX, chunkY, z);
+		Chunk c = getChunk(w, chunkX, chunkY, z);
 		int xTemp = x % chunkSize;
 		if (xTemp < 0) xTemp += chunkSize;
 		int yTemp = y % chunkSize;
@@ -69,7 +71,7 @@ public class Chunk
 		this.tiles[chunkSize * y + x] = id;
 	}
 
-	public static int getTile(int x, int y, int z)
+	public static int getTile(World w, int x, int y, int z)
 	{
 		int chunkX = x / chunkSize;
 		int chunkY = y / chunkSize;
@@ -77,31 +79,31 @@ public class Chunk
 		if (x < 0) chunkX--;
 		if (y < 0) chunkY--;
 
-		if (chunks.get(getHashString(chunkX, chunkY, z)) == null) createNewChunk(chunkX, chunkY, 0);
+		if (chunks.get(getHashString(chunkX, chunkY, z)) == null) createNewChunk(w, chunkX, chunkY, z);
 
 		int xTemp = x % chunkSize;
 		if (xTemp < 0) xTemp += chunkSize;
 		int yTemp = y % chunkSize;
 		if (yTemp < 0) yTemp += chunkSize;
-		return getChunk(chunkX, chunkY, z).getTileFromChunk(xTemp, yTemp);
+		return getChunk(w, chunkX, chunkY, z).getTileFromChunk(xTemp, yTemp);
 	}
 
 	private int getTileFromChunk(int x, int y)
 	{
 		return this.tiles[chunkSize * y + x];
 	}
-	
-	public static Chunk getChunk(Vector3f p)
+
+	public static Chunk getChunk(World w, Vector3f p)
 	{
-		if(p.x < 0)p.x--;
-		if(p.y < 0)p.y--;
-		return getChunk((int)p.x, (int)p.y, (int)p.z);
+		if (p.x < 0) p.x--;
+		if (p.y < 0) p.y--;
+		return getChunk(w, (int) p.x, (int) p.y, (int) p.z);
 	}
 
-	public static Chunk getChunk(int x, int y, int z)
+	public static Chunk getChunk(World world, int x, int y, int z)
 	{
 		Chunk c = chunks.get(getHashString(x, y, z));
-		if (c == null) return createNewChunk(x, y, z);
+		if (c == null) return createNewChunk(world, x, y, z);		
 		return c;
 	}
 
@@ -114,13 +116,22 @@ public class Chunk
 					chunks.put(getHashString(i + x * clusterSize, j + y * clusterSize, k + z * clusterSize), null);
 				}
 	}
+	
+	public static List<Entity> getAllLoadedEntitiesForLayer(int layer)
+	{
+		ArrayList<Entity> ret = new ArrayList<>();
+		for (String s : chunks.keySet())
+			if (chunks.get(s) != null) for (Entity e : chunks.get(s).entities)
+				if (!ret.contains(e) && e.position.z == layer) ret.add(e);
+		return ret;
+	}
 
 	public static List<Entity> getAllLoadedEntities()
 	{
 		ArrayList<Entity> ret = new ArrayList<>();
 		for (String s : chunks.keySet())
 			if (chunks.get(s) != null) for (Entity e : chunks.get(s).entities)
-				if(!ret.contains(e))ret.add(e);
+				if (!ret.contains(e)) ret.add(e);
 		return ret;
 	}
 }

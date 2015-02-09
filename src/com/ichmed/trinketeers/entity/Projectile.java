@@ -43,7 +43,7 @@ public class Projectile extends Entity
 		lightSource.setActive(f > 0);
 		Vector3f v = Element.elements.get(element).getColor();
 		lightSource.setColor((Vector4f) new Vector4f(v.x, v.y, v.z, f).scale(f * this.size.x * this.size.y));
-		lightSource.setPosition(this.getCenter());
+		lightSource.setPosition(new Vector2f(this.getCenter()));
 		return lightSource;
 	}
 

@@ -53,7 +53,7 @@ public class Entity implements IWorldGraphic, Waypoint
 	public void tick(World world)
 	{
 		behaviourString = null;
-		if (this.getLight() != null) this.getLight().setPosition(this.getCenter());
+		if (this.getLight() != null) this.getLight().setPosition(new Vector2f(this.getCenter()));
 		if (direction.length() > 0) direction.normalise();
 		if (this.isDead) despawnCountDown--;
 		if (this.lifespan == 0) this.kill(world);
@@ -212,14 +212,14 @@ public class Entity implements IWorldGraphic, Waypoint
 		return this.isDead;
 	}
 
-	public Vector2f getCenter()
+	public Vector3f getCenter()
 	{
-		return new Vector2f(this.position.x + this.size.x / 2, this.position.y + this.size.y / 2);
+		return new Vector3f(this.position.x + this.size.x / 2, this.position.y + this.size.y / 2, this.position.z);
 	}
 
-	public Entity setCenter(Vector2f v)
+	public Entity setCenter(Vector3f v)
 	{
-		this.position = new Vector3f(v.x - this.size.x / 2, v.y - this.size.y / 2, 0);
+		this.position = new Vector3f(v.x - this.size.x / 2, v.y - this.size.y / 2, v.z);
 		return this;
 	}
 
@@ -235,11 +235,11 @@ public class Entity implements IWorldGraphic, Waypoint
 		if (this.dropLootOnDeath)
 		{
 
-			Vector2f c = this.getCenter();
+			Vector3f c = this.getCenter();
 			List<Entity> l = Loot.getLootForValue(this.lootValue);
 			for (int i = 0; i < l.size(); i++)
 			{
-				Vector2f p = new Vector2f(c.x + ((float) (Math.random() - 0.5) * this.lootRange), c.y + ((float) (Math.random() - 0.5) * this.lootRange));
+				Vector3f p = new Vector3f(c.x + ((float) (Math.random() - 0.5) * this.lootRange), c.y + ((float) (Math.random() - 0.5) * this.lootRange), this.position.z);
 				world.spawn(l.get(i).setCenter(p), false);
 			}
 		}

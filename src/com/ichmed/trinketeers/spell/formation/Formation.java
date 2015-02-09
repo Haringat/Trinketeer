@@ -1,6 +1,7 @@
 package com.ichmed.trinketeers.spell.formation;
 
 import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.entity.Projectile;
@@ -25,7 +26,7 @@ public abstract class Formation
 		p.direction = p.preferredDirection = new Vector2f(direction);
 
 		p.setController(controller);
-		p.setCenter(new Vector2f(x + p.direction.x * (controller.size.x / 2), y + p.direction.y * (controller.size.y / 2)));
+		p.setCenter(new Vector3f(x + p.direction.x * (controller.size.x / 2), y + p.direction.y * (controller.size.y / 2), p.position.z));
 
 		p.lifespan = spell.getLifespan();
 		p.trailDelay = p.maxTrailDelay = spell.trailDelay;
