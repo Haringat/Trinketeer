@@ -22,7 +22,7 @@ import com.ichmed.trinketeers.world.World;
 public class Entity implements IWorldGraphic, Waypoint
 {
 	public Vector3f position = new Vector3f();
-	public Vector2f direction = new Vector2f(1, 0), size = new Vector2f(.1f, .1f);
+	public Vector2f direction = new Vector2f(1, 0), size = new Vector2f(.125f, .125f);
 	public Vector2f preferredDirection = new Vector2f(1, 0);
 	public float speed = 0f;
 	public float preferredSpeed = 0f;
@@ -310,6 +310,7 @@ public class Entity implements IWorldGraphic, Waypoint
 	@Override
 	public boolean shouldRender(World w)
 	{
-		return this.position.z == w.player.position.z;
+		return this.position.z == w.player.position.z && this.position.x > w.player.position.x - 1.5f && this.position.x < w.player.position.x + 1.5f && this.position.y > w.player.position.y - 1.5f
+				&& this.position.y < w.player.position.y + 1.5f;
 	}
 }

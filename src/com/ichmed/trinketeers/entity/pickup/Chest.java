@@ -16,7 +16,7 @@ public class Chest extends Pickup
 	{
 		this.renderWhenDead = true;
 		this.despawnCountDown = 100000;
-		this.size = new Vector2f(0.2f, 0.1f);
+		this.size = new Vector2f(0.25f, 0.125f);
 		this.isSolid = true;
 		this.pickupRange = 0.2f;
 		this.solidWhenDead = true;
@@ -29,14 +29,14 @@ public class Chest extends Pickup
 	@Override
 	public boolean pickUp(World w, Player p)
 	{
-		if (Game.isKeyDown(GLFW_KEY_SPACE) && w.getNumberOfEnemies() == 0) return true;
+		if (Game.isKeyDown(GLFW_KEY_SPACE) && w.getNumberOfEnemies((int) this.position.z) == 0) return true;
 		return false;
 	}
 
 	@Override
 	public AxisAllignedBoundingBox getRenderArea()
 	{
-		return new AxisAllignedBoundingBox(position.x, this.position.y, this.size.x, this.size.y + 0.1f);
+		return new AxisAllignedBoundingBox(position.x, this.position.y, this.size.x, this.size.y + 0.125f);
 	}
 	
 	

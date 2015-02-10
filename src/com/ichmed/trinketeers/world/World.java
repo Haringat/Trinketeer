@@ -271,11 +271,11 @@ public class World
 		return null;
 	}
 	
-	public int getNumberOfEnemies()
+	public int getNumberOfEnemies(int layer)
 	{
 		int i = 0;
 		for (Entity e : Chunk.getAllLoadedEntities())
-			if (e.isHostile()) i++;
+			if (e.isHostile() && e.position.z == layer) i++;
 		return i;
 	}
 

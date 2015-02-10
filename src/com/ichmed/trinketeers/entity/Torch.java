@@ -55,4 +55,9 @@ public class Torch extends Pickup
 		return new AxisAllignedBoundingBox(this.position.x - 0.0375f, this.position.y, this.size.x + 0.075f, this.size.y + 0.075f);
 	}
 
+	@Override
+	public String getTextureForState(World w)
+	{
+		return this.name + "_" + (this.ticksExisted / 10) % 4;
+	}
 }

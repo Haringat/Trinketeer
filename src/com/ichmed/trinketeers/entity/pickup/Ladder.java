@@ -2,6 +2,7 @@ package com.ichmed.trinketeers.entity.pickup;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.ichmed.trinketeers.Game;
@@ -22,20 +23,21 @@ public class Ladder extends Pickup
 	@Override
 	public boolean pickUp(World w, Player p)
 	{
-		if(Game.isKeyDown(GLFW_KEY_SPACE)) p.position.z += down ? -1 : 1;
+		if(Game.isKeyDown(GLFW_KEY_SPACE))
+			p.setCenter(new Vector3f(this.getCenter().x, this.getCenter().y + (down ? -0.125f : 0.125f), this.position.z + (down ? -1 : 1)));
 		return false;
 	}
 
 	@Override
 	public boolean canBePickedUp(World w)
 	{
-		return super.canBePickedUp(w) && w.getNumberOfEnemies() <= 0;
+		return super.canBePickedUp(w) && w.getNumberOfEnemies((int) this.position.z) <= 0;
 	}
 
 	@Override
 	public String getTextureForState(World w)
 	{
-		return this.canBePickedUp(w) ? "hatchOpen" : "hatchClosed";
+		return "ladder" + (this.down ? "Down" : "Up") + (this.canBePickedUp(w) ? "Open" : "Closed");
 	}
 
 	@Override
@@ -49,9 +51,9 @@ public class Ladder extends Pickup
 	{
 		super.actualRender(w);
 		Vector3f v = this.getCenter();
-		if(w.getNumberOfEnemies() == 0)
+		if(w.getNumberOfEnemies((int) this.position.z) == 0)
 			GLHelper.renderText(v.x, v.y + 0.05f, "Prees SPACE to enter", 0.001f, 0.001f, TrueTypeFont.ALIGN_CENTER);
-		else if(Game.isKeyDown(GLFW_KEY_SPACE) && isPlayerInPickupRange(w.player) && w.getNumberOfEnemies() > 0) 
+		else if(Game.isKeyDown(GLFW_KEY_SPACE) && isPlayerInPickupRange(w.player) && w.getNumberOfEnemies((int)this.position.z) > 0) 
 			GLHelper.renderText(v.x, v.y + 0.05f, "CLOSED!", 0.002f, 0.002f, TrueTypeFont.ALIGN_CENTER);		
 	}
 
