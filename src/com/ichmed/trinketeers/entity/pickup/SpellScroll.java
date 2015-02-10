@@ -68,7 +68,7 @@ public class SpellScroll extends Pickup
 	public void actualRender(World w)
 	{
 		GLHelper.renderTexturedQuad(this.position.x, this.position.y - 0.03f, this.size.x, this.size.y, "shadow");
-		float f = (float) (Math.sin(this.ticksExisted / 100d) * 0.02f);
+		float f = (float) (Math.sin((this.ticksExisted / 100d)) + 1) * 0.02f;
 		GLHelper.renderTexturedQuad(this.position.x, this.position.y + f, this.size.x, this.size.y, "scroll");
 		GLHelper.renderTexturedQuad(this.position.x, this.position.y + f, this.size.x, this.size.y, this.spell.element.toLowerCase() + "Projectile");
 		if (this.canBePickedUp(w))

@@ -14,7 +14,7 @@ public class Chunk
 	public static HashMap<String, Chunk> chunks = new HashMap<>();
 	public List<Entity> entities = new ArrayList<Entity>();
 
-	public static final int chunkSize = 16;
+	public static final int chunkSize = 8;
 	public static final int clusterSize = 4;
 	public int[] tiles = new int[chunkSize * chunkSize];
 
@@ -79,8 +79,6 @@ public class Chunk
 		if (x < 0) chunkX--;
 		if (y < 0) chunkY--;
 
-		if (chunks.get(getHashString(chunkX, chunkY, z)) == null) createNewChunk(w, chunkX, chunkY, z);
-
 		int xTemp = x % chunkSize;
 		if (xTemp < 0) xTemp += chunkSize;
 		int yTemp = y % chunkSize;
@@ -95,15 +93,17 @@ public class Chunk
 
 	public static Chunk getChunk(World w, Vector3f p)
 	{
-		if (p.x < 0) p.x--;
-		if (p.y < 0) p.y--;
-		return getChunk(w, (int) p.x, (int) p.y, (int) p.z);
+		int x = (int) p.x;
+		int y = (int) p.y;
+		if (p.x < 0) x--;
+		if (p.y < 0) y--;
+		return getChunk(w, x, y, (int) p.z);
 	}
 
 	public static Chunk getChunk(World world, int x, int y, int z)
 	{
 		Chunk c = chunks.get(getHashString(x, y, z));
-		if (c == null) return createNewChunk(world, x, y, z);		
+		if (c == null) return createNewChunk(world, x, y, z);
 		return c;
 	}
 
@@ -112,11 +112,9 @@ public class Chunk
 		for (int i = 0; i < clusterSize; i++)
 			for (int j = 0; j < clusterSize; j++)
 				for (int k = 0; k < clusterSize; k++)
-				{
 					chunks.put(getHashString(i + x * clusterSize, j + y * clusterSize, k + z * clusterSize), null);
-				}
 	}
-	
+
 	public static List<Entity> getAllLoadedEntitiesForLayer(int layer)
 	{
 		ArrayList<Entity> ret = new ArrayList<>();

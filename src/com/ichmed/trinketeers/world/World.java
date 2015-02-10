@@ -111,16 +111,16 @@ public class World
 			}
 		});
 	}
-	public void generateZombies(int amount)
+	public void generateZombies(int amount, int layer)
 	{
 		for (int i = 0; i < amount; i++)
-			spawn((new Zombie()).setPosition(new Vector2f((float) Math.random() - 0.5f, (float) Math.random() * 0.5f)));
+			spawn((new Zombie()).setCenter(new Vector3f((float) Math.random() - 0.5f, (float) Math.random() * 0.5f, layer)));
 	}
 
-	public void generateFlameElementals(int amount)
+	public void generateFlameElementals(int amount, int layer)
 	{
 		for (int i = 0; i < amount; i++)
-			spawn((new FlameElemental()).setPosition(new Vector2f((float) Math.random() - 0.5f, (float) Math.random() * 0.5f)));
+			spawn((new FlameElemental()).setCenter(new Vector3f((float) Math.random() - 0.5f, (float) Math.random() * 0.5f, layer)));
 	}
 
 	public void generateTorches(int amount)
@@ -157,7 +157,7 @@ public class World
 		renderChunks(false);
 		worldGraphics.sort(new GraphicSorterYAxis());
 		for (IWorldGraphic g : worldGraphics)
-			g.render(this);
+			if(g.shouldRender(this)) g.render(this);
 		renderChunks(true);
 		glPopMatrix();
 		LightRenderer.renderLights(this, lights);
@@ -168,11 +168,11 @@ public class World
 
 	private void renderChunks(boolean b)
 	{
-		for (int i = -1; i < 17; i++)
-			for (int j = -1; j < 17; j++)
+		for (int i = -Chunk.chunkSize - 1; i < Chunk.chunkSize + 1; i++)
+			for (int j = -Chunk.chunkSize - 1; j < Chunk.chunkSize + 1; j++)
 			{
-				int x = i + (int) ((player.getCenter().x - 1) * 8);
-				int y = j + (int) ((player.getCenter().y - 1) * 8);
+				int x = i + (int) ((player.getCenter().x) * Chunk.chunkSize);
+				int y = j + (int) ((player.getCenter().y) * Chunk.chunkSize);
 				Tile t = Tile.tiles[Chunk.getTile(this, x, y, (int)player.position.z)];
 				if (t.renderInFront(this, x, y) == b) t.render(this, x, y);
 			}
@@ -185,20 +185,20 @@ public class World
 		return true;
 	}
 
-	public List<Entity> getListOfIntersectingEntities(Entity e, boolean onlySolids)
+	public List<Entity> getListOfIntersectingEntities(Entity e, boolean onlySolids, int layer)
 	{
-		return getListOfIntersectingEntities(e.getColissionBox(), e.getEntitiesExcludedFromCollision(), onlySolids);
+		return getListOfIntersectingEntities(e.getColissionBox(), e.getEntitiesExcludedFromCollision(), onlySolids, layer);
 	}
 
-	public List<Entity> getListOfIntersectingEntities(AxisAllignedBoundingBox aabb, boolean onlySolids)
+	public List<Entity> getListOfIntersectingEntities(AxisAllignedBoundingBox aabb, boolean onlySolids, int layer)
 	{
-		return getListOfIntersectingEntities(aabb, null, onlySolids);
+		return getListOfIntersectingEntities(aabb, null, onlySolids, layer);
 	}
 
-	public List<Entity> getListOfIntersectingEntities(AxisAllignedBoundingBox aabb, List<Entity> exclude, boolean onlySolids)
+	public List<Entity> getListOfIntersectingEntities(AxisAllignedBoundingBox aabb, List<Entity> exclude, boolean onlySolids, int layer)
 	{
 		ArrayList<Entity> list = new ArrayList<>();
-		for (Entity f : Chunk.getAllLoadedEntities())
+		for (Entity f : Chunk.getAllLoadedEntitiesForLayer(layer))
 			if ((exclude == null || !(exclude.contains(f))) && AxisAllignedBoundingBox.doAABBsIntersect(aabb, f.getColissionBox())) if (!onlySolids || f.isSolid) list.add(f);
 		return list;
 	}
@@ -218,7 +218,7 @@ public class World
 		if (checkForColission)
 		{
 			AxisAllignedBoundingBox aabb = e.getColissionBox();
-			if (getListOfIntersectingEntities(aabb, checkSolidsOnly).size() > 0) return false;
+			if (getListOfIntersectingEntities(aabb, checkSolidsOnly, (int)e.position.z).size() > 0) return false;
 		}
 		this.addEntityToChunk(e);
 		this.worldGraphics.add(e);

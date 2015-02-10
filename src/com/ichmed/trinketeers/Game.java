@@ -101,8 +101,8 @@ public class Game
 				if (key == GLFW_KEY_F3 && action == GLFW_RELEASE) renderHitBoxes = !renderHitBoxes;
 				if (key == GLFW_KEY_F5 && action == GLFW_RELEASE) ChunkSave.saveChunkClusterToDisk(world, 0, 0, 0);
 				if (key == GLFW_KEY_T && action == GLFW_RELEASE) Chunk.setTile(world, (int)(world.player.position.x * 8), (int)(world.player.position.y * 8), (int)world.player.position.z, 2);
-				if (key == GLFW_KEY_KP_ADD && action == GLFW_RELEASE) zoom += 0.25;
-				if (key == GLFW_KEY_KP_SUBTRACT && action == GLFW_RELEASE) zoom -= 0.25;
+				if (key == GLFW_KEY_KP_ADD && action == GLFW_RELEASE) world.player.position.z++;
+				if (key == GLFW_KEY_KP_SUBTRACT && action == GLFW_RELEASE) zoom -= world.player.position.z--;
 
 				if (action == GLFW_PRESS) keys.put(key, true);
 				if (action == GLFW_RELEASE) keys.put(key, false);

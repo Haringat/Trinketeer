@@ -48,24 +48,6 @@ public class Chest extends Pickup
 	}
 
 	@Override
-	public void tick(World world)
-	{
-		AxisAllignedBoundingBox aabb = new AxisAllignedBoundingBox(this.position.x + 0.0001f, this.position.y + 0.0001f, this.size.x + 0.0002f, this.size.x + 0.0002f);
-		if(world.getListOfIntersectingEntities(aabb, true).contains(world.player))
-		{
-			this.speed = 0.0001f;
-			this.isMoveable = true;
-			this.preferredDirection = new Vector2f(this.position).translate(world.player.position.x, world.player.position.y);
-		}
-		else
-		{
-			this.isMoveable = false;
-			this.speed = 0;
-		}
-		super.tick(world);
-	}
-
-	@Override
 	public boolean movesTowardPlayer()
 	{
 		return false;

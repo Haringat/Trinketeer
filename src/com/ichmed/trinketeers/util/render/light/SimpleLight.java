@@ -11,11 +11,17 @@ public class SimpleLight implements ILight
 	private float angle = 360;
 	private boolean isActive = true;
 	private float maxRange;
+	private int layer;
 
 	@Override
 	public float getMaxRange()
 	{
 		return maxRange;
+	}
+	
+	public void setLayer(int layer)
+	{
+		this.layer = layer;
 	}
 
 	public void setMaxRange(float maxRange)
@@ -99,6 +105,12 @@ public class SimpleLight implements ILight
 	public boolean isActive()
 	{
 		return isActive;
+	}
+
+	@Override
+	public boolean shouldRender(int layer)
+	{
+		return this.layer == layer;
 	}
 
 }

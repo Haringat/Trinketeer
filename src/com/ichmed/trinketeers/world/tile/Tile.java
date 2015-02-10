@@ -3,6 +3,7 @@ package com.ichmed.trinketeers.world.tile;
 import org.lwjgl.opengl.GL11;
 
 import com.ichmed.trinketeers.util.render.GLHelper;
+import com.ichmed.trinketeers.world.Chunk;
 import com.ichmed.trinketeers.world.World;
 
 public class Tile
@@ -47,12 +48,13 @@ public class Tile
 
 	public void render(World w, int x, int y)
 	{
-		if (this.getTexture(w, x, y, (int)w.player.position.z) != null) GLHelper.renderTexturedQuad((.125f * x), (.125f * y), .125f, .125f, this.getTexture(w, x, y, (int)w.player.position.z));
+		float f = 1f / (float) Chunk.chunkSize;
+		if (this.getTexture(w, x, y, (int)w.player.position.z) != null) GLHelper.renderTexturedQuad(f * x, f * y, f, f, this.getTexture(w, x, y, (int)w.player.position.z));
 		else
 		{
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glColor3f(0, 0, 0);
-			GLHelper.drawRect((.125f * x), (.125f * y), .125f, .125f);
+			GLHelper.drawRect((f * x), (f * y), f, f);
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			GL11.glColor3f(1, 1, 1);
 		}

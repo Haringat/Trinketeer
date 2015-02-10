@@ -30,7 +30,6 @@ public class Player extends Entity
 	{
 		super();
 		this.size = new Vector2f(.075f, .075f);
-		this.position = new Vector3f(-0.25f, 0, 0);
 		this.speed = 0.01f;
 		this.preferredSpeed = 0.01f;
 		this.name = "player";
@@ -72,8 +71,6 @@ public class Player extends Entity
 		else this.direction.x = this.preferredDirection.x = 0;
 		shotCooldownLeft--;
 		shotCooldownRight--;
-
-		if (!this.isDead && world.getListOfIntersectingEntities(this, true).size() > 0) System.out.println("Yay, I intersect! Wait... what? I totally should not be doing that!");
 
 		if (this.currentSpellLeft != null && glfwGetMouseButton(Game.window, GLFW_MOUSE_BUTTON_1) == 1 && shotCooldownLeft <= 0 && this.mana >= currentSpellLeft.getManaCost())
 		{

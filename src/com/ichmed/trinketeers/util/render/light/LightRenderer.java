@@ -54,7 +54,7 @@ public class LightRenderer
 		glLoadIdentity();
 		for (ILight light : list)
 		{
-			if (!light.isActive()) continue;
+			if (!light.isActive() || !light.shouldRender((int)world.player.position.z)) continue;
 			glColorMask(false, false, false, false);
 			glStencilFunc(GL_ALWAYS, 1, 1);
 			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);

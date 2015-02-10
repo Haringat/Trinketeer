@@ -23,4 +23,6 @@ public interface ILight
 	public float getMaxRange();
 	
 	public void setPosition(Vector2f pos);
+	
+	public boolean shouldRender(int layer);
 }

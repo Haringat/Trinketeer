@@ -26,7 +26,7 @@ public abstract class Formation
 		p.direction = p.preferredDirection = new Vector2f(direction);
 
 		p.setController(controller);
-		p.setCenter(new Vector3f(x + p.direction.x * (controller.size.x / 2), y + p.direction.y * (controller.size.y / 2), p.position.z));
+		p.setCenter(new Vector3f(x + p.direction.x * (controller.size.x / 2), y + p.direction.y * (controller.size.y / 2), controller.position.z));
 
 		p.lifespan = spell.getLifespan();
 		p.trailDelay = p.maxTrailDelay = spell.trailDelay;

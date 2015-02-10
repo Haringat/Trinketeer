@@ -16,6 +16,7 @@ import com.ichmed.trinketeers.util.Loot;
 import com.ichmed.trinketeers.util.render.GLHelper;
 import com.ichmed.trinketeers.util.render.IWorldGraphic;
 import com.ichmed.trinketeers.util.render.light.ILight;
+import com.ichmed.trinketeers.util.render.light.SimpleLight;
 import com.ichmed.trinketeers.world.World;
 
 public class Entity implements IWorldGraphic, Waypoint
@@ -52,8 +53,14 @@ public class Entity implements IWorldGraphic, Waypoint
 
 	public void tick(World world)
 	{
+		// System.out.println("I'm a " + name + " and I'm on level " +
+		// (int)this.position.z);
 		behaviourString = null;
-		if (this.getLight() != null) this.getLight().setPosition(new Vector2f(this.getCenter()));
+		if (this.getLight() != null)
+		{
+			this.getLight().setPosition(new Vector2f(this.getCenter()));
+			((SimpleLight) this.light).setLayer((int) this.position.z);
+		}
 		if (direction.length() > 0) direction.normalise();
 		if (this.isDead) despawnCountDown--;
 		if (this.lifespan == 0) this.kill(world);
@@ -127,7 +134,8 @@ public class Entity implements IWorldGraphic, Waypoint
 		float speedMod = (float) Math.pow(2, iteration);
 		Vector2f iteratedSpeed = new Vector2f((this.direction.x / speedMod) * this.speed, 0);
 		AxisAllignedBoundingBox predictedPosition = new AxisAllignedBoundingBox(position.x + iteratedSpeed.x, position.y + iteratedSpeed.y, size.x, size.y);
-		if (world.getListOfIntersectingEntities(predictedPosition, exclude, true).size() == 0 && !world.isPositionStuckInGeometry(predictedPosition, (int)world.player.position.z))
+		if (world.getListOfIntersectingEntities(predictedPosition, exclude, true, (int) this.position.z).size() == 0
+				&& !world.isPositionStuckInGeometry(predictedPosition, (int) world.player.position.z))
 		{
 			this.position.translate(iteratedSpeed.x, iteratedSpeed.y, 0);
 			return true;
@@ -146,7 +154,8 @@ public class Entity implements IWorldGraphic, Waypoint
 		float speedMod = (float) Math.pow(2, iteration);
 		Vector2f iteratedSpeed = new Vector2f(0, (this.direction.y / speedMod) * this.speed);
 		AxisAllignedBoundingBox predictedPosition = new AxisAllignedBoundingBox(position.x + iteratedSpeed.x, position.y + iteratedSpeed.y, size.x, size.y);
-		if (world.getListOfIntersectingEntities(predictedPosition, exclude, true).size() == 0 && !world.isPositionStuckInGeometry(predictedPosition, (int)world.player.position.z))
+		if (world.getListOfIntersectingEntities(predictedPosition, exclude, true, (int) this.position.z).size() == 0
+				&& !world.isPositionStuckInGeometry(predictedPosition, (int) world.player.position.z))
 		{
 			this.position.translate(iteratedSpeed.x, iteratedSpeed.y, 0);
 			return true;
@@ -176,17 +185,17 @@ public class Entity implements IWorldGraphic, Waypoint
 		glTranslated(renderArea.size.x / 2, renderArea.size.x / 2, 0);
 		glRotated(this.rotation, 0, 0, 1);
 		glTranslated(-renderArea.size.x / 2, -renderArea.size.y / 2, 0);
-//		GLHelper.drawRect(this.size.x, this.size.y);
+		// GLHelper.drawRect(this.size.x, this.size.y);
 		GLHelper.renderTexturedQuad(0, 0, renderArea.size.x, renderArea.size.y, this.getTextureForState(w));
 		glColor3f(1, 1, 1);
 		glPopMatrix();
 	}
-	
+
 	public String getTextureForState(World w)
 	{
-		if( this.behaviourString != null) return this.name + behaviourString;
-		if(this.isDead)return this.name + "Dead";
-		if(this.speed > 0)return this.name + "Moving";
+		if (this.behaviourString != null) return this.name + behaviourString;
+		if (this.isDead) return this.name + "Dead";
+		if (this.speed > 0) return this.name + "Moving";
 		return this.name + "Idle_" + (this.ticksExisted % 240) / 60;
 	}
 
@@ -263,7 +272,7 @@ public class Entity implements IWorldGraphic, Waypoint
 	@Override
 	public float getY()
 	{
-		return this.position.y + this.size.y;
+		return this.position.y;
 	}
 
 	@Override
@@ -296,5 +305,11 @@ public class Entity implements IWorldGraphic, Waypoint
 	public float getRadius()
 	{
 		return this.size.length();
+	}
+
+	@Override
+	public boolean shouldRender(World w)
+	{
+		return this.position.z == w.player.position.z;
 	}
 }

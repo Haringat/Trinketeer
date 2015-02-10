@@ -61,7 +61,7 @@ public class Projectile extends Entity
 			this.direction.x += ((float) Math.random() - .5f) * wobble;
 			this.direction.y += ((float) Math.random() - .5f) * wobble;
 			this.direction.normalise().scale(s);
-			List<Entity> hit = world.getListOfIntersectingEntities(this, true);
+			List<Entity> hit = world.getListOfIntersectingEntities(this, true, (int)this.position.z);
 			for (Entity e : hit)
 			{
 				if (e.isVulnerable)
