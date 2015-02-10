@@ -3,13 +3,7 @@ package com.ichmed.trinketeers.world;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.util.vector.Vector2f;
-
 import com.ichmed.trinketeers.entity.Entity;
-import com.ichmed.trinketeers.entity.pickup.Chest;
-import com.ichmed.trinketeers.entity.pickup.Ladder;
-import com.ichmed.trinketeers.entity.pickup.SpellScroll;
-import com.ichmed.trinketeers.entity.pickup.Torch;
 import com.ichmed.trinketeers.util.render.IWorldGraphic;
 import com.ichmed.trinketeers.util.render.light.ILight;
 import com.ichmed.trinketeers.util.render.light.IShadow;

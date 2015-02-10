@@ -3,13 +3,9 @@ package com.ichmed.trinketeers.entity;
 import java.util.List;
 
 import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.util.vector.Vector4f;
 
 import com.ichmed.trinketeers.spell.Spell;
 import com.ichmed.trinketeers.spell.element.Element;
-import com.ichmed.trinketeers.util.render.light.ILight;
-import com.ichmed.trinketeers.util.render.light.SimpleLight;
 import com.ichmed.trinketeers.world.World;
 
 public class Projectile extends Entity

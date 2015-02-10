@@ -2,7 +2,6 @@ package com.ichmed.trinketeers.entity.pickup;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
-import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.ichmed.trinketeers.Game;

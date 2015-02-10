@@ -13,8 +13,6 @@ import com.ichmed.trinketeers.Game;
 import com.ichmed.trinketeers.ai.BehaviourLight;
 import com.ichmed.trinketeers.spell.Spell;
 import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
-import com.ichmed.trinketeers.util.render.light.ILight;
-import com.ichmed.trinketeers.util.render.light.SimpleLight;
 import com.ichmed.trinketeers.world.World;
 
 public class Player extends Entity

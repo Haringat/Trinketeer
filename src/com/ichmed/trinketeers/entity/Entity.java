@@ -15,8 +15,6 @@ import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
 import com.ichmed.trinketeers.util.Loot;
 import com.ichmed.trinketeers.util.render.GLHelper;
 import com.ichmed.trinketeers.util.render.IWorldGraphic;
-import com.ichmed.trinketeers.util.render.light.ILight;
-import com.ichmed.trinketeers.util.render.light.SimpleLight;
 import com.ichmed.trinketeers.world.World;
 
 public class Entity implements IWorldGraphic, Waypoint

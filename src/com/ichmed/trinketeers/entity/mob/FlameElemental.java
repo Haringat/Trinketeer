@@ -1,7 +1,6 @@
 package com.ichmed.trinketeers.entity.mob;
 
 import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector4f;
 
 import com.ichmed.trinketeers.ai.BehaviourAttackTarget;
 import com.ichmed.trinketeers.ai.BehaviourCastSpellAtTarget;
@@ -13,8 +12,6 @@ import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.entity.Player;
 import com.ichmed.trinketeers.spell.SpellFireball;
 import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
-import com.ichmed.trinketeers.util.render.light.ILight;
-import com.ichmed.trinketeers.util.render.light.SimpleLight;
 import com.ichmed.trinketeers.world.World;
 
 public class FlameElemental extends Entity
