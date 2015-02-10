@@ -57,12 +57,12 @@ public class Editor extends JFrame implements MouseListener, ActionListener, Foc
 	private HashMap<String, Element> elements = new HashMap<String, Element>();
 	private HashMap<String, Component[]> id = new HashMap<String, Component[]>();
 
+	private String tempname;
+
 	public Editor(){
-		//this.setResizable(false);
 		DataLoader.loadElements();
 		editor = new JPanel();
 		GridBagConstraints c = new GridBagConstraints();
-		//elements = new ArrayList<Element>(Element.elements.values());
 		elements = Element.elements;
 		Container pane = this.getContentPane();
 		pane.setLayout(new GridBagLayout());
@@ -95,6 +95,7 @@ public class Editor extends JFrame implements MouseListener, ActionListener, Foc
 		addButtons();
 		
 		editor.setMaximumSize(new Dimension(editor.getSize().width+10, editor.getSize().height + 10));
+		editor.repaint();
 		this.pack();
 		this.setVisible(true);
 	}
@@ -206,10 +207,10 @@ public class Editor extends JFrame implements MouseListener, ActionListener, Foc
 			remove.addActionListener(this);
 			comps[7] = remove;
 			editor.add(remove, c);
-
+			
 			editor.repaint();
 			
-			//pack();
+			pack();
 			id.put(e.getName(), comps);
 		}
 	}
@@ -229,7 +230,7 @@ public class Editor extends JFrame implements MouseListener, ActionListener, Foc
 		c.gridwidth = REMAINDER;
 		editor.add(save,c);
 		editor.repaint();
-		//this.pack();
+		pack();
 	}
 
 	private void removeRow(String index){
@@ -238,7 +239,7 @@ public class Editor extends JFrame implements MouseListener, ActionListener, Foc
 			editor.remove(a);
 		}
 		editor.repaint();
-		//this.pack();
+		this.pack();
 	}
 
 	@Override
@@ -364,12 +365,25 @@ public class Editor extends JFrame implements MouseListener, ActionListener, Foc
 
 	@Override
 	public void focusGained(FocusEvent e) {
-		// TODO Auto-generated method stub
-		
+		if((JTextField)e.getSource() instanceof JTextField &&
+				((JTextField)e.getSource()).getName().equals("name")){
+			tempname = ((JTextField)e.getSource()).getText();
+		}
 	}
 
 	@Override
 	public void focusLost(FocusEvent e) {
+		if((JTextField)e.getSource() instanceof JTextField &&
+				!((JTextField)e.getSource()).getText().equals(tempname)){
+			String newname = ((JTextField) e.getSource()).getText();
+			Component[] tempcomps = id.get(tempname);
+			Element tempelement = elements.get(tempname);
+			id.remove(tempname);
+			id.put(newname, tempcomps);
+			elements.remove(tempname);
+			elements.put(newname, tempelement);
+			tempcomps[7].setName("remove "+newname);
+		}
 		try{
 			refreshHashmap();
 		} catch(NumberFormatException e1){
