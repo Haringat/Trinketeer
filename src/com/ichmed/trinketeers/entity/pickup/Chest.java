@@ -12,8 +12,9 @@ import com.ichmed.trinketeers.world.World;
 public class Chest extends Pickup
 {
 
-	public Chest()
+	public Chest(World w)
 	{
+		super(w);
 		this.renderWhenDead = true;
 		this.despawnCountDown = 100000;
 		this.size = new Vector2f(0.25f, 0.125f);

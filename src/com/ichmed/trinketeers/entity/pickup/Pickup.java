@@ -14,8 +14,9 @@ public abstract class Pickup extends Entity
 	float pickupRange = 0.1f;
 	int movementDelay = 0;
 
-	public Pickup()
+	public Pickup(World w)
 	{
+		super(w);
 		this.isSolid = false;
 		this.despawnCountDown = 1;
 	}

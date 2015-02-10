@@ -9,7 +9,7 @@ public class BehaviourFollowTarget extends Behaviour
 	private Class<? extends Entity> targetClass;
 
 	@SuppressWarnings("unchecked")
-	public BehaviourFollowTarget(Object... args)
+	public BehaviourFollowTarget(World w, Object... args)
 	{
 		super(args);
 		this.speed = (float)args[0];

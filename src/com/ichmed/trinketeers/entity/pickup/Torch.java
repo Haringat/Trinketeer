@@ -1,4 +1,4 @@
-package com.ichmed.trinketeers.entity;
+package com.ichmed.trinketeers.entity.pickup;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
@@ -6,7 +6,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector4f;
 
 import com.ichmed.trinketeers.Game;
-import com.ichmed.trinketeers.entity.pickup.Pickup;
+import com.ichmed.trinketeers.entity.Player;
 import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
 import com.ichmed.trinketeers.util.render.light.ILight;
 import com.ichmed.trinketeers.util.render.light.SimpleLight;
@@ -14,8 +14,9 @@ import com.ichmed.trinketeers.world.World;
 
 public class Torch extends Pickup
 {
-	public Torch()
+	public Torch(World world)
 	{
+		super(world);
 		this.size = new Vector2f(0.01f, 0.01f);
 		this.speed = 0;
 		this.name = "torch";
@@ -23,14 +24,13 @@ public class Torch extends Pickup
 		this.isVulnerable = false;
 	}
 
-	@Override
-	public ILight createLight()
-	{
-		SimpleLight lightSource = new SimpleLight();
-		lightSource.setActive(true);
-		lightSource.setColor(new Vector4f(20f, 20f, 4f, 0f));
-		return lightSource;
-	}
+//	public ILight createLight()
+//	{
+//		SimpleLight lightSource = new SimpleLight();
+//		lightSource.setActive(true);
+//		lightSource.setColor(new Vector4f(20f, 20f, 4f, 0f));
+//		return lightSource;
+//	}
 
 	@Override
 	public boolean movesTowardPlayer()

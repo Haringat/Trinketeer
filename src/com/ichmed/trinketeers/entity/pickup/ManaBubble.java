@@ -10,17 +10,18 @@ import com.ichmed.trinketeers.world.World;
 
 public class ManaBubble extends Pickup
 {
-	public ManaBubble(float min, float max)
+	public ManaBubble(World w, float min, float max)
 	{
+		super(w);
 		this.name = "manaBubble";
 		this.mana = min + (float) Math.random() * (max - min);
 		this.size.x = this.size.y = (float) (Math.sqrt(this.mana)) / 100f;
 		this.movementDelay = 5;
 	}
 
-	public ManaBubble()
+	public ManaBubble(World w)
 	{
-		this(5, 10);
+		this(w, 5, 10);
 	}
 
 	public float mana = 1;

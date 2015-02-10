@@ -6,8 +6,9 @@ import com.ichmed.trinketeers.world.World;
 public class Grave extends Entity
 {
 	public int spawnCooldown = 100;
-	public Grave()
+	public Grave(World w)
 	{
+		super(w);
 		this.isSolid = false;
 		this.isMoveable = false;
 	}
@@ -18,7 +19,7 @@ public class Grave extends Entity
 		spawnCooldown--;
 		if(this.spawnCooldown <= 0)
 		{
-			world.spawn(new Zombie().setCenter(this.getCenter()));
+			world.spawn(new Zombie(world).setCenter(this.getCenter()));
 			this.spawnCooldown = 100;
 		}
 		super.tick(world);

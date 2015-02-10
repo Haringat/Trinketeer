@@ -8,7 +8,7 @@ public class BehaviourHiveMindFollowTarget extends Behaviour
 	private Class<?> target, hive;
 	private float range, speed;
 
-	public BehaviourHiveMindFollowTarget(Object...w)
+	public BehaviourHiveMindFollowTarget(World world, Object...w)
 	{
 		this.target = (Class<?>)w[0];
 		this.hive = (Class<?>)w[1];

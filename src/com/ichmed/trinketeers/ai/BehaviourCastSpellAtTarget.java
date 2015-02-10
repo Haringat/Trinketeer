@@ -14,7 +14,7 @@ public class BehaviourCastSpellAtTarget extends Behaviour
 	private Class<? extends Entity> target;
 	private int cooldown;
 
-	public BehaviourCastSpellAtTarget(Spell spell, float range, Class<? extends Entity> target)
+	public BehaviourCastSpellAtTarget(World w, Spell spell, float range, Class<? extends Entity> target)
 	{
 		super();
 		this.spell = spell;

@@ -11,9 +11,9 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.entity.Player;
-import com.ichmed.trinketeers.entity.Torch;
 import com.ichmed.trinketeers.entity.mob.FlameElemental;
 import com.ichmed.trinketeers.entity.mob.Zombie;
+import com.ichmed.trinketeers.entity.pickup.Torch;
 import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
 import com.ichmed.trinketeers.util.render.GLHelper;
 import com.ichmed.trinketeers.util.render.GraphicSorterYAxis;
@@ -27,10 +27,10 @@ import com.ichmed.trinketeers.world.tile.Tile;
 
 public class World
 {
-	public Player player = new Player();
+	public Player player = new Player(this);
 	List<IGraphic> uiGraphics = new ArrayList<>();
 	List<IWorldGraphic> worldGraphics = new ArrayList<>();
-	List<ILight> lights = new ArrayList<>();
+	public List<ILight> lights = new ArrayList<>();
 	
 	public static final Vector3f LIGHT_DAYTIME = new Vector3f(0.5f, 0.5f, 0.65f), LIGHT_FULL_DARK = new Vector3f();
 
@@ -111,22 +111,23 @@ public class World
 			}
 		});
 	}
+	
 	public void generateZombies(int amount, int layer)
 	{
 		for (int i = 0; i < amount; i++)
-			spawn((new Zombie()).setCenter(new Vector3f((float) Math.random() - 0.5f, (float) Math.random() * 0.5f, layer)));
+			spawn((new Zombie(this)).setCenter(new Vector3f((float) Math.random() - 0.5f, (float) Math.random() * 0.5f, layer)));
 	}
 
 	public void generateFlameElementals(int amount, int layer)
 	{
 		for (int i = 0; i < amount; i++)
-			spawn((new FlameElemental()).setCenter(new Vector3f((float) Math.random() - 0.5f, (float) Math.random() * 0.5f, layer)));
+			spawn((new FlameElemental(this)).setCenter(new Vector3f((float) Math.random() - 0.5f, (float) Math.random() * 0.5f, layer)));
 	}
 
 	public void generateTorches(int amount)
 	{
 		for (int i = 0; i < amount; i++)
-			spawn((new Torch()).setPosition(new Vector2f((float) (Math.random() - 0.5) * 4, (float) (Math.random() - 0.5) * 4)));
+			spawn((new Torch(this)).setPosition(new Vector2f((float) (Math.random() - 0.5) * 4, (float) (Math.random() - 0.5) * 4)));
 	}
 
 	public void addLight(ILight l)

@@ -23,9 +23,9 @@ public class Projectile extends Entity
 	public int travelBeforeStandStill = -1;
 	public boolean destroyOnImpact = true;
 
-	public Projectile(Vector2f size, String element, Spell child, float wobble, Spell trailSpell)
+	public Projectile(World w, Vector2f size, String element, Spell child, float wobble, Spell trailSpell)
 	{
-		super();
+		super(w);
 		this.size = new Vector2f(size);
 		this.element = element;
 		this.isSolid = false;
@@ -35,17 +35,16 @@ public class Projectile extends Entity
 		this.despawnCountDown = 1;
 	}
 
-	@Override
-	public ILight createLight()
-	{
-		SimpleLight lightSource = new SimpleLight();
-		float f = Element.elements.get(element).getBrightness();
-		lightSource.setActive(f > 0);
-		Vector3f v = Element.elements.get(element).getColor();
-		lightSource.setColor((Vector4f) new Vector4f(v.x, v.y, v.z, f).scale(f * this.size.x * this.size.y));
-		lightSource.setPosition(new Vector2f(this.getCenter()));
-		return lightSource;
-	}
+//	public ILight createLight()
+//	{
+//		SimpleLight lightSource = new SimpleLight();
+//		float f = Element.elements.get(element).getBrightness();
+//		lightSource.setActive(f > 0);
+//		Vector3f v = Element.elements.get(element).getColor();
+//		lightSource.setColor((Vector4f) new Vector4f(v.x, v.y, v.z, f).scale(f * this.size.x * this.size.y));
+//		lightSource.setPosition(new Vector2f(this.getCenter()));
+//		return lightSource;
+//	}
 
 	@Override
 	public void tick(World world)

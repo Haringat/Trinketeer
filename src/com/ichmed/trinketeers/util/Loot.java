@@ -9,6 +9,7 @@ import com.ichmed.trinketeers.entity.pickup.HealthBottle;
 import com.ichmed.trinketeers.entity.pickup.ManaBottle;
 import com.ichmed.trinketeers.entity.pickup.ManaBubble;
 import com.ichmed.trinketeers.entity.pickup.SpellScroll;
+import com.ichmed.trinketeers.world.World;
 
 public class Loot
 {
@@ -31,9 +32,9 @@ public class Loot
 			}
 
 			@Override
-			public Entity createEntity()
+			public Entity createEntity(World world)
 			{
-				return new ManaBubble();
+				return new ManaBubble(world);
 			}
 		});
 
@@ -52,9 +53,9 @@ public class Loot
 			}
 
 			@Override
-			public Entity createEntity()
+			public Entity createEntity(World world)
 			{
-				return new HealthBottle();
+				return new HealthBottle(world);
 			}
 		});
 
@@ -73,9 +74,9 @@ public class Loot
 			}
 
 			@Override
-			public Entity createEntity()
+			public Entity createEntity(World world)
 			{
-				return new SpellScroll();
+				return new SpellScroll(world);
 			}
 		});
 
@@ -94,9 +95,9 @@ public class Loot
 			}
 
 			@Override
-			public Entity createEntity()
+			public Entity createEntity(World world)
 			{
-				return new ManaBottle();
+				return new ManaBottle(world);
 			}
 		});
 
@@ -115,9 +116,9 @@ public class Loot
 			}
 
 			@Override
-			public Entity createEntity()
+			public Entity createEntity(World world)
 			{
-				return new Coin();
+				return new Coin(world);
 			}
 		});
 	}
@@ -130,7 +131,7 @@ public class Loot
 		return i;
 	}
 
-	public static List<Entity> getLootForValue(int value)
+	public static List<Entity> getLootForValue(World world, int value)
 	{
 		ArrayList<LootContainer> lTemp = new ArrayList<>(lootList);
 		ArrayList<Entity> lResult = new ArrayList<>();
@@ -146,7 +147,7 @@ public class Loot
 			for (int i = 0; i < lTemp.size(); i++)
 				if (c + lTemp.get(i).getRarity().randomMod > d)
 				{
-					lResult.add(lTemp.get(i).createEntity());
+					lResult.add(lTemp.get(i).createEntity(world));
 					value -= lTemp.get(i).getValue();
 					break;
 				} else c += lTemp.get(i).getRarity().randomMod;
@@ -162,7 +163,7 @@ public class Loot
 
 		public abstract Rarity getRarity();
 
-		public abstract Entity createEntity();
+		public abstract Entity createEntity(World world);
 	}
 
 	public static enum Rarity

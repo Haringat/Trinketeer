@@ -15,8 +15,9 @@ public class Ladder extends Pickup
 {
 	public boolean down;
 
-	public Ladder(boolean down)
+	public Ladder(World w, boolean down)
 	{
+		super(w);
 		this.down = down;
 	}
 	

@@ -38,7 +38,6 @@ public class Entity implements IWorldGraphic, Waypoint
 	public boolean isVulnerable = true;
 	public int lifespan = -1;
 	public float rotation = 0;
-	public ILight light;
 	public boolean isMoveable = true;
 	public int ticksExisted = 0;
 	public boolean renderWhenDead = false, solidWhenDead = false, dropLootOnDeath = false;
@@ -50,17 +49,16 @@ public class Entity implements IWorldGraphic, Waypoint
 	public int attackCooldown, maxAttackcooldown;
 	public String name = "test";
 	public String behaviourString = null;
+	
+	public Entity(World w)
+	{
+	}
 
 	public void tick(World world)
 	{
 		// System.out.println("I'm a " + name + " and I'm on level " +
 		// (int)this.position.z);
 		behaviourString = null;
-		if (this.getLight() != null)
-		{
-			this.getLight().setPosition(new Vector2f(this.getCenter()));
-			((SimpleLight) this.light).setLayer((int) this.position.z);
-		}
 		if (direction.length() > 0) direction.normalise();
 		if (this.isDead) despawnCountDown--;
 		if (this.lifespan == 0) this.kill(world);
@@ -100,18 +98,6 @@ public class Entity implements IWorldGraphic, Waypoint
 
 	public void onSpawn(World w)
 	{
-		this.light = createLight();
-		if (this.light != null) w.addLight(this.getLight());
-	}
-
-	public ILight createLight()
-	{
-		return null;
-	}
-
-	public ILight getLight()
-	{
-		return this.light;
 	}
 
 	public void damage(float damage)
@@ -240,12 +226,10 @@ public class Entity implements IWorldGraphic, Waypoint
 
 	protected void onDeath(World world)
 	{
-		world.removeLight(this.getLight());
 		if (this.dropLootOnDeath)
 		{
-
 			Vector3f c = this.getCenter();
-			List<Entity> l = Loot.getLootForValue(this.lootValue);
+			List<Entity> l = Loot.getLootForValue(world, this.lootValue);
 			for (int i = 0; i < l.size(); i++)
 			{
 				Vector3f p = new Vector3f(c.x + ((float) (Math.random() - 0.5) * this.lootRange), c.y + ((float) (Math.random() - 0.5) * this.lootRange), this.position.z);

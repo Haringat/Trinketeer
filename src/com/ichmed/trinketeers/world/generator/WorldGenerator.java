@@ -3,10 +3,10 @@ package com.ichmed.trinketeers.world.generator;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.ichmed.trinketeers.entity.Foliage;
-import com.ichmed.trinketeers.entity.Torch;
 import com.ichmed.trinketeers.entity.pickup.Chest;
 import com.ichmed.trinketeers.entity.pickup.Ladder;
 import com.ichmed.trinketeers.entity.pickup.SpellScroll;
+import com.ichmed.trinketeers.entity.pickup.Torch;
 import com.ichmed.trinketeers.world.Chunk;
 import com.ichmed.trinketeers.world.World;
 
@@ -36,27 +36,27 @@ public class WorldGenerator
 				}
 				if (z != 0) Chunk.setTile(world, -2 + i, -11, z, 3);
 			}
-			world.spawn((new Torch()).setCenter(new Vector3f(x + 0.1f, y + 0.8f, z)));
-			world.spawn((new Torch()).setCenter(new Vector3f(x - 0.1f, y + 0.8f, z)));
-			world.spawn((new Torch()).setCenter(new Vector3f(x - 0.1f, y - 0.8f, z)));
-			world.spawn((new Torch()).setCenter(new Vector3f(x + 0.1f, y - 0.8f, z)));
-			world.spawn((new Ladder(z % 2 == 0)).setCenter(new Vector3f(x, y + 1.1f, z)), false);
-			if(z < 0) world.spawn((new Ladder(z % 2 != 0)).setCenter(new Vector3f(x, y - 1.1f, z)), false);
-			world.spawn((new Chest()).setCenter(new Vector3f(x + 0.0f, y + 0.6f, z)));
+			world.spawn((new Torch(world)).setCenter(new Vector3f(x + 0.1f, y + 0.8f, z)));
+			world.spawn((new Torch(world)).setCenter(new Vector3f(x - 0.1f, y + 0.8f, z)));
+			world.spawn((new Torch(world)).setCenter(new Vector3f(x - 0.1f, y - 0.8f, z)));
+			world.spawn((new Torch(world)).setCenter(new Vector3f(x + 0.1f, y - 0.8f, z)));
+			world.spawn((new Ladder(world, z % 2 == 0)).setCenter(new Vector3f(x, y + 1.1f, z)), false);
+			if(z < 0) world.spawn((new Ladder(world, z % 2 != 0)).setCenter(new Vector3f(x, y - 1.1f, z)), false);
+			world.spawn((new Chest(world)).setCenter(new Vector3f(x + 0.0f, y + 0.6f, z)));
 			world.generateZombies(-z, z);
 			world.generateFlameElementals(-z / 5, z);
 
 			if (z == 0)
 			{
 				for (int i = 0; i < 5; i++)
-					world.spawn((new SpellScroll()).setCenter(new Vector3f(-0.8f + (i / 10f) * 4, 0f, z)), false, false);
+					world.spawn((new SpellScroll(world)).setCenter(new Vector3f(-0.8f + (i / 10f) * 4, 0f, z)), false, false);
 			}
 		}
 		if(z == 0)
 		{
 			int r = (int)(Math.random() * 5) + 5;
 			for(int i = 0; i < r; i++)
-				world.spawn((new Foliage()).setCenter(new Vector3f(x + 1 - (float)Math.random(), y + 1 - (float)Math.random(), z)));
+				world.spawn((new Foliage(world)).setCenter(new Vector3f(x + 1 - (float)Math.random(), y + 1 - (float)Math.random(), z)));
 		}
 	}
 }

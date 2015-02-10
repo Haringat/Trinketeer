@@ -10,14 +10,15 @@ import com.ichmed.trinketeers.ai.BehaviourWander;
 import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.entity.Player;
 import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
+import com.ichmed.trinketeers.world.World;
 
 public class Zombie extends Entity
 {
 	public int attackCooldown = 0;
 
-	public Zombie()
+	public Zombie(World w)
 	{
-		super();
+		super(w);
 		this.size = new Vector2f(.075f, .075f);
 		this.speed = 0.005f;
 		this.preferredSpeed = 0.005f;
@@ -26,11 +27,11 @@ public class Zombie extends Entity
 		this.lootRange = 0.1f;
 		this.dropLootOnDeath = true;
 		this.name = "zombie";
-		this.behaviours.add(new BehaviourTurnToCurrentWaypoint());
-		this.behaviours.add(new BehaviourFollowTarget(0.005f, Player.class));
-		this.behaviours.add(new BehaviourWander(0.001f, 110, 30));
-		this.behaviours.add(new BehaviourAttackTarget(2f, 0.1f, Player.class));
-		this.behaviours.add(new BehaviourHiveMindFollowTarget(Player.class, Zombie.class, this.visionRange * 2.5f, 0.005f));
+		this.behaviours.add(new BehaviourTurnToCurrentWaypoint(w));
+		this.behaviours.add(new BehaviourFollowTarget(w, 0.005f, Player.class));
+		this.behaviours.add(new BehaviourWander(w, 0.001f, 110, 30));
+		this.behaviours.add(new BehaviourAttackTarget(w, 2f, 0.1f, Player.class));
+		this.behaviours.add(new BehaviourHiveMindFollowTarget(w, Player.class, Zombie.class, this.visionRange * 2.5f, 0.005f));
 	}
 	
 	@Override

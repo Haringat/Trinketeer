@@ -10,6 +10,7 @@ import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
 import com.ichmed.trinketeers.Game;
+import com.ichmed.trinketeers.ai.BehaviourLight;
 import com.ichmed.trinketeers.spell.Spell;
 import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
 import com.ichmed.trinketeers.util.render.light.ILight;
@@ -25,25 +26,20 @@ public class Player extends Entity
 
 	public Spell currentSpellLeft;
 	public Spell currentSpellRight;
+	
+	BehaviourLight light;
 
-	public Player()
+	public Player(World w)
 	{
-		super();
+		super(w);
 		this.size = new Vector2f(.075f, .075f);
 		this.speed = 0.01f;
 		this.preferredSpeed = 0.01f;
 		this.name = "player";
 		this.maxDamageCooldown = 30;
 		this.maxHealth = this.health = 25;
-	}
-
-	@Override
-	public ILight createLight()
-	{
-		SimpleLight lightSource = new SimpleLight();
-		lightSource.setActive(false);
-		lightSource.setColor(new Vector4f(20f, 20f, 4f, 0f));
-		return lightSource;
+		light = new BehaviourLight(w, new Vector4f(20f, 20f, 4f, 0f), 1.0f, 0.1f);
+		this.behaviours.add(light);
 	}
 
 	public float getManaRegen()
@@ -59,8 +55,8 @@ public class Player extends Entity
 		if (fuel > 0)
 		{
 			this.fuel--;
-			((SimpleLight) this.light).setActive(true);
-		} else ((SimpleLight) this.light).setActive(false);
+			this.light.light.setActive(true);
+		} else this.light.light.setActive(false);
 
 		if (Game.isKeyDown(GLFW_KEY_W)) this.direction.y = this.preferredDirection.y = 1;
 		else if (Game.isKeyDown(GLFW_KEY_S)) this.direction.y = this.preferredDirection.y = -1f;

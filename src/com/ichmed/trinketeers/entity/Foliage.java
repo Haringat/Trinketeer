@@ -2,18 +2,21 @@ package com.ichmed.trinketeers.entity;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import com.ichmed.trinketeers.world.World;
+
 
 public class Foliage extends Entity
 {
 	public static final String[] names = {"bush", "grass1"};
 	
-	public Foliage()
+	public Foliage(World w)
 	{
-		this(names[(int)(Math.random() * names.length)]);
+		this(w, names[(int)(Math.random() * names.length)]);
 	}
 
-	public Foliage(String name)
+	public Foliage(World w, String name)
 	{
+		super(w);
 		this.isMoveable = false;
 		this.isSolid = false;
 		this.isVulnerable = false;

@@ -4,11 +4,13 @@ import org.lwjgl.util.vector.Vector2f;
 
 import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
 import com.ichmed.trinketeers.util.render.light.IShadow;
+import com.ichmed.trinketeers.world.World;
 
 public class Wall extends Entity implements IShadow
 {
-	public Wall()
+	public Wall(World w)
 	{
+		super(w);
 		this.isMoveable = false;
 		this.isVulnerable = false;
 		this.name = "wall";

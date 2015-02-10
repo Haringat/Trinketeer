@@ -13,16 +13,16 @@ public class SpellScroll extends Pickup
 {
 	public Spell spell;
 
-	public SpellScroll(Spell s)
+	public SpellScroll(World w, Spell s)
 	{
+		super(w);
 		this.spell = s;
 		this.pickupRange = 0.15f;
 	}
 
-	public SpellScroll()
+	public SpellScroll(World w)
 	{
-		//this(Spell.generateSpell(1000));
-		this(new Spell());
+		this(w, new Spell());
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class SpellScroll extends Pickup
 		{
 			if (player.currentSpellLeft != null)
 			{
-				SpellScroll scroll = new SpellScroll(player.currentSpellLeft);
+				SpellScroll scroll = new SpellScroll(world, player.currentSpellLeft);
 				scroll.setCenter(this.getCenter());
 				world.spawn(scroll, false);
 			}
@@ -48,7 +48,7 @@ public class SpellScroll extends Pickup
 		{
 			if (player.currentSpellRight != null)
 			{
-				SpellScroll scroll = new SpellScroll(player.currentSpellRight);
+				SpellScroll scroll = new SpellScroll(world, player.currentSpellRight);
 				scroll.setCenter(this.getCenter());
 				world.spawn(scroll, false);
 			}

@@ -9,13 +9,14 @@ import com.ichmed.trinketeers.world.World;
 
 public class HealthBottle extends Pickup
 {
-	public HealthBottle(float min, float max)
+	public HealthBottle(World w, float min, float max)
 	{
-		this();
+		this(w);
 	}
 
-	public HealthBottle()
+	public HealthBottle(World w)
 	{
+		super(w);
 		this.name = "healthBottle";
 		this.size.x = this.size.y = 0.05f;
 	}

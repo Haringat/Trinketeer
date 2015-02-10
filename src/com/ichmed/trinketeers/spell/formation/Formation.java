@@ -21,7 +21,7 @@ public abstract class Formation
 
 	protected final Projectile createProjectile(World world, Entity controller, float x, float y, Vector2f direction, Spell spell)
 	{
-		Projectile p = new Projectile(spell.size, spell.element, spell.childSpell, spell.wobble, spell.trailSpell);
+		Projectile p = new Projectile(world, spell.size, spell.element, spell.childSpell, spell.wobble, spell.trailSpell);
 		p.speed = p.preferredSpeed = spell.speed;
 		p.direction = p.preferredDirection = new Vector2f(direction);
 

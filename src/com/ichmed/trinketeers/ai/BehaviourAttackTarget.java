@@ -9,7 +9,7 @@ public class BehaviourAttackTarget extends Behaviour
 	private Class<? extends Entity> target;
 
 	@SuppressWarnings("unchecked")
-	public BehaviourAttackTarget(Object... args)
+	public BehaviourAttackTarget(World w, Object... args)
 	{
 		this.damage = (float) args[0];
 		this.range = (float) args[1];
@@ -39,5 +39,4 @@ public class BehaviourAttackTarget extends Behaviour
 		}
 		return false;
 	}
-
 }

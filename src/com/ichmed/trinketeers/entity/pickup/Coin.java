@@ -5,8 +5,9 @@ import com.ichmed.trinketeers.world.World;
 
 public class Coin extends Pickup
 {
-	public Coin()
+	public Coin(World w)
 	{
+		super(w);
 		this.name = "coin";
 		this.size.x = this.size.y = 0.035f;
 		this.movementDelay = 25;

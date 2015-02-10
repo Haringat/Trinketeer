@@ -9,17 +9,18 @@ import com.ichmed.trinketeers.world.World;
 
 public class ManaBottle extends Pickup
 {
-	public ManaBottle(float min, float max)
+	public ManaBottle(World w, float min, float max)
 	{
+		super(w);
 		this.name = "healthBottle";
 		this.mana = min + (float) Math.random() * (max - min);
 		this.size.x = this.size.y = (float) (Math.sqrt(this.mana)) / 100f;
 		this.movementDelay = 15;
 	}
 
-	public ManaBottle()
+	public ManaBottle(World w)
 	{
-		this(15, 30);
+		this(w, 15, 30);
 	}
 
 	public float mana = 1;

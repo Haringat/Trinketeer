@@ -13,7 +13,7 @@ public class BehaviourWander extends Behaviour
 	private float speed;
 	private int waitTime, waitTimeVariance;
 
-	public BehaviourWander(float wanderSpeed, int i, int j)
+	public BehaviourWander(World w, float wanderSpeed, int i, int j)
 	{
 		this.speed = wanderSpeed;
 		this.waitTime = i;

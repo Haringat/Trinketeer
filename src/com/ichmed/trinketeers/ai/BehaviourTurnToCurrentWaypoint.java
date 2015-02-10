@@ -8,6 +8,9 @@ import com.ichmed.trinketeers.world.World;
 
 public class BehaviourTurnToCurrentWaypoint extends Behaviour
 {
+	public BehaviourTurnToCurrentWaypoint(World w)
+	{
+	}
 
 	@Override
 	public int getPriority(Entity e)

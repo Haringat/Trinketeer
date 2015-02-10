@@ -15,12 +15,13 @@ import com.ichmed.trinketeers.spell.SpellFireball;
 import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
 import com.ichmed.trinketeers.util.render.light.ILight;
 import com.ichmed.trinketeers.util.render.light.SimpleLight;
+import com.ichmed.trinketeers.world.World;
 
 public class FlameElemental extends Entity
 {
-	public FlameElemental()
+	public FlameElemental(World w)
 	{
-		super();
+		super(w);
 		this.size = new Vector2f(.075f, .075f);
 		this.speed = 0.005f;
 		this.preferredSpeed = 0.005f;
@@ -30,22 +31,21 @@ public class FlameElemental extends Entity
 		this.maxAttackcooldown = 60;
 		this.dropLootOnDeath = true;
 		this.name = "flameElemental";
-		this.behaviours.add(new BehaviourTurnToCurrentWaypoint());
-		this.behaviours.add(new BehaviourFollowTarget(0.008f, Player.class));
-		this.behaviours.add(new BehaviourWander(0.003f, 0, 0));
-		this.behaviours.add(new BehaviourHoldDistanceToTarget(0.45f, Player.class));
-		this.behaviours.add(new BehaviourCastSpellAtTarget(new SpellFireball(), 0.55f, Player.class));
-		this.behaviours.add(new BehaviourAttackTarget(1f, 0.01f, Player.class));
+		this.behaviours.add(new BehaviourTurnToCurrentWaypoint(w));
+		this.behaviours.add(new BehaviourFollowTarget(w, 0.008f, Player.class));
+		this.behaviours.add(new BehaviourWander(w, 0.003f, 0, 0));
+		this.behaviours.add(new BehaviourHoldDistanceToTarget(w, 0.45f, Player.class));
+		this.behaviours.add(new BehaviourCastSpellAtTarget(w, new SpellFireball(), 0.55f, Player.class));
+		this.behaviours.add(new BehaviourAttackTarget(w, 1f, 0.01f, Player.class));
 	}
 	
-	@Override
-	public ILight createLight()
-	{
-		SimpleLight lightSource = new SimpleLight();
-		lightSource.setActive(true);
-		lightSource.setColor(new Vector4f(20f, 20f, 4f, 0f));
-		return lightSource;
-	}
+//	public ILight createLight()
+//	{
+//		SimpleLight lightSource = new SimpleLight();
+//		lightSource.setActive(true);
+//		lightSource.setColor(new Vector4f(20f, 20f, 4f, 0f));
+//		return lightSource;
+//	}
 
 	@Override
 	public AxisAllignedBoundingBox getRenderArea()
