@@ -19,18 +19,19 @@ import com.ichmed.trinketeers.world.World;
 
 public class Entity implements IWorldGraphic, Waypoint
 {
-	
-//	Universal
+
+	// Universal
 	public float acceleration = 0.01f;
 	public String name = "test";
 	public float visionRange = 0.7f;
 	public int lootValue = 5; // implied via Mob-Strength
 	public float maxHealth = 10;
 	public List<Behaviour> behaviours = new ArrayList<>();
-	
-//	Specific
+	public String type = "Misc";
+
+	// Specific
 	protected final int MAX_COLLISION_ITERATIONS = 10;
-	
+
 	public Vector3f position = new Vector3f();
 	public Vector2f direction = new Vector2f(1, 0), size = new Vector2f(.125f, .125f);
 	public Vector2f preferredDirection = new Vector2f(1, 0);
@@ -52,7 +53,7 @@ public class Entity implements IWorldGraphic, Waypoint
 	public float lootRange = 2.0f;
 	public Waypoint currentWaypoint;
 	public String behaviourString = null;
-	
+
 	public Entity(World w)
 	{
 	}
@@ -82,10 +83,13 @@ public class Entity implements IWorldGraphic, Waypoint
 		if (this.damageCooldown > 0) this.color = new Vector3f(0.75f, 0.2f, 0.2f);
 		else this.color = this.getColor();
 
-		world.removeEntityFromChunk(this);
-		performRecursiveCollisionX(0, world, exclude);
-		performRecursiveCollisionY(0, world, exclude);
-		world.addEntityToChunk(this);
+		if (!this.isDead)
+		{
+			world.removeEntityFromChunk(this);
+			performRecursiveCollisionX(0, world, exclude);
+			performRecursiveCollisionY(0, world, exclude);
+			world.addEntityToChunk(this);
+		}
 
 		if (this.stun <= 0)
 		{
@@ -229,9 +233,9 @@ public class Entity implements IWorldGraphic, Waypoint
 
 	protected void onDeath(World world)
 	{
-		for(Behaviour b : this.behaviours)
+		for (Behaviour b : this.behaviours)
 			b.cleanUp(world);
-		
+
 		if (this.dropLootOnDeath)
 		{
 			Vector3f c = this.getCenter();
@@ -303,7 +307,7 @@ public class Entity implements IWorldGraphic, Waypoint
 		return this.position.z == w.player.position.z && this.position.x > w.player.position.x - 1.5f && this.position.x < w.player.position.x + 1.5f && this.position.y > w.player.position.y - 1.5f
 				&& this.position.y < w.player.position.y + 1.5f;
 	}
-	
+
 	public String getSaveData()
 	{
 		String s = "";

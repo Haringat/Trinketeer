@@ -55,8 +55,8 @@ public class WorldGenerator
 		if(z == 0)
 		{
 			int r = (int)(Math.random() * 5) + 5;
-			for(int i = 0; i < r; i++)
-				world.spawn((new Foliage(world)).setCenter(new Vector3f(x + 1 - (float)Math.random(), y + 1 - (float)Math.random(), z)));
+//			for(int i = 0; i < r; i++)
+//				world.spawn((new Foliage(world)).setCenter(new Vector3f(x + 1 - (float)Math.random(), y + 1 - (float)Math.random(), z)));
 		}
 	}
 }

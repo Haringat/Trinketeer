@@ -96,6 +96,17 @@ public class World
 		});
 		
 
+
+		uiGraphics.add(new IGraphic()
+		{
+
+			@Override
+			public void render()
+			{
+				GLHelper.renderText(-1f, -0.9f, "E: " + Chunk.getAllLoadedEntities().size(), 0.002f, 0.002f, TrueTypeFont.ALIGN_LEFT);
+			}
+		});		
+
 		uiGraphics.add(new IGraphic()
 		{
 
@@ -253,7 +264,8 @@ public class World
 	
 	public void removeEntityFromChunk(Entity e)
 	{
-		Chunk.getChunk(this, new Vector3f(e.position)).entities.remove(e);
+		List<Entity> l = Chunk.getChunk(this, new Vector3f(e.position)).entities;
+		while(l.contains(e)) l.remove(e);
 	}
 
 	public List<Entity> getEntitiesByDistance(Entity source, float maxDistance)

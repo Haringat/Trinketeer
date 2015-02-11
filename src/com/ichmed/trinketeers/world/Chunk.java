@@ -96,6 +96,8 @@ public class Chunk
 	{
 		int x = (int) p.x;
 		int y = (int) p.y;
+		if(p.x < 0) x--;
+		if(p.y < 0) y--;
 		return getChunk(w, x, y, (int) p.z);
 	}
 
@@ -132,8 +134,12 @@ public class Chunk
 	{
 		ArrayList<Entity> ret = new ArrayList<>();
 		for (String s : chunks.keySet())
-			if (chunks.get(s) != null) for (Entity e : chunks.get(s).entities)
+			if (chunks.get(s) != null)
+			{
+				List<Entity> l =  chunks.get(s).entities;
+				for (Entity e : l)
 				if (!ret.contains(e)) ret.add(e);
+			}
 		return ret;
 	}
 }

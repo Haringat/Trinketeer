@@ -24,7 +24,6 @@ public class SpellFireball extends Spell
 		texture = "fireballRed.png";
 
 		args.put("Spray", 0.7f);
-		args.put("Inertia", 0.4f);
 	}
 
 	private class Child extends Spell
