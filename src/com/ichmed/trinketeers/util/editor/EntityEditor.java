@@ -3,6 +3,8 @@ package com.ichmed.trinketeers.util.editor;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
 
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class EntityEditor extends JPanel {
@@ -11,6 +13,7 @@ public class EntityEditor extends JPanel {
 
 	public EntityEditor() {
 		this.setMinimumSize(new Dimension(100,100));
+		JComboBox entityselector = new JComboBox();
 	}
 
 	public EntityEditor(LayoutManager layout) {

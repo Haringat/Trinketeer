@@ -14,34 +14,24 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.filechooser.FileFilter;
 
 import com.ichmed.trinketeers.spell.element.Element;
 import com.ichmed.trinketeers.savefile.DataLoader;
-import com.ichmed.trinketeers.util.render.TextureLibrary;
 
 public class ElementEditor extends JPanel implements MouseListener, ActionListener, FocusListener, ChangeListener
 {
 	private static final long serialVersionUID = -1549438543620749797L;
 	private JButton add;
 	private JButton save;
-	private JButton edittl;
 	
 	private HashMap<String, Element> elements = new HashMap<String, Element>();
 	private HashMap<String, Component[]> id = new HashMap<String, Component[]>();
@@ -51,11 +41,9 @@ public class ElementEditor extends JPanel implements MouseListener, ActionListen
 	public ElementEditor(){
 		DataLoader.loadElements();
 		elements = Element.elements;
-		edittl = new JButton("edit texturelib");
-		edittl.addActionListener(this);
 		add = new JButton("+");
 		add.addActionListener(this);
-		save = new JButton("save");
+		save = new JButton("save elements");
 		save.addActionListener(this);
 		this.addMouseListener(this);
 		this.setLayout(new GridBagLayout());
@@ -116,7 +104,6 @@ public class ElementEditor extends JPanel implements MouseListener, ActionListen
 		if(elements.containsValue(e)){
 			this.remove(add);
 			this.remove(save);
-			this.remove(edittl);
 			Component[] comps = new Component[8];
 			GridBagConstraints c = new GridBagConstraints();
 		
@@ -176,6 +163,7 @@ public class ElementEditor extends JPanel implements MouseListener, ActionListen
 			comps[7] = remove;
 			this.add(remove, c);
 			
+			this.revalidate();
 			this.repaint();
 			
 			id.put(e.getName(), comps);
@@ -191,9 +179,6 @@ public class ElementEditor extends JPanel implements MouseListener, ActionListen
 		this.add(add,c);
 		
 		c.gridx = 1;
-		this.add(edittl,c);
-		
-		c.gridx = 2;
 		c.gridwidth = REMAINDER;
 		this.add(save,c);
 		this.repaint();
@@ -204,6 +189,7 @@ public class ElementEditor extends JPanel implements MouseListener, ActionListen
 		for(Component a : id.get(index)){
 			this.remove(a);
 		}
+		this.revalidate();
 		this.repaint();
 	}
 
@@ -232,26 +218,6 @@ public class ElementEditor extends JPanel implements MouseListener, ActionListen
 				&& e.getSource().equals(save)){
 			refreshHashmap();
 			DataLoader.saveElements(elements);
-		}
-		if(e.getSource() instanceof JButton
-				&& e.getSource().equals(edittl)){
-			File f = edittl();
-			if(f != null && f.isDirectory() == true){
-				List<String[]> textures = new ArrayList<String[]>();
-				for( File file: f.listFiles()){
-					String[] texture = new String[2];
-					texture[1] = file.getName().subSequence(0, file.getName().lastIndexOf('.')).toString();
-					texture[0] = file.getAbsolutePath();
-					textures.add(texture);
-				}
-				try {
-					TextureLibrary.generateTextureLibrary(f.getAbsolutePath(), textures);
-				} catch (Exception e1) {
-					e1.printStackTrace();
-					JDialog dia = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), e1.getLocalizedMessage());
-					dia.setVisible(true);
-				}
-			}
 		}
 		if(e.getSource() instanceof JButton
 				&& ((JButton) e.getSource()).getName() != null
@@ -295,30 +261,6 @@ public class ElementEditor extends JPanel implements MouseListener, ActionListen
 				}
 				elements.put(e.getName(), e);
 			}
-		}
-	}
-
-	private File edittl() {
-		JFileChooser file = new JFileChooser();
-		file.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		file.setSelectedFile(new File(".").getAbsoluteFile());
-		file.setFileFilter(new FileFilter(){
-			@Override
-			public boolean accept(File f) {
-				if(f.isDirectory())
-					return true;
-				return false;
-			}
-			@Override
-			public String getDescription() {
-				return "Folder";
-			}
-		});
-		file.setMultiSelectionEnabled(false);
-		if(file.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
-			return file.getSelectedFile();
-		} else {
-			return null;
 		}
 	}
 
