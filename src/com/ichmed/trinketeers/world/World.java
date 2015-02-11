@@ -32,14 +32,15 @@ public class World
 	List<IWorldGraphic> worldGraphics = new ArrayList<>();
 	public List<ILight> lights = new ArrayList<>();
 	public Player player = new Player(this);
-	
+	public Vector3f currentCluster = Chunk.getClusterForPoint(this, player.position);
+
 	public static final Vector3f LIGHT_DAYTIME = new Vector3f(0.5f, 0.5f, 0.65f), LIGHT_FULL_DARK = new Vector3f();
 
 	public final String name = "world_0";
 
 	public World()
 	{
-//		LightRenderer.setAmbientLight(1f, 1f, 1f);
+		// LightRenderer.setAmbientLight(1f, 1f, 1f);
 		LightRenderer.setAmbientLight(0.0f, 0.0f, 0.0f);
 		spawn(player);
 
@@ -94,8 +95,6 @@ public class World
 				GLHelper.renderText(0, 0.9f, "" + (int) player.mana, 0.002f, 0.002f, TrueTypeFont.ALIGN_CENTER);
 			}
 		});
-		
-
 
 		uiGraphics.add(new IGraphic()
 		{
@@ -105,7 +104,7 @@ public class World
 			{
 				GLHelper.renderText(-1f, -0.9f, "E: " + Chunk.getAllLoadedEntities().size(), 0.002f, 0.002f, TrueTypeFont.ALIGN_LEFT);
 			}
-		});		
+		});
 
 		uiGraphics.add(new IGraphic()
 		{
@@ -134,13 +133,12 @@ public class World
 				GLHelper.renderTexturedQuad(start, 0.85f, 1, 0.05f, "healthBarEmpty");
 				GLHelper.renderTexturedQuad(start + (1 - health) / 2f, 0.85f, health, 0.05f, "healthBarFull");
 				GLHelper.renderText(0, 0.83f, "" + (int) player.health, 0.002f, 0.002f, TrueTypeFont.ALIGN_CENTER);
-				
 
-				GLHelper.renderText(0,  -1f, "Level: " + player.position.z, 0.002f, 0.002f, TrueTypeFont.ALIGN_CENTER);
+				GLHelper.renderText(0, -1f, "Level: " + player.position.z, 0.002f, 0.002f, TrueTypeFont.ALIGN_CENTER);
 			}
 		});
 	}
-	
+
 	public void generateZombies(int amount, int layer)
 	{
 		for (int i = 0; i < amount; i++)
@@ -171,9 +169,11 @@ public class World
 
 	public void tick()
 	{
-		if(player.position.z == 0) LightRenderer.setAmbientLight(LIGHT_DAYTIME);
+		currentCluster = Chunk.getClusterForPoint(this, player.position);
+		Chunk.unloadUnneededChunks(this);
+		if (player.position.z >= 0) LightRenderer.setAmbientLight(LIGHT_DAYTIME);
 		else LightRenderer.setAmbientLight(LIGHT_FULL_DARK);
-		for (Entity e : Chunk.getAllLoadedEntitiesForLayer((int)player.position.z))	
+		for (Entity e : Chunk.getAllLoadedEntitiesForLayer((int) player.position.z))
 			e.tick(this);
 		render();
 	}
@@ -187,7 +187,7 @@ public class World
 		renderChunks(false);
 		worldGraphics.sort(new GraphicSorterYAxis());
 		for (IWorldGraphic g : worldGraphics)
-			if(g.shouldRender(this)) g.render(this);
+			if (g.shouldRender(this)) g.render(this);
 		renderChunks(true);
 		glPopMatrix();
 		LightRenderer.renderLights(this, lights);
@@ -203,7 +203,7 @@ public class World
 			{
 				int x = i + (int) ((player.getCenter().x) * Chunk.chunkSize);
 				int y = j + (int) ((player.getCenter().y) * Chunk.chunkSize);
-				Tile t = Tile.tiles[Chunk.getTile(this, x, y, (int)player.position.z)];
+				Tile t = Tile.tiles[Chunk.getTile(this, x, y, (int) player.position.z)];
 				if (t.renderInFront(this, x, y) == b) t.render(this, x, y);
 			}
 	}
@@ -248,29 +248,30 @@ public class World
 		if (checkForColission)
 		{
 			AxisAllignedBoundingBox aabb = e.getColissionBox();
-			if (getListOfIntersectingEntities(aabb, checkSolidsOnly, (int)e.position.z).size() > 0) return false;
+			if (getListOfIntersectingEntities(aabb, checkSolidsOnly, (int) e.position.z).size() > 0) return false;
 		}
 		this.addEntityToChunk(e);
 		this.worldGraphics.add(e);
-//		if (e instanceof IShadow) this.shadows.add((IShadow) e);
+		// if (e instanceof IShadow) this.shadows.add((IShadow) e);
 		e.onSpawn(this);
 		return true;
 	}
-	
+
 	public void addEntityToChunk(Entity e)
 	{
 		Chunk.getChunk(this, new Vector3f(e.position)).entities.add(e);
 	}
-	
+
 	public void removeEntityFromChunk(Entity e)
 	{
 		List<Entity> l = Chunk.getChunk(this, new Vector3f(e.position)).entities;
-		while(l.contains(e)) l.remove(e);
+		while (l.contains(e))
+			l.remove(e);
 	}
 
 	public List<Entity> getEntitiesByDistance(Entity source, float maxDistance)
 	{
-		List<Entity> l = new ArrayList<>(Chunk.getAllLoadedEntitiesForLayer((int)source.position.z));
+		List<Entity> l = new ArrayList<>(Chunk.getAllLoadedEntitiesForLayer((int) source.position.z));
 		l.sort(new Comparator<Entity>()
 		{
 
@@ -301,7 +302,7 @@ public class World
 			if (!e.isDead && entityClass.isAssignableFrom(e.getClass())) return e;
 		return null;
 	}
-	
+
 	public int getNumberOfEnemies(int layer)
 	{
 		int i = 0;
@@ -320,7 +321,7 @@ public class World
 		if (predictedPosition.pos.x <= 0) x1--;
 		if ((predictedPosition.pos.x + predictedPosition.size.x) > 0) x2++;
 		if (predictedPosition.pos.y < 0) y1--;
-		if((predictedPosition.pos.y + predictedPosition.size.y) > 0)y2++;
+		if ((predictedPosition.pos.y + predictedPosition.size.y) > 0) y2++;
 
 		int i = x1;
 		do

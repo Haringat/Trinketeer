@@ -21,6 +21,41 @@ public class Chunk
 
 	public int posX, posY, posZ;
 
+	public static Vector3f getClusterForPoint(World w, Vector3f point)
+	{
+		int intXTemp = (int) point.x;
+		int intYTemp = (int) point.y;
+		if (point.x < 0) intXTemp--;
+		if (point.y < 0) intYTemp--;
+
+		return getClusterForChunk(w, intXTemp, intYTemp, (int) point.z);
+	}
+
+	public static Vector3f getClusterForChunk(World w, Chunk c)
+	{
+		return getClusterForChunk(w, c.posX, c.posY, c.posZ);
+	}
+
+	public static Vector3f getClusterForChunk(World w, int x, int y, int z)
+	{
+		int intXFin = x / clusterSize;
+		int intYFin = y / clusterSize;
+		int intZFin = z / clusterSize;
+
+		if (x < 0) intXFin--;
+		if (y < 0) intYFin--;
+		if (z < 0) intZFin--;
+
+		return new Vector3f(intXFin, intYFin, intZFin);
+	}
+
+	public static boolean isClusterAdjacent(World w, Vector3f v)
+	{
+		boolean b = (v.x >= w.currentCluster.x - 1 && v.x <= w.currentCluster.x + 1 && v.y >= w.currentCluster.y - 1 && v.y <= w.currentCluster.y + 1 && v.z == w.currentCluster.z)
+				|| v.z == w.currentCluster.z + 1 || v.z == w.currentCluster.z - 1;
+		return b;
+	}
+
 	public Chunk(int x, int y, int z)
 	{
 		this.posX = x;
@@ -96,29 +131,33 @@ public class Chunk
 	{
 		int x = (int) p.x;
 		int y = (int) p.y;
-		if(p.x < 0) x--;
-		if(p.y < 0) y--;
+		if (p.x < 0) x--;
+		if (p.y < 0) y--;
 		return getChunk(w, x, y, (int) p.z);
 	}
 
 	public static Chunk getChunk(World world, int x, int y, int z)
 	{
+		return getChunk(world, x, y, z, true);
+	}
+
+	public static Chunk getChunk(World world, int x, int y, int z, boolean createNew)
+	{
 		Chunk c = chunks.get(getHashString(x, y, z));
-		if (c == null)
-		{
-			System.out.println(x + " " + y + " " + z);
-			return createNewChunk(world, x, y, z);
-		}
+		if (c == null && createNew)
+		return createNewChunk(world, x, y, z);
 		return c;
 	}
 
-	public void unloadCluster(World w, int x, int y, int z)
+	public static void unloadCluster(World w, int x, int y, int z)
 	{
-		ChunkSave.saveChunkClusterToDisk(w, x, y, z);
+		// ChunkSave.saveChunkClusterToDisk(w, x, y, z);
 		for (int i = 0; i < clusterSize; i++)
 			for (int j = 0; j < clusterSize; j++)
 				for (int k = 0; k < clusterSize; k++)
-					chunks.put(getHashString(i + x * clusterSize, j + y * clusterSize, k + z * clusterSize), null);
+				{
+					chunks.put(getHashString(i + (x * clusterSize), j + (y * clusterSize), k + (z * clusterSize)), null);
+				}
 	}
 
 	public static List<Entity> getAllLoadedEntitiesForLayer(int layer)
@@ -136,10 +175,29 @@ public class Chunk
 		for (String s : chunks.keySet())
 			if (chunks.get(s) != null)
 			{
-				List<Entity> l =  chunks.get(s).entities;
+				List<Entity> l = chunks.get(s).entities;
 				for (Entity e : l)
-				if (!ret.contains(e)) ret.add(e);
+					if (!ret.contains(e)) ret.add(e);
 			}
 		return ret;
+	}
+
+	public static void unloadUnneededChunks(World w)
+	{
+		List<Vector3f> l = new ArrayList<>();
+		for (String s : chunks.keySet())
+		{
+			Chunk c = chunks.get(s);
+			if (c != null && !isClusterAdjacent(w, getClusterForChunk(w, c)))
+			{
+				Vector3f v = getClusterForChunk(w, c);
+				if (!l.contains(v)) l.add(v);
+			}
+		}
+
+		for (Vector3f v : l)
+		{
+			unloadCluster(w, (int) v.x, (int) v.y, (int) v.z);
+		}
 	}
 }

@@ -15,6 +15,7 @@ import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWvidmode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
+import org.lwjgl.util.vector.Vector3f;
 
 import com.ichmed.trinketeers.savefile.ChunkSave;
 import com.ichmed.trinketeers.savefile.DataLoader;
@@ -83,7 +84,6 @@ public class Game
 												// after creation
 		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE); // the window will be
 													// resizable
-		
 
 		// Create the window
 		window = glfwCreateWindow(WIDTH, HEIGHT, "Trinketeers", NULL, NULL);
@@ -98,11 +98,17 @@ public class Game
 			public void invoke(long window, int key, int scancode, int action, int mods)
 			{
 				if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) glfwSetWindowShouldClose(window, GL_TRUE);
-//				if (key == GLFW_KEY_R && action == GLFW_RELEASE) world.player.rerollSpells();
-//				if (key == GLFW_KEY_Z && action == GLFW_RELEASE) world.nextLevel();
+				// if (key == GLFW_KEY_R && action == GLFW_RELEASE)
+				// world.player.rerollSpells();
+				// if (key == GLFW_KEY_Z && action == GLFW_RELEASE)
+				// world.nextLevel();
 				if (key == GLFW_KEY_F3 && action == GLFW_RELEASE) renderHitBoxes = !renderHitBoxes;
-				if (key == GLFW_KEY_F5 && action == GLFW_RELEASE) ChunkSave.saveChunkClusterToDisk(world, 0, 0, 0);
-				if (key == GLFW_KEY_T && action == GLFW_RELEASE) Chunk.setTile(world, (int)(world.player.position.x * 8), (int)(world.player.position.y * 8), (int)world.player.position.z, 2);
+				if (key == GLFW_KEY_F5 && action == GLFW_RELEASE)
+				{
+					Vector3f v = Chunk.getClusterForPoint(world, world.player.position);
+					ChunkSave.saveChunkClusterToDisk(world, (int)v.x, (int)v.y, (int)v.z);
+				}
+				if (key == GLFW_KEY_T && action == GLFW_RELEASE) Chunk.setTile(world, (int) (world.player.position.x * 8), (int) (world.player.position.y * 8), (int) world.player.position.z, 2);
 				if (key == GLFW_KEY_KP_ADD && action == GLFW_RELEASE) world.player.position.z++;
 				if (key == GLFW_KEY_KP_SUBTRACT && action == GLFW_RELEASE) zoom -= world.player.position.z--;
 
@@ -124,7 +130,7 @@ public class Game
 
 		// Make the window visible
 		glfwShowWindow(window);
-		
+
 		InitGL();
 	}
 
@@ -146,14 +152,14 @@ public class Game
 
 	private void loop()
 	{
-		//GLContext.createFromCurrent();
-		//glClearColor(1f, 0f, 0f, 0f);
+		// GLContext.createFromCurrent();
+		// glClearColor(1f, 0f, 0f, 0f);
 
 		while (glfwWindowShouldClose(window) == GL_FALSE)
 		{
-			
-			//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the
-																// framebuffer
+
+			// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the
+			// framebuffer
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 			world.tick();
 			glfwSwapBuffers(window); // swap the color buffers
@@ -166,8 +172,10 @@ public class Game
 
 	public static void main(String[] args)
 	{
-		for(String arg: args){
-			if(arg.equals("-editor")){
+		for (String arg : args)
+		{
+			if (arg.equals("-editor"))
+			{
 				new Editor();
 				return;
 			}

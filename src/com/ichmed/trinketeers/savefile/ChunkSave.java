@@ -12,6 +12,12 @@ import static com.ichmed.trinketeers.world.Chunk.*;
 
 public class ChunkSave
 {
+	public static boolean isChunkOnDisk(World w, int x, int y, int z)
+	{
+		File f = new File("resc/data/world/" + w.name + "/" + x + "x" + y + "x" + z + ".ccd");
+		return f.exists();		
+	}
+	
 	public static void saveChunkClusterToDisk(World w, int x, int y, int z)
 	{
 		File f = new File("resc/data/world/" + w.name + "/" + x + "x" + y + "x" + z + ".ccd");
@@ -30,8 +36,8 @@ public class ChunkSave
 			for (int j = 0; j < clusterSize; j++)
 				for (int k = 0; k < clusterSize; k++)
 				{
-//					System.out.println("parsing: " + i + " " + j + " " + k);
-					Chunk c = getChunk(w, i + (x * clusterSize), j + (y * clusterSize), k + (z * clusterSize));
+					Chunk c = getChunk(w, i + (x * clusterSize), j + (y * clusterSize), k + (z * clusterSize), false);
+					if(c == null) continue;
 					data.append("[" + i + "x" + j + "x" + k + "{");
 					for (int l = 0; l < chunkSize * chunkSize; l++)
 					{
