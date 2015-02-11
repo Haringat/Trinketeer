@@ -19,17 +19,27 @@ import com.ichmed.trinketeers.world.World;
 
 public class Entity implements IWorldGraphic, Waypoint
 {
+	
+//	Universal
+	public float acceleration = 0.01f;
+	public String name = "test";
+	public float visionRange = 0.7f;
+	public int lootValue = 5; // implied via Mob-Strength
+	public float maxHealth = 10;
+	public List<Behaviour> behaviours = new ArrayList<>();
+	
+//	Specific
+	protected final int MAX_COLLISION_ITERATIONS = 10;
+	
 	public Vector3f position = new Vector3f();
 	public Vector2f direction = new Vector2f(1, 0), size = new Vector2f(.125f, .125f);
 	public Vector2f preferredDirection = new Vector2f(1, 0);
 	public float speed = 0f;
 	public float preferredSpeed = 0f;
-	public float acceleration = 0.01f;
 	public Vector3f color = this.getColor();
 	public boolean isDead;
 	protected int despawnCountDown = 100;
-	public float health = 10, maxHealth = 10;
-	protected int maxCollisionIterations = 10;
+	public float health = 10;
 	protected int damageCooldown, maxDamageCooldown = 3;
 	public int stun = 0;
 	public boolean isSolid = true;
@@ -40,12 +50,7 @@ public class Entity implements IWorldGraphic, Waypoint
 	public int ticksExisted = 0;
 	public boolean renderWhenDead = false, solidWhenDead = false, dropLootOnDeath = false;
 	public float lootRange = 2.0f;
-	public int lootValue = 5;
-	public List<Behaviour> behaviours = new ArrayList<>();
 	public Waypoint currentWaypoint;
-	public float visionRange = 0.7f;
-	public int attackCooldown, maxAttackcooldown;
-	public String name = "test";
 	public String behaviourString = null;
 	
 	public Entity(World w)
@@ -114,7 +119,7 @@ public class Entity implements IWorldGraphic, Waypoint
 			this.position.translate(direction.x * this.speed, 0, 0);
 			return true;
 		}
-		if (iteration >= maxCollisionIterations) return false;
+		if (iteration >= MAX_COLLISION_ITERATIONS) return false;
 		float speedMod = (float) Math.pow(2, iteration);
 		Vector2f iteratedSpeed = new Vector2f((this.direction.x / speedMod) * this.speed, 0);
 		AxisAllignedBoundingBox predictedPosition = new AxisAllignedBoundingBox(position.x + iteratedSpeed.x, position.y + iteratedSpeed.y, size.x, size.y);
@@ -134,7 +139,7 @@ public class Entity implements IWorldGraphic, Waypoint
 			this.position.translate(0, direction.y * this.speed, 0);
 			return true;
 		}
-		if (iteration >= maxCollisionIterations) return false;
+		if (iteration >= MAX_COLLISION_ITERATIONS) return false;
 		float speedMod = (float) Math.pow(2, iteration);
 		Vector2f iteratedSpeed = new Vector2f(0, (this.direction.y / speedMod) * this.speed);
 		AxisAllignedBoundingBox predictedPosition = new AxisAllignedBoundingBox(position.x + iteratedSpeed.x, position.y + iteratedSpeed.y, size.x, size.y);

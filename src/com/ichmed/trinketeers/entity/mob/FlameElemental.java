@@ -25,7 +25,6 @@ public class FlameElemental extends Entity
 		this.despawnCountDown = 1;
 		this.renderWhenDead = true;
 		this.lootRange = 0.1f;
-		this.maxAttackcooldown = 60;
 		this.dropLootOnDeath = true;
 		this.name = "flameElemental";
 		this.behaviours.add(new BehaviourTurnToCurrentWaypoint(w));
