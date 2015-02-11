@@ -243,6 +243,7 @@ public class TextureLibrary
 
 	public boolean isPixelTransparent(int x, int y, BufferedImage bfrdImg)
 	{
+		if(x >= LIBRARY_SIZE || y >= LIBRARY_SIZE) return false;
 		Color c = new Color(bfrdImg.getRGB(x, y));
 		return c.getRed() == 255 && c.getBlue() == 255;
 	}

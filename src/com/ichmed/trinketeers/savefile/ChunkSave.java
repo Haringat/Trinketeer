@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.world.Chunk;
 import com.ichmed.trinketeers.world.World;
 
@@ -14,6 +15,7 @@ public class ChunkSave
 	public static void saveChunkClusterToDisk(World w, int x, int y, int z)
 	{
 		File f = new File("resc/data/world/" + w.name + "/" + x + "x" + y + "x" + z + ".ccd");
+		System.out.println("starting " + f.getAbsolutePath());
 		try
 		{
 
@@ -28,13 +30,22 @@ public class ChunkSave
 			for (int j = 0; j < clusterSize; j++)
 				for (int k = 0; k < clusterSize; k++)
 				{
-					Chunk c = getChunk(w, i + x * clusterSize, j + y * clusterSize, k + z * clusterSize);
+//					System.out.println("parsing: " + i + " " + j + " " + k);
+					Chunk c = getChunk(w, i + (x * clusterSize), j + (y * clusterSize), k + (z * clusterSize));
 					data.append("[" + i + "x" + j + "x" + k + "{");
 					for (int l = 0; l < chunkSize * chunkSize; l++)
 					{
 						data.append(c.tiles[l]);
 						if (l < chunkSize * chunkSize - 1) data.append(",");
 					}
+					data.append("}{");
+					for (Entity e : c.entities)
+					{
+//						System.out.println(e.getSaveData());
+						data.append(e.getSaveData());
+						data.append(",");
+					}
+					data.append("}");
 					data.append("]");
 				}
 		try
@@ -46,5 +57,6 @@ public class ChunkSave
 		{
 			e.printStackTrace();
 		}
+		System.out.println("finished " + f.getAbsolutePath());
 	}
 }

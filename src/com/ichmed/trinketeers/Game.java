@@ -83,11 +83,13 @@ public class Game
 												// after creation
 		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE); // the window will be
 													// resizable
+		
 
 		// Create the window
 		window = glfwCreateWindow(WIDTH, HEIGHT, "Trinketeers", NULL, NULL);
 		if (window == NULL) throw new RuntimeException("Failed to create the GLFW window");
 
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 		// Setup a key callback. It will be called every time a key is pressed,
 		// repeated or released.
 		glfwSetKeyCallback(window, keyCallback = new GLFWKeyCallback()

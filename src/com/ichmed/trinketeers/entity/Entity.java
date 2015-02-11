@@ -224,6 +224,9 @@ public class Entity implements IWorldGraphic, Waypoint
 
 	protected void onDeath(World world)
 	{
+		for(Behaviour b : this.behaviours)
+			b.cleanUp(world);
+		
 		if (this.dropLootOnDeath)
 		{
 			Vector3f c = this.getCenter();
@@ -294,5 +297,18 @@ public class Entity implements IWorldGraphic, Waypoint
 	{
 		return this.position.z == w.player.position.z && this.position.x > w.player.position.x - 1.5f && this.position.x < w.player.position.x + 1.5f && this.position.y > w.player.position.y - 1.5f
 				&& this.position.y < w.player.position.y + 1.5f;
+	}
+	
+	public String getSaveData()
+	{
+		String s = "";
+		s += this.name;
+		s += " ";
+		s += this.position.x;
+		s += " ";
+		s += this.position.y;
+		s += " ";
+		s += this.position.z;
+		return s;
 	}
 }

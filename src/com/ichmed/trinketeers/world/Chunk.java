@@ -7,6 +7,7 @@ import java.util.List;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.ichmed.trinketeers.entity.Entity;
+import com.ichmed.trinketeers.savefile.ChunkSave;
 import com.ichmed.trinketeers.world.generator.WorldGenerator;
 
 public class Chunk
@@ -95,20 +96,23 @@ public class Chunk
 	{
 		int x = (int) p.x;
 		int y = (int) p.y;
-		if (p.x < 0) x--;
-		if (p.y < 0) y--;
 		return getChunk(w, x, y, (int) p.z);
 	}
 
 	public static Chunk getChunk(World world, int x, int y, int z)
 	{
 		Chunk c = chunks.get(getHashString(x, y, z));
-		if (c == null) return createNewChunk(world, x, y, z);
+		if (c == null)
+		{
+			System.out.println(x + " " + y + " " + z);
+			return createNewChunk(world, x, y, z);
+		}
 		return c;
 	}
 
-	public void unloadCluster(int x, int y, int z)
+	public void unloadCluster(World w, int x, int y, int z)
 	{
+		ChunkSave.saveChunkClusterToDisk(w, x, y, z);
 		for (int i = 0; i < clusterSize; i++)
 			for (int j = 0; j < clusterSize; j++)
 				for (int k = 0; k < clusterSize; k++)

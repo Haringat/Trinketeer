@@ -36,8 +36,9 @@ public class Player extends Entity
 		this.name = "player";
 		this.maxDamageCooldown = 30;
 		this.maxHealth = this.health = 25;
-		light = new BehaviourLight(w, new Vector4f(20f, 20f, 4f, 0f), 1.0f, 0.1f);
+		light = new BehaviourLight(w, new Vector4f(20f, 20f, 4f, 0f), 1.0f, 1f);
 		this.behaviours.add(light);
+//		this.isSolid = false;
 	}
 
 	public float getManaRegen()

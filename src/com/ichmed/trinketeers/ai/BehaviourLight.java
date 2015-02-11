@@ -9,11 +9,10 @@ import com.ichmed.trinketeers.world.World;
 
 public class BehaviourLight extends Behaviour
 {
-
 	public SimpleLight light;
 	private Vector4f color;
 	private float brightness, flicker;
-	
+	private boolean init = false;
 	
 	public BehaviourLight(World w, Object...objects)
 	{
@@ -22,6 +21,7 @@ public class BehaviourLight extends Behaviour
 		this.brightness = (Float)objects[1];
 		this.flicker = (Float)objects[2];
 		w.addLight(light);
+		this.light.setActive(false);
 	}
 
 	@Override
@@ -39,8 +39,13 @@ public class BehaviourLight extends Behaviour
 	@Override
 	public boolean perform(Entity performer, World w)
 	{
+		if(!init)
+		{
+			init = true;
+			light.setActive(true);
+		}
 		light.setPosition(new Vector2f(performer.getCenter()));
-		light.setColor((Vector4f) (new Vector4f(color).scale(brightness + (float) Math.sin(performer.ticksExisted / 1000d) * flicker)));
+		light.setColor((Vector4f) (new Vector4f(color).scale(brightness + (int)(((float) Math.sin(performer.ticksExisted / 30d) + 1) * flicker) * 0.1f)) );
 		light.setLayer((int) performer.position.z);
 		return true;
 	}
@@ -48,6 +53,6 @@ public class BehaviourLight extends Behaviour
 	@Override
 	public void cleanUp(World w)
 	{
-		w.lights.remove(this.light);
+		w.removeLight(this.light);
 	}
 }

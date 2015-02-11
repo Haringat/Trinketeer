@@ -15,6 +15,7 @@ import com.ichmed.trinketeers.entity.mob.FlameElemental;
 import com.ichmed.trinketeers.entity.mob.Zombie;
 import com.ichmed.trinketeers.entity.pickup.Torch;
 import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
+import com.ichmed.trinketeers.util.InputUtil;
 import com.ichmed.trinketeers.util.render.GLHelper;
 import com.ichmed.trinketeers.util.render.GraphicSorterYAxis;
 import com.ichmed.trinketeers.util.render.IGraphic;
@@ -27,10 +28,10 @@ import com.ichmed.trinketeers.world.tile.Tile;
 
 public class World
 {
-	public Player player = new Player(this);
 	List<IGraphic> uiGraphics = new ArrayList<>();
 	List<IWorldGraphic> worldGraphics = new ArrayList<>();
 	public List<ILight> lights = new ArrayList<>();
+	public Player player = new Player(this);
 	
 	public static final Vector3f LIGHT_DAYTIME = new Vector3f(0.5f, 0.5f, 0.65f), LIGHT_FULL_DARK = new Vector3f();
 
@@ -91,6 +92,23 @@ public class World
 				GLHelper.renderTexturedQuad(start, 0.92f, 1, 0.05f, "manaBarEmpty");
 				GLHelper.renderTexturedQuad(start + (1 - mana) / 2f, 0.92f, mana, 0.05f, "manaBarFull");
 				GLHelper.renderText(0, 0.9f, "" + (int) player.mana, 0.002f, 0.002f, TrueTypeFont.ALIGN_CENTER);
+			}
+		});
+		
+
+		uiGraphics.add(new IGraphic()
+		{
+
+			@Override
+			public void render()
+			{
+				Vector2f v = InputUtil.getMouseRelativToScreenCenter();
+				glPushMatrix();
+				glTranslatef(v.x, v.y, 0);
+				GLHelper.renderTexturedQuad(-0.0625f, -0.0625f, 0.125f, 0.125f, "crosshair_1");
+				glRotated(player.ticksExisted, 0, 0, 1);
+				GLHelper.renderTexturedQuad(-0.0625f, -0.0625f, 0.125f, 0.125f, "crosshair_0");
+				glPopMatrix();
 			}
 		});
 

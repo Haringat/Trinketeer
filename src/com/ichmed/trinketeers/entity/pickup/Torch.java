@@ -3,8 +3,10 @@ package com.ichmed.trinketeers.entity.pickup;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
 import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector4f;
 
 import com.ichmed.trinketeers.Game;
+import com.ichmed.trinketeers.ai.BehaviourLight;
 import com.ichmed.trinketeers.entity.Player;
 import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
 import com.ichmed.trinketeers.world.World;
@@ -19,15 +21,8 @@ public class Torch extends Pickup
 		this.name = "torch";
 		this.isSolid = true;
 		this.isVulnerable = false;
+		this.behaviours.add(new BehaviourLight(world, new Vector4f(20f, 20f, 4f, 0f), 1.0f, 2f));
 	}
-
-//	public ILight createLight()
-//	{
-//		SimpleLight lightSource = new SimpleLight();
-//		lightSource.setActive(true);
-//		lightSource.setColor(new Vector4f(20f, 20f, 4f, 0f));
-//		return lightSource;
-//	}
 
 	@Override
 	public boolean movesTowardPlayer()
