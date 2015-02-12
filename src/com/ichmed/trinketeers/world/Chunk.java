@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.lwjgl.util.vector.Vector;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.ichmed.trinketeers.ai.Behaviour;
 import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.savefile.ChunkSave;
+import com.ichmed.trinketeers.util.MathUtil;
 import com.ichmed.trinketeers.world.generator.WorldGenerator;
 
 public class Chunk
@@ -17,7 +19,7 @@ public class Chunk
 	public List<Entity> entities = new ArrayList<Entity>();
 
 	public static final int chunkSize = 8;
-	public static final int clusterSize = 2;
+	public static final int clusterSize = 4;
 	public int[] tiles = new int[chunkSize * chunkSize];
 
 	public int posX, posY, posZ;
@@ -34,14 +36,15 @@ public class Chunk
 
 	public static Vector3f getClusterForChunk(World w, Chunk c)
 	{
+		if (c == null) return null;
 		return getClusterForChunk(w, c.posX, c.posY, c.posZ);
 	}
 
 	public static Vector3f getClusterForChunk(World w, int x, int y, int z)
 	{
-		if (x < 0) x--;
-		if (y < 0) y--;
-		if (z < 0) z--;
+		if (x < 0) x -= (clusterSize - 1);
+		if (y < 0) y -= (clusterSize - 1);
+		if (z < 0) z -= (clusterSize - 1);
 
 		int intXFin = x / clusterSize;
 		int intYFin = y / clusterSize;
@@ -219,7 +222,7 @@ public class Chunk
 			if (c != null && !isClusterAdjacent(w, getClusterForChunk(w, c)))
 			{
 				Vector3f v = getClusterForChunk(w, c);
-				if (!l.contains(v)) l.add(v);
+				if (l != null && !l.contains(v)) l.add(v);
 			}
 		}
 
@@ -233,11 +236,20 @@ public class Chunk
 		for (String s : chunks.keySet())
 		{
 			Chunk c = chunks.get(s);
+			System.out.println(Chunk.getHashString(c.posX, c.posY, c.posZ));
 			Vector3f v = getClusterForChunk(w, c);
-			if (!l.contains(v)) l.add(v);
+			if (l != null)
+			{
+				boolean b = true;
+				for(Vector3f v2 : l)if (MathUtil.areVectors3fEqual(v, v2)) b = false;
+				if(b)l.add(v);
+			}
 		}
 
 		for (Vector3f v : l)
+		{
+			System.out.println("Saving " + v);
 			ChunkSave.saveChunkClusterToDisk(w, (int) v.x, (int) v.y, (int) v.z);
+		}
 	}
 }
