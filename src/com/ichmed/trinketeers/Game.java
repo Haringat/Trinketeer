@@ -39,7 +39,7 @@ public class Game
 
 	// The window handle
 	public static long window;
-	public static boolean renderHitBoxes = false;
+	public static boolean debugMode = false;
 
 	public void run()
 	{
@@ -54,6 +54,7 @@ public class Game
 
 			// Release window and window callbacks
 			glfwDestroyWindow(window);
+			world.cleanUp();
 			TextureLibrary.textureLibrary.cleanUp();
 			keyCallback.release();
 		} catch (Exception e)
@@ -102,13 +103,13 @@ public class Game
 				// world.player.rerollSpells();
 				// if (key == GLFW_KEY_Z && action == GLFW_RELEASE)
 				// world.nextLevel();
-				if (key == GLFW_KEY_F3 && action == GLFW_RELEASE) renderHitBoxes = !renderHitBoxes;
+				if (key == GLFW_KEY_F3 && action == GLFW_RELEASE) debugMode = !debugMode;
 				if (key == GLFW_KEY_F5 && action == GLFW_RELEASE)
 				{
 					Vector3f v = Chunk.getClusterForPoint(world, world.player.position);
 					ChunkSave.saveChunkClusterToDisk(world, (int)v.x, (int)v.y, (int)v.z);
 				}
-				if (key == GLFW_KEY_T && action == GLFW_RELEASE) Chunk.setTile(world, (int) (world.player.position.x * 8), (int) (world.player.position.y * 8), (int) world.player.position.z, 2);
+				if (key == GLFW_KEY_T && action == GLFW_RELEASE) Chunk.setTile(world, (int) (world.player.position.x * 8), (int) (world.player.position.y * 8), (int) world.player.position.z, 3);
 				if (key == GLFW_KEY_KP_ADD && action == GLFW_RELEASE) world.player.position.z++;
 				if (key == GLFW_KEY_KP_SUBTRACT && action == GLFW_RELEASE) zoom -= world.player.position.z--;
 

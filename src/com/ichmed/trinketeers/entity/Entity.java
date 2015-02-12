@@ -166,7 +166,7 @@ public class Entity implements IWorldGraphic, Waypoint
 	public void render(World w)
 	{
 		if (!this.isDead || this.renderWhenDead) this.actualRender(w);
-		if (Game.renderHitBoxes) renderHitBox(w);
+		if (Game.debugMode) renderHitBox(w);
 	}
 
 	protected void actualRender(World w)

@@ -52,7 +52,5 @@ public class JSONUtil
 				w.close();
 			}
 		}catch(IOException e){}
-		
 	}
-
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import com.ichmed.trinketeers.ai.Behaviour;
 import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.savefile.ChunkSave;
 import com.ichmed.trinketeers.world.generator.WorldGenerator;
@@ -16,7 +17,7 @@ public class Chunk
 	public List<Entity> entities = new ArrayList<Entity>();
 
 	public static final int chunkSize = 8;
-	public static final int clusterSize = 4;
+	public static final int clusterSize = 2;
 	public int[] tiles = new int[chunkSize * chunkSize];
 
 	public int posX, posY, posZ;
@@ -38,13 +39,13 @@ public class Chunk
 
 	public static Vector3f getClusterForChunk(World w, int x, int y, int z)
 	{
+		if (x < 0) x--;
+		if (y < 0) y--;
+		if (z < 0) z--;
+
 		int intXFin = x / clusterSize;
 		int intYFin = y / clusterSize;
 		int intZFin = z / clusterSize;
-
-		if (x < 0) intXFin--;
-		if (y < 0) intYFin--;
-		if (z < 0) intZFin--;
 
 		return new Vector3f(intXFin, intYFin, intZFin);
 	}
@@ -65,10 +66,18 @@ public class Chunk
 
 	public static Chunk createNewChunk(World world, int x, int y, int z)
 	{
+		return createNewChunk(world, x, y, z, true);
+	}
+
+	public static Chunk createNewChunk(World world, int x, int y, int z, boolean generate)
+	{
 		Chunk c = new Chunk(x, y, z);
-		c.populate();
 		chunks.put(getHashString(x, y, z), c);
-		WorldGenerator.generateChunk(world, x, y, z);
+		c.populate();
+		if (generate)
+		{
+			WorldGenerator.generateChunk(world, x, y, z);
+		}
 		return c;
 	}
 
@@ -107,6 +116,17 @@ public class Chunk
 		this.tiles[chunkSize * y + x] = id;
 	}
 
+	public void onUnload(World w)
+	{
+		for (Entity e : this.entities)
+		{
+			while (w.worldGraphics.contains(e))
+				w.worldGraphics.remove(e);
+			for (Behaviour b : e.behaviours)
+				b.cleanUp(w);
+		}
+	}
+
 	public static int getTile(World w, int x, int y, int z)
 	{
 		int chunkX = x / chunkSize;
@@ -138,20 +158,28 @@ public class Chunk
 
 	public static Chunk getChunk(World world, int x, int y, int z)
 	{
-		return getChunk(world, x, y, z, true);
+		return getChunk(world, x, y, z, true, true);
 	}
 
-	public static Chunk getChunk(World world, int x, int y, int z, boolean createNew)
+	public static Chunk getChunk(World world, int x, int y, int z, boolean generate, boolean loadFromDisk)
 	{
 		Chunk c = chunks.get(getHashString(x, y, z));
-		if (c == null && createNew)
-		return createNewChunk(world, x, y, z);
+		if (c == null)
+		{
+			Vector3f cluster = getClusterForChunk(world, x, y, z);
+			if (loadFromDisk && ChunkSave.isClusterOnDisk(world, (int) cluster.x, (int) cluster.y, (int) cluster.z))
+			{
+				ChunkSave.loadCluster(world, (int) cluster.x, (int) cluster.y, (int) cluster.z);
+			}
+			c = chunks.get(getHashString(x, y, z));
+			return c == null ? createNewChunk(world, x, y, z, generate) : c;
+		}
 		return c;
 	}
 
 	public static void unloadCluster(World w, int x, int y, int z)
 	{
-		// ChunkSave.saveChunkClusterToDisk(w, x, y, z);
+		ChunkSave.saveChunkClusterToDisk(w, x, y, z);
 		for (int i = 0; i < clusterSize; i++)
 			for (int j = 0; j < clusterSize; j++)
 				for (int k = 0; k < clusterSize; k++)
@@ -196,8 +224,20 @@ public class Chunk
 		}
 
 		for (Vector3f v : l)
-		{
 			unloadCluster(w, (int) v.x, (int) v.y, (int) v.z);
+	}
+
+	public static void saveAllChunks(World w)
+	{
+		List<Vector3f> l = new ArrayList<>();
+		for (String s : chunks.keySet())
+		{
+			Chunk c = chunks.get(s);
+			Vector3f v = getClusterForChunk(w, c);
+			if (!l.contains(v)) l.add(v);
 		}
+
+		for (Vector3f v : l)
+			ChunkSave.saveChunkClusterToDisk(w, (int) v.x, (int) v.y, (int) v.z);
 	}
 }

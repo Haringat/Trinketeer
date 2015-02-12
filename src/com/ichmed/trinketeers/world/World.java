@@ -9,6 +9,7 @@ import java.util.List;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.ichmed.trinketeers.Game;
 import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.entity.Player;
 import com.ichmed.trinketeers.entity.mob.FlameElemental;
@@ -37,12 +38,35 @@ public class World
 	public static final Vector3f LIGHT_DAYTIME = new Vector3f(0.5f, 0.5f, 0.65f), LIGHT_FULL_DARK = new Vector3f();
 
 	public final String name = "world_0";
+	
+	/*
+	 * Handle with care!
+	 */
+	public static World wordObj;
 
 	public World()
 	{
 		// LightRenderer.setAmbientLight(1f, 1f, 1f);
 		LightRenderer.setAmbientLight(0.0f, 0.0f, 0.0f);
 		spawn(player);
+		wordObj = this;
+
+		uiGraphics.add(new IGraphic()
+		{
+
+			@Override
+			public void render()
+			{
+				Vector2f v = InputUtil.getMouseRelativToScreenCenter();
+				glPushMatrix();
+				glTranslatef(v.x, v.y, 0);
+				GLHelper.renderTexturedQuad(-0.0625f, -0.0625f, 0.125f, 0.125f, "crosshair_1");
+				glRotated(player.ticksExisted, 0, 0, 1);
+				GLHelper.renderTexturedQuad(-0.0625f, -0.0625f, 0.125f, 0.125f, "crosshair_0");
+				glPopMatrix();
+			}
+		});
+
 
 		uiGraphics.add(new IGraphic()
 		{
@@ -98,30 +122,21 @@ public class World
 
 		uiGraphics.add(new IGraphic()
 		{
-
 			@Override
 			public void render()
 			{
-				GLHelper.renderText(-1f, -0.9f, "E: " + Chunk.getAllLoadedEntities().size(), 0.002f, 0.002f, TrueTypeFont.ALIGN_LEFT);
+				if(!Game.debugMode)return;
+				GLHelper.renderText(-1f, -0.9f, "E: " + Chunk.getAllLoadedEntities().size());
+				GLHelper.renderText(-1, -0.5f, "X: " + player.position.x);
+				GLHelper.renderText(-1, -0.55f, "Y: " + player.position.y);
+				GLHelper.renderText(-1, -0.6f, "Height: " + (int)player.position.z);
+				Chunk c = Chunk.getChunk(World.wordObj, player.position);
+				GLHelper.renderText(-1, -0.67f, "Chunk: " + Chunk.getHashString(c.posX, c.posY, c.posZ));
+				Vector3f v = Chunk.getClusterForChunk(wordObj, c);
+				GLHelper.renderText(-1, -0.72f, "Cluster: " + v.x + " " + v.y + " " + v.z);
 			}
 		});
-
-		uiGraphics.add(new IGraphic()
-		{
-
-			@Override
-			public void render()
-			{
-				Vector2f v = InputUtil.getMouseRelativToScreenCenter();
-				glPushMatrix();
-				glTranslatef(v.x, v.y, 0);
-				GLHelper.renderTexturedQuad(-0.0625f, -0.0625f, 0.125f, 0.125f, "crosshair_1");
-				glRotated(player.ticksExisted, 0, 0, 1);
-				GLHelper.renderTexturedQuad(-0.0625f, -0.0625f, 0.125f, 0.125f, "crosshair_0");
-				glPopMatrix();
-			}
-		});
-
+		
 		uiGraphics.add(new IGraphic()
 		{
 
@@ -134,7 +149,6 @@ public class World
 				GLHelper.renderTexturedQuad(start + (1 - health) / 2f, 0.85f, health, 0.05f, "healthBarFull");
 				GLHelper.renderText(0, 0.83f, "" + (int) player.health, 0.002f, 0.002f, TrueTypeFont.ALIGN_CENTER);
 
-				GLHelper.renderText(0, -1f, "Level: " + player.position.z, 0.002f, 0.002f, TrueTypeFont.ALIGN_CENTER);
 			}
 		});
 	}
@@ -343,6 +357,13 @@ public class World
 	{
 		int pointX = (int) (point.x);
 		int pointY = (int) (point.y);
+		if(point.x < 0) pointX--;
+		if(point.y < 0) pointY--;
 		return Tile.tiles[Chunk.getTile(this, pointX, pointY, (int) point.z)].massive;
+	}
+
+	public void cleanUp()
+	{
+		Chunk.saveAllChunks(this);
 	}
 }
