@@ -34,6 +34,10 @@ public class World
 	public List<ILight> lights = new ArrayList<>();
 	public Player player = new Player(this);
 	public Vector3f currentCluster = Chunk.getClusterForPoint(this, player.position);
+	public int ageInYears = 0;
+	
+	public int ticksSinceLaunch;
+	
 
 	public static final Vector3f LIGHT_DAYTIME = new Vector3f(0.5f, 0.5f, 0.65f), LIGHT_FULL_DARK = new Vector3f();
 
@@ -183,8 +187,9 @@ public class World
 
 	public void tick()
 	{
+		ticksSinceLaunch++;
 		currentCluster = Chunk.getClusterForPoint(this, player.position);
-		Chunk.unloadUnneededChunks(this);
+		if(ticksSinceLaunch % 20 == 0)Chunk.unloadUnneededChunks(this);
 		if (player.position.z >= 0) LightRenderer.setAmbientLight(LIGHT_DAYTIME);
 		else LightRenderer.setAmbientLight(LIGHT_FULL_DARK);
 		for (Entity e : Chunk.getAllLoadedEntitiesForLayer((int) player.position.z))
@@ -327,10 +332,10 @@ public class World
 
 	public boolean isPositionStuckInGeometry(AxisAllignedBoundingBox predictedPosition, int height)
 	{
-		int x1 = (int) (predictedPosition.pos.x * 8);
-		int x2 = (int) ((predictedPosition.pos.x + predictedPosition.size.x) * 8);
-		int y1 = (int) (predictedPosition.pos.y * 8);
-		int y2 = (int) ((predictedPosition.pos.y + predictedPosition.size.y) * 8);
+		int x1 = (int) (predictedPosition.pos.x * Chunk.chunkSize);
+		int x2 = (int) ((predictedPosition.pos.x + predictedPosition.size.x) * Chunk.chunkSize);
+		int y1 = (int) (predictedPosition.pos.y * Chunk.chunkSize);
+		int y2 = (int) ((predictedPosition.pos.y + predictedPosition.size.y) * Chunk.chunkSize);
 
 		if (predictedPosition.pos.x <= 0) x1--;
 		if ((predictedPosition.pos.x + predictedPosition.size.x) > 0) x2++;
@@ -343,7 +348,6 @@ public class World
 			int j = y1;
 			do
 			{
-
 				if (isPointStuckInGeometry(new Vector3f(i, j, height))) return true;
 				j++;
 			} while (j < y2);

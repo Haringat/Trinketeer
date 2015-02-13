@@ -13,6 +13,7 @@ public class MathUtil
 	
 	public static boolean areVectors3fEqual(Vector3f v1, Vector3f v2)
 	{
+		if(v1 == null || v2 == null)return false;
 		return v1.x == v2.x && v1.y == v2.y && v1.z == v2.z;
 	}
 }

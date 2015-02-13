@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.lwjgl.util.vector.Vector;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.ichmed.trinketeers.ai.Behaviour;
@@ -23,6 +22,7 @@ public class Chunk
 	public int[] tiles = new int[chunkSize * chunkSize];
 
 	public int posX, posY, posZ;
+	public int age;
 
 	public static Vector3f getClusterForPoint(World w, Vector3f point)
 	{
@@ -76,6 +76,7 @@ public class Chunk
 	{
 		Chunk c = new Chunk(x, y, z);
 		chunks.put(getHashString(x, y, z), c);
+		c.age = world.ageInYears;
 		c.populate();
 		if (generate)
 		{
@@ -173,8 +174,8 @@ public class Chunk
 			if (loadFromDisk && ChunkSave.isClusterOnDisk(world, (int) cluster.x, (int) cluster.y, (int) cluster.z))
 			{
 				ChunkSave.loadCluster(world, (int) cluster.x, (int) cluster.y, (int) cluster.z);
+				c = chunks.get(getHashString(x, y, z));
 			}
-			c = chunks.get(getHashString(x, y, z));
 			return c == null ? createNewChunk(world, x, y, z, generate) : c;
 		}
 		return c;
@@ -222,7 +223,10 @@ public class Chunk
 			if (c != null && !isClusterAdjacent(w, getClusterForChunk(w, c)))
 			{
 				Vector3f v = getClusterForChunk(w, c);
-				if (l != null && !l.contains(v)) l.add(v);
+				boolean b = true;
+				for (Vector3f v2 : l)
+					if (MathUtil.areVectors3fEqual(v, v2)) b = false;
+				if (b && v != null) l.add(v);
 			}
 		}
 
@@ -236,20 +240,17 @@ public class Chunk
 		for (String s : chunks.keySet())
 		{
 			Chunk c = chunks.get(s);
-			System.out.println(Chunk.getHashString(c.posX, c.posY, c.posZ));
 			Vector3f v = getClusterForChunk(w, c);
 			if (l != null)
 			{
 				boolean b = true;
-				for(Vector3f v2 : l)if (MathUtil.areVectors3fEqual(v, v2)) b = false;
-				if(b)l.add(v);
+				for (Vector3f v2 : l)
+					if (MathUtil.areVectors3fEqual(v, v2)) b = false;
+				if (b && v != null) l.add(v);
 			}
 		}
 
 		for (Vector3f v : l)
-		{
-			System.out.println("Saving " + v);
 			ChunkSave.saveChunkClusterToDisk(w, (int) v.x, (int) v.y, (int) v.z);
-		}
 	}
 }

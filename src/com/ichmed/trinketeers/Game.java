@@ -180,6 +180,11 @@ public class Game
 				new Editor();
 				return;
 			}
+			if (arg.equals("-debug"))
+			{
+				debugMode = true;
+			}
+			
 		}
 		DataLoader.loadElements();
 		new Game().run();
