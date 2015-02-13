@@ -187,9 +187,7 @@ public class Chunk
 		for (int i = 0; i < clusterSize; i++)
 			for (int j = 0; j < clusterSize; j++)
 				for (int k = 0; k < clusterSize; k++)
-				{
 					chunks.put(getHashString(i + (x * clusterSize), j + (y * clusterSize), k + (z * clusterSize)), null);
-				}
 	}
 
 	public static List<Entity> getAllLoadedEntitiesForLayer(int layer)
