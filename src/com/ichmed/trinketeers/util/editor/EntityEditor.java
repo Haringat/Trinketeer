@@ -1,34 +1,39 @@
 package com.ichmed.trinketeers.util.editor;
 
 import java.awt.Dimension;
-import java.awt.LayoutManager;
+import java.awt.GridBagLayout;
+import java.util.HashMap;
 
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import com.ichmed.trinketeers.entity.Entity;
 
 public class EntityEditor extends JPanel {
 
 	private static final long serialVersionUID = 1840428064298141218L;
 
+	private HashMap<String, Entity> ents = new HashMap<>();
+	private JComboBox<com.ichmed.trinketeers.entity.Entity> entityselector;
+
 	public EntityEditor() {
-		this.setMinimumSize(new Dimension(100,100));
-		JComboBox entityselector = new JComboBox();
+		setLayout(new GridBagLayout());
+		setMinimumSize(new Dimension(100,100));
+		entityselector = new JComboBox<com.ichmed.trinketeers.entity.Entity>();
+		add(entityselector);
+		loadEntitys();
 	}
-
-	public EntityEditor(LayoutManager layout) {
-		super(layout);
-		// TODO Auto-generated constructor stub
+	
+	private void addEntity(Entity e, int i){
+		
 	}
-
-	public EntityEditor(boolean isDoubleBuffered) {
-		super(isDoubleBuffered);
-		// TODO Auto-generated constructor stub
+	
+	public void saveEntitys(){
+		// TODO: save data
 	}
-
-	public EntityEditor(LayoutManager layout, boolean isDoubleBuffered) {
-		super(layout, isDoubleBuffered);
-		// TODO Auto-generated constructor stub
+	
+	private void loadEntitys(){
+		// TODO: load data
 	}
 
 }
