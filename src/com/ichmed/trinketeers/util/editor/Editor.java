@@ -3,6 +3,7 @@ package com.ichmed.trinketeers.util.editor;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,18 +18,24 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
 import javax.swing.filechooser.FileFilter;
 
 import com.ichmed.trinketeers.util.render.TextureLibrary;
 
-public class Editor extends JFrame implements ActionListener, MenuListener{
+public class Editor extends JFrame implements ActionListener{
 	
 	private static final long serialVersionUID = -5209002133921099055L;
-	private final String createtexliblabel = "create texturelibrary";
+	private final String createtexliblabel = "Create texturelibrary...";
 	private final String elementeditorconstraints = "ElementEditor";
 	private final String entityeditorconstraints = "EntityEditor";
+	private final String saveelementslabel = "Save elements";
+	private final String saveentityslabel = "Save entitys";
+	private final String closelabel = "Exit";
+	private final String showlabel = "Show";
+	private final String filelabel = "File";
+	
+	private ElementEditor elementeditor;
+	private EntityEditor entityeditor;
 
 	private JPanel cp = new JPanel();
 	private CardLayout cl = new CardLayout();
@@ -36,35 +43,56 @@ public class Editor extends JFrame implements ActionListener, MenuListener{
 	public Editor() {
 		JScrollPane sp = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		elementeditor = new ElementEditor();
+		entityeditor = new EntityEditor();
 		JViewport vp = new JViewport();
 		JMenuBar mb = new JMenuBar();
-		JMenu show = new JMenu("show");
-		JMenu createtexlib = new JMenu(createtexliblabel);
+		JMenu show = new JMenu(showlabel);
+		JMenuItem createtexlib = new JMenuItem(createtexliblabel);
+		JMenu file = new JMenu(filelabel);
 		JMenuItem showelementeditor = new JMenuItem(elementeditorconstraints);
 		JMenuItem showentityeditor = new JMenuItem(entityeditorconstraints);
+		JMenuItem saveelements = new JMenuItem(saveelementslabel);
+		JMenuItem saveentitys = new JMenuItem(saveentityslabel);
+		JMenuItem close = new JMenuItem(closelabel);
+		
+		createtexlib.setName(createtexliblabel);
+		show.setName(showlabel);
+		file.setName(filelabel);
+		
+		showelementeditor.setName(elementeditorconstraints);
+		showentityeditor.setName(entityeditorconstraints);
+		saveelements.setName(saveelementslabel);
+		saveentitys.setName(saveentityslabel);
+		close.setName(closelabel);
+		
+		mb.add(file);
+		mb.add(show);
+		
+		file.add(createtexlib);
+		file.add(saveelements);
+		file.add(saveentitys);
+		file.add(close);
+		
 		show.add(showelementeditor);
 		show.add(showentityeditor);
+		
 		showelementeditor.addActionListener(this);
 		showentityeditor.addActionListener(this);
-		createtexlib.addMenuListener(this);
-		//createtexlib.addActionListener(this);
-		mb.add(show);
-		mb.add(createtexlib);
+		createtexlib.addActionListener(this);
+		close.addActionListener(this);
+		
 		this.setJMenuBar(mb);
-		vp.setOpaque(false);
 		this.setTitle("Trinketeers Editor");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		sp.setViewport(vp);
 		this.getContentPane().add(sp);
 		cp.setLayout(cl);
 		
-		cp.add(new ElementEditor(), elementeditorconstraints);
-		cp.add(new EntityEditor(), entityeditorconstraints);
+		cp.add(elementeditor, elementeditorconstraints);
+		cp.add(entityeditor, entityeditorconstraints);
 		cl.first(cp);
 		vp.setView(cp);
-		if(vp.getView()!= null){
-			System.out.println(vp.getView().toString());
-		}
 		this.pack();
 		this.setVisible(true);
 	}
@@ -73,17 +101,10 @@ public class Editor extends JFrame implements ActionListener, MenuListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() instanceof JMenuItem){
 			JMenuItem src = (JMenuItem) e.getSource();
-			cl.show(cp, src.getText());
-		}
-		
-	}
-
-	@Override
-	public void menuSelected(MenuEvent e) {
-		if(e.getSource() instanceof JMenu){
-			JMenu src = (JMenu) e.getSource();
-			if(src.getText().equals(createtexliblabel)){
-				System.out.println("creating texlib");
+			if(src.getName().equals(entityeditorconstraints)
+					|| src.getName().equals(elementeditorconstraints))
+				cl.show(cp, src.getName());
+			if(src.getName().equals(createtexliblabel)){
 				File f = edittl();
 				if(f != null && f.isDirectory() == true){
 					List<String[]> textures = new ArrayList<String[]>();
@@ -102,15 +123,18 @@ public class Editor extends JFrame implements ActionListener, MenuListener{
 					}
 				}
 			}
+			if(src.getName().equals(saveelementslabel)){
+				elementeditor.saveElements();
+			}
+			if(src.getName().equals(saveentityslabel)){
+				entityeditor.saveEntitys();
+			}
+			if(src.getName().equals(closelabel)){
+				this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+			}
 		}
 		
 	}
-
-	@Override
-	public void menuDeselected(MenuEvent e) {}
-
-	@Override
-	public void menuCanceled(MenuEvent e) {}
 	
 	private File edittl() {
 		JFileChooser file = new JFileChooser();

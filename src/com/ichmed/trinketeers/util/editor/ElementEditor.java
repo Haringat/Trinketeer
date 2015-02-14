@@ -215,17 +215,17 @@ public class ElementEditor extends JPanel implements MouseListener, ActionListen
 			addRow();
 		}
 		if(e.getSource() instanceof JButton
-				&& e.getSource().equals(save)){
-			refreshHashmap();
-			DataLoader.saveElements(elements);
-		}
-		if(e.getSource() instanceof JButton
 				&& ((JButton) e.getSource()).getName() != null
 				&& ((JButton) e.getSource()).getName().contains("remove")){
 			String index = ((JButton) e.getSource()).getName().substring(
 					((JButton) e.getSource()).getName().indexOf(" ")+1);
 			removeRow(index);
 		}
+	}
+
+	public void saveElements(){
+		refreshHashmap();
+		DataLoader.saveElements(elements);
 	}
 
 	private void refreshHashmap() {
