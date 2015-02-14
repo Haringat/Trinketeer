@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.lwjgl.util.vector.Vector2f;
+
 public class EntityData
 {
 	public static HashMap<String, EntityData> entityData = new HashMap<>();
@@ -13,6 +15,10 @@ public class EntityData
 	public String type;
 	public int strength;
 	public int rarity;
+	
+	public List<String> behaviours;
+	
+	public Vector2f size, renderSize;
 	
 	public static List<EntityData> getAllEntitesOfType(String type)
 	{
