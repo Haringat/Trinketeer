@@ -109,9 +109,9 @@ public class Game
 					Vector3f v = Chunk.getClusterForPoint(world, world.player.position);
 					ChunkSave.saveChunkClusterToDisk(world, (int)v.x, (int)v.y, (int)v.z);
 				}
-				if (key == GLFW_KEY_T && action == GLFW_RELEASE) Chunk.setTile(world, (int) (world.player.position.x * 8), (int) (world.player.position.y * 8), (int) world.player.position.z, 3);
-				if (key == GLFW_KEY_KP_ADD && action == GLFW_RELEASE) world.player.position.z++;
-				if (key == GLFW_KEY_KP_SUBTRACT && action == GLFW_RELEASE) zoom -= world.player.position.z--;
+				if (key == GLFW_KEY_T && action == GLFW_RELEASE) Chunk.setTile(world, (int) (world.player.position.x * 8), (int) (world.player.position.y * 8), (int) world.player.position.z, 5);
+				if (key == GLFW_KEY_KP_ADD && action == GLFW_RELEASE) world.player.changeHeight(world, 1);
+				if (key == GLFW_KEY_KP_SUBTRACT && action == GLFW_RELEASE) world.player.changeHeight(world, -1);
 
 				if (action == GLFW_PRESS) keys.put(key, true);
 				if (action == GLFW_RELEASE) keys.put(key, false);

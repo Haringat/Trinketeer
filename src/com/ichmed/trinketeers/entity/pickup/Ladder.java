@@ -19,12 +19,16 @@ public class Ladder extends Pickup
 		super(w);
 		this.down = down;
 	}
-	
+
 	@Override
 	public boolean pickUp(World w, Player p)
 	{
-		if(Game.isKeyDown(GLFW_KEY_SPACE))
+		if (Game.isKeyDown(GLFW_KEY_SPACE))
+		{
+			w.removeEntityFromChunk(p);
 			p.setCenter(new Vector3f(this.getCenter().x, this.getCenter().y + (down ? -0.125f : 0.125f), this.position.z + (down ? -1 : 1)));
+			w.addEntityToChunk(p);
+		}
 		return false;
 	}
 
@@ -51,10 +55,9 @@ public class Ladder extends Pickup
 	{
 		super.actualRender(w);
 		Vector3f v = this.getCenter();
-		if(w.getNumberOfEnemies((int) this.position.z) == 0)
-			GLHelper.renderText(v.x, v.y + 0.05f, "Prees SPACE to enter", 0.001f, 0.001f, TrueTypeFont.ALIGN_CENTER);
-		else if(Game.isKeyDown(GLFW_KEY_SPACE) && isPlayerInPickupRange(w.player) && w.getNumberOfEnemies((int)this.position.z) > 0) 
-			GLHelper.renderText(v.x, v.y + 0.05f, "CLOSED!", 0.002f, 0.002f, TrueTypeFont.ALIGN_CENTER);		
+		if (w.getNumberOfEnemies((int) this.position.z) == 0) GLHelper.renderText(v.x, v.y + 0.05f, "Prees SPACE to enter", 0.001f, 0.001f, TrueTypeFont.ALIGN_CENTER);
+		else if (Game.isKeyDown(GLFW_KEY_SPACE) && isPlayerInPickupRange(w.player) && w.getNumberOfEnemies((int) this.position.z) > 0)
+			GLHelper.renderText(v.x, v.y + 0.05f, "CLOSED!", 0.002f, 0.002f, TrueTypeFont.ALIGN_CENTER);
 	}
 
 	@Override
@@ -62,8 +65,5 @@ public class Ladder extends Pickup
 	{
 		return 10000000;
 	}
-	
-	
-	
-	
+
 }

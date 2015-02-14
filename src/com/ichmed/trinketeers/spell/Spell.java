@@ -5,7 +5,7 @@ import java.util.HashMap;
 import org.lwjgl.util.vector.Vector2f;
 
 import com.ichmed.trinketeers.entity.Entity;
-import com.ichmed.trinketeers.spell.element.Element;
+import com.ichmed.trinketeers.savefile.data.ElementData;
 import com.ichmed.trinketeers.spell.formation.Formation;
 import com.ichmed.trinketeers.spell.formation.Arc;
 import com.ichmed.trinketeers.spell.formation.Single;
@@ -48,7 +48,7 @@ public class Spell
 //		float cooldownMod = (float) 50 / cooldown;
 		float despawnMod = destroyOnImpact ? 1 : 3.5f;
 
-		this.manaCost = sizeMod * lifespanMod  * amount * despawnMod * Element.elements.get(element).getManaMod() * 4;
+		this.manaCost = sizeMod * lifespanMod  * amount * despawnMod * ElementData.elements.get(element).getManaMod() * 4;
 
 //		System.out.printf("Size: %1$f Lifespan: %2$f Cooldown: %3$f Amount: %4$d Despawn: %5$f Manamod: %6$f \n", sizeMod, lifespanMod, cooldownMod, amount, despawnMod, Element.elements.get(element)
 //				.getManaMod());
@@ -85,9 +85,9 @@ public class Spell
 	}
 
 	public Spell(){
-		element = (String) Element.elements.keySet().toArray()[(int) (Element.elements.keySet().size() * Math.random())];
-		float manaMod = Element.elements.get(element).getManaMod();
-		float sizeMod = Element.elements.get(element).getSizeMod();
+		element = (String) ElementData.elements.keySet().toArray()[(int) (ElementData.elements.keySet().size() * Math.random())];
+		float manaMod = ElementData.elements.get(element).getManaMod();
+		float sizeMod = ElementData.elements.get(element).getSizeMod();
 		boolean multi = Math.random() >= 0.5f;
 		boolean constant = Math.random() >= 0.5f;
 		if (!multi)
@@ -107,8 +107,8 @@ public class Spell
 		size = new Vector2f(f, f);
 		speed = 0.02f - (float) Math.random() * 0.015f;
 		lifespan = 100;
-		texture = Element.elements.get(element).getTexture();
-		destroyOnImpact = Element.elements.get(element).shouldBreakOnImpact();
+		texture = ElementData.elements.get(element).getTexture();
+		destroyOnImpact = ElementData.elements.get(element).shouldBreakOnImpact();
 	}
 	
 }

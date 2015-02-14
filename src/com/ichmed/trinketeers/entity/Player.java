@@ -20,7 +20,7 @@ public class Player extends Entity
 	public int shotCooldownLeft = 0, shotCooldownRight = 0;
 	public float mana = 150f, maxMana = 150.0f;
 	public int coins = 0;
-	public int fuel = 0;
+	public int fuel = 10000000;
 
 	public Spell currentSpellLeft;
 	public Spell currentSpellRight;
@@ -38,7 +38,7 @@ public class Player extends Entity
 		this.maxHealth = this.health = 25;
 		light = new BehaviourLight(w, new Vector4f(20f, 20f, 4f, 0f), 1.0f, 1f);
 		this.behaviours.add(light);
-//		this.isSolid = false;
+		this.isSolid = false;
 	}
 
 	public float getManaRegen()

@@ -307,6 +307,14 @@ public class Entity implements IWorldGraphic, Waypoint
 		return this.position.z == w.player.position.z && this.position.x > w.player.position.x - 1.5f && this.position.x < w.player.position.x + 1.5f && this.position.y > w.player.position.y - 1.5f
 				&& this.position.y < w.player.position.y + 1.5f;
 	}
+	
+	public boolean changeHeight(World w, int heightMod)
+	{
+		w.removeEntityFromChunk(this);
+		this.position.z += heightMod;
+		w.addEntityToChunk(this);
+		return true;
+	}
 
 	public String getSaveData()
 	{

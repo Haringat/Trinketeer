@@ -17,12 +17,13 @@ public class WorldGenerator
 		int tileY = y * Chunk.chunkSize;
 		if (x == 0 && y == 0 && z > -20)
 		{
+			int floor = z == 0 ? 1 : 5; 
 			for (int i = -8; i < 8; i++)
 			{
 				if (z != 0) Chunk.setTile(world, i, -8, z, 3);
 				for (int j = -7; j < 8; j++)
 
-					Chunk.setTile(world, tileX + i, tileY + j, z, 1);
+					Chunk.setTile(world, tileX + i, tileY + j, z, floor);
 
 			}
 			for (int i = 0; i < 4; i++)
@@ -30,8 +31,8 @@ public class WorldGenerator
 
 				for (int j = 0; j < 4; j++)
 				{
-					Chunk.setTile(world, tileX - 2 + i, tileY + 7 + j, z, 1);
-					Chunk.setTile(world, tileX - 2 + i, tileY - 11 + j, z, 1);
+					Chunk.setTile(world, tileX - 2 + i, tileY + 7 + j, z, floor);
+					Chunk.setTile(world, tileX - 2 + i, tileY - 11 + j, z, floor);
 				}
 				if (z != 0) Chunk.setTile(world, -2 + i, -11, z, 3);
 			}
