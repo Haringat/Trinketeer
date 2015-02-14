@@ -8,11 +8,12 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.util.HashMap;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.ichmed.trinketeers.spell.element.Element;
+import com.ichmed.trinketeers.savefile.data.ElementData;
 import com.ichmed.trinketeers.util.JSONUtil;
 
 import static com.ichmed.trinketeers.util.DataRef.*;
@@ -51,7 +52,7 @@ public class DataLoader
 			for (int i = 0; i < a.length(); i++)
 			{
 				JSONObject e = (JSONObject) a.get(i);
-				Element elementGame = new Element(e.getString("name"),
+				ElementData elementGame = new ElementData(e.getString("name"),
 						(float) e.getDouble("color_red"),
 						(float) e.getDouble("color_green"),
 						(float) e.getDouble("color_blue"),
@@ -71,7 +72,7 @@ public class DataLoader
 					elementGame.values.put(field, e.getString(field));
 				}*/
 				
-				Element.elements.put(name, elementGame);
+				ElementData.elements.put(name, elementGame);
 			}
 		} catch (JSONException e)
 		{
@@ -79,7 +80,7 @@ public class DataLoader
 		}
 	}
 
-	public static void saveElements(HashMap<String, Element> elements) {
+	public static void saveElements(HashMap<String, ElementData> elements) {
 		try{
 			JSONObject root = new JSONObject();
 			JSONArray a = new JSONArray();

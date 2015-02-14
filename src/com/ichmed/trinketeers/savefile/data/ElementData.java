@@ -1,12 +1,12 @@
-package com.ichmed.trinketeers.spell.element;
+package com.ichmed.trinketeers.savefile.data;
 
 import java.util.HashMap;
 
 import org.lwjgl.util.vector.Vector3f;
 
-public class Element
+public class ElementData
 {
-	public static HashMap<String, Element> elements = new HashMap<>();
+	public static HashMap<String, ElementData> elements = new HashMap<>();
 	
 	private String name;
 	private float red;
@@ -22,7 +22,7 @@ public class Element
 	@SuppressWarnings("unused")
 	private float sizemod;
 	
-	public Element(String name, float r, float g, float b, float brightness, float density,
+	public ElementData(String name, float r, float g, float b, float brightness, float density,
 			boolean boi, float dmg, String tex, float manamod, float sizemod){
 		this.setName(name);
 		damage = dmg;
@@ -37,7 +37,7 @@ public class Element
 		this.sizemod = sizemod;
 	}
 	
-	public Element(){
+	public ElementData(){
 		this("new element", 1.0f, 1.0f, 1.0f, 0.0f, 0.001f, true, 10.0f, "defaultSpell.png", 0.0f, 0.0f);
 	}
 	

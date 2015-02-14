@@ -20,6 +20,7 @@ public class Tile
 		tiles[2] = new TileWallBrick("wallBrick", true, true);
 		tiles[3] = new TileWallTop("wallTop", true, false).setRenderInFront(true);
 		tiles[4] = new Tile("floorGrass", false, false);
+		tiles[5] = new Tile("floorStone", false, false);
 	}
 
 	public Tile(String texture, boolean breakable, boolean massive)

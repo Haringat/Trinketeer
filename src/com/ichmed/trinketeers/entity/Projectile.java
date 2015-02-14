@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import com.ichmed.trinketeers.savefile.data.ElementData;
 import com.ichmed.trinketeers.spell.Spell;
-import com.ichmed.trinketeers.spell.element.Element;
 import com.ichmed.trinketeers.world.World;
 
 public class Projectile extends Entity
@@ -52,7 +52,7 @@ public class Projectile extends Entity
 		{
 			this.travelBeforeStandStill--;
 			if (this.travelBeforeStandStill == 0) this.speed = 0;
-			float s = this.direction.length() * (1 - Element.elements.get(element).getDensity());
+			float s = this.direction.length() * (1 - ElementData.elements.get(element).getDensity());
 			this.direction.x += ((float) Math.random() - .5f) * wobble;
 			this.direction.y += ((float) Math.random() - .5f) * wobble;
 			this.direction.normalise().scale(s);
@@ -61,11 +61,11 @@ public class Projectile extends Entity
 			{
 				if (e.isVulnerable)
 				{
-					e.damage(this.size.x * Element.elements.get(element).getBaseDamage());
+					e.damage(this.size.x * ElementData.elements.get(element).getBaseDamage());
 					if (e.isMoveable)
 					{
 						e.direction = this.direction;
-						e.speed = Element.elements.get(element).getDensity();
+						e.speed = ElementData.elements.get(element).getDensity();
 						e.stun = 2;
 						if (this.destroyOnImpact) this.kill(world);
 
@@ -74,7 +74,7 @@ public class Projectile extends Entity
 				} else if (e.isMoveable)
 				{
 					e.direction = this.direction;
-					e.speed = Element.elements.get(element).getDensity();
+					e.speed = ElementData.elements.get(element).getDensity();
 					e.stun = 2;
 					if (this.destroyOnImpact) this.kill(world);
 					break;

@@ -15,7 +15,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
 import com.ichmed.trinketeers.savefile.DataLoader;
-import com.ichmed.trinketeers.spell.element.Element;
+import com.ichmed.trinketeers.savefile.data.ElementData;
 
 public class Preview extends JComponent implements MouseListener{
 	
@@ -40,7 +40,7 @@ public class Preview extends JComponent implements MouseListener{
 	public void setImage(String path) throws NullPointerException{
 		image = DataLoader.loadImage(path, this);
 		if(image == null){
-			image = DataLoader.loadImage(new Element().getTexture(), this);
+			image = DataLoader.loadImage(new ElementData().getTexture(), this);
 		}
 		repaint();
 	}

@@ -24,8 +24,8 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.ichmed.trinketeers.spell.element.Element;
 import com.ichmed.trinketeers.savefile.DataLoader;
+import com.ichmed.trinketeers.savefile.data.ElementData;
 
 public class ElementEditor extends JPanel implements MouseListener, ActionListener, FocusListener, ChangeListener
 {
@@ -33,14 +33,14 @@ public class ElementEditor extends JPanel implements MouseListener, ActionListen
 	private JButton add;
 	private JButton save;
 	
-	private HashMap<String, Element> elements = new HashMap<String, Element>();
+	private HashMap<String, ElementData> elements = new HashMap<String, ElementData>();
 	private HashMap<String, Component[]> id = new HashMap<String, Component[]>();
 
 	private String tempname;
 
 	public ElementEditor(){
 		DataLoader.loadElements();
-		elements = Element.elements;
+		elements = ElementData.elements;
 		add = new JButton("+");
 		add.addActionListener(this);
 		save = new JButton("save elements");
@@ -95,12 +95,12 @@ public class ElementEditor extends JPanel implements MouseListener, ActionListen
 	}
 
 	private void addRow(){
-		Element e = new Element();
+		ElementData e = new ElementData();
 		elements.put(e.getName(), e);
 		addRow(e, elements.size());
 	}
 
-	private void addRow(Element e, int i) {
+	private void addRow(ElementData e, int i) {
 		if(elements.containsValue(e)){
 			this.remove(add);
 			this.remove(save);
@@ -235,7 +235,7 @@ public class ElementEditor extends JPanel implements MouseListener, ActionListen
 		for(String key: id.keySet().toArray(new String[0])){
 			Component[] comps = id.get(key);
 			for(Component comp: comps){
-				Element e = new Element();
+				ElementData e = new ElementData();
 				switch(comp.getName()){
 				case "texture":
 					e.setTexture(((Preview)comp).getPath());
@@ -284,7 +284,7 @@ public class ElementEditor extends JPanel implements MouseListener, ActionListen
 				!((JTextField)e.getSource()).getText().equals(tempname)){
 			String newname = ((JTextField) e.getSource()).getText();
 			Component[] tempcomps = id.get(tempname);
-			Element tempelement = elements.get(tempname);
+			ElementData tempelement = elements.get(tempname);
 			id.remove(tempname);
 			id.put(newname, tempcomps);
 			elements.remove(tempname);

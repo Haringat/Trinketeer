@@ -1,11 +1,13 @@
 package com.ichmed.trinketeers.world;
 
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -35,14 +37,13 @@ public class World
 	public Player player = new Player(this);
 	public Vector3f currentCluster = Chunk.getClusterForPoint(this, player.position);
 	public int ageInYears = 0;
-	
+
 	public int ticksSinceLaunch;
-	
 
 	public static final Vector3f LIGHT_DAYTIME = new Vector3f(0.5f, 0.5f, 0.65f), LIGHT_FULL_DARK = new Vector3f();
 
 	public final String name = "world_0";
-	
+
 	/*
 	 * Handle with care!
 	 */
@@ -58,19 +59,31 @@ public class World
 		uiGraphics.add(new IGraphic()
 		{
 
+			int deg;
+			int acc;
+
 			@Override
 			public void render()
 			{
+				if(deg % 360 == 0) deg = 0;
+				if(GLFW.glfwGetMouseButton(Game.window, GLFW_MOUSE_BUTTON_1) == 1)
+				{
+					if(acc < 20)acc++;
+					deg += acc;
+				}
+				else if(acc > 2) acc--;
+				deg++;
 				Vector2f v = InputUtil.getMouseRelativToScreenCenter();
 				glPushMatrix();
 				glTranslatef(v.x, v.y, 0);
 				GLHelper.renderTexturedQuad(-0.0625f, -0.0625f, 0.125f, 0.125f, "crosshair_1");
-				glRotated(player.ticksExisted, 0, 0, 1);
+				glRotated(deg, 0, 0, 1);
 				GLHelper.renderTexturedQuad(-0.0625f, -0.0625f, 0.125f, 0.125f, "crosshair_0");
+				glRotated(-1.5 * deg, 0, 0, 1);
+				GLHelper.renderTexturedQuad(-0.0625f, -0.0625f, 0.125f, 0.125f, "crosshair_2");
 				glPopMatrix();
 			}
 		});
-
 
 		uiGraphics.add(new IGraphic()
 		{
@@ -129,18 +142,18 @@ public class World
 			@Override
 			public void render()
 			{
-				if(!Game.debugMode)return;
+				if (!Game.debugMode) return;
 				GLHelper.renderText(-1f, -0.9f, "E: " + Chunk.getAllLoadedEntities().size());
 				GLHelper.renderText(-1, -0.5f, "X: " + player.position.x);
 				GLHelper.renderText(-1, -0.55f, "Y: " + player.position.y);
-				GLHelper.renderText(-1, -0.6f, "Height: " + (int)player.position.z);
+				GLHelper.renderText(-1, -0.6f, "Height: " + (int) player.position.z);
 				Chunk c = Chunk.getChunk(World.wordObj, player.position);
 				GLHelper.renderText(-1, -0.67f, "Chunk: " + Chunk.getHashString(c.posX, c.posY, c.posZ));
 				Vector3f v = Chunk.getClusterForChunk(wordObj, c);
 				GLHelper.renderText(-1, -0.72f, "Cluster: " + v.x + " " + v.y + " " + v.z);
 			}
 		});
-		
+
 		uiGraphics.add(new IGraphic()
 		{
 
@@ -189,7 +202,7 @@ public class World
 	{
 		ticksSinceLaunch++;
 		currentCluster = Chunk.getClusterForPoint(this, player.position);
-		if(ticksSinceLaunch % 20 == 0)Chunk.unloadUnneededChunks(this);
+		if (ticksSinceLaunch % 20 == 0) Chunk.unloadUnneededChunks(this);
 		if (player.position.z >= 0) LightRenderer.setAmbientLight(LIGHT_DAYTIME);
 		else LightRenderer.setAmbientLight(LIGHT_FULL_DARK);
 		for (Entity e : Chunk.getAllLoadedEntitiesForLayer((int) player.position.z))
@@ -337,9 +350,7 @@ public class World
 		int y1 = (int) (predictedPosition.pos.y * Chunk.chunkSize);
 		int y2 = (int) ((predictedPosition.pos.y + predictedPosition.size.y) * Chunk.chunkSize);
 
-		if (predictedPosition.pos.x <= 0) x1--;
 		if ((predictedPosition.pos.x + predictedPosition.size.x) > 0) x2++;
-		if (predictedPosition.pos.y < 0) y1--;
 		if ((predictedPosition.pos.y + predictedPosition.size.y) > 0) y2++;
 
 		int i = x1;
@@ -361,8 +372,8 @@ public class World
 	{
 		int pointX = (int) (point.x);
 		int pointY = (int) (point.y);
-		if(point.x < 0) pointX--;
-		if(point.y < 0) pointY--;
+		if (point.x < 0) pointX--;
+		if (point.y < 0) pointY--;
 		return Tile.tiles[Chunk.getTile(this, pointX, pointY, (int) point.z)].massive;
 	}
 
