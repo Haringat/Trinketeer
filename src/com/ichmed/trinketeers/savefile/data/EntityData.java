@@ -16,6 +16,11 @@ public class EntityData
 	private int strength;
 	private int rarity;
 	
+	@Override
+	public String toString() {
+		return name;
+	}
+
 	public List<String> behaviours;
 	
 	public Vector2f size, renderSize;

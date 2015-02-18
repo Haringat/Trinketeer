@@ -31,7 +31,6 @@ public class ElementEditor extends JPanel implements MouseListener, ActionListen
 {
 	private static final long serialVersionUID = -1549438543620749797L;
 	private JButton add;
-	private JButton save;
 	
 	private HashMap<String, ElementData> elements = new HashMap<String, ElementData>();
 	private HashMap<String, Component[]> id = new HashMap<String, Component[]>();
@@ -43,8 +42,6 @@ public class ElementEditor extends JPanel implements MouseListener, ActionListen
 		elements = ElementData.elements;
 		add = new JButton("+");
 		add.addActionListener(this);
-		save = new JButton("save elements");
-		save.addActionListener(this);
 		this.addMouseListener(this);
 		this.setLayout(new GridBagLayout());
 		
@@ -103,7 +100,6 @@ public class ElementEditor extends JPanel implements MouseListener, ActionListen
 	private void addRow(ElementData e, int i) {
 		if(elements.containsValue(e)){
 			this.remove(add);
-			this.remove(save);
 			Component[] comps = new Component[8];
 			GridBagConstraints c = new GridBagConstraints();
 		
@@ -176,11 +172,8 @@ public class ElementEditor extends JPanel implements MouseListener, ActionListen
 		c.fill = HORIZONTAL;
 		c.anchor = SOUTH;
 		c.gridx = 0;
-		this.add(add,c);
-		
-		c.gridx = 1;
 		c.gridwidth = REMAINDER;
-		this.add(save,c);
+		this.add(add,c);
 		this.repaint();
 	}
 
@@ -234,8 +227,8 @@ public class ElementEditor extends JPanel implements MouseListener, ActionListen
 		}
 		for(String key: id.keySet().toArray(new String[0])){
 			Component[] comps = id.get(key);
+			ElementData e = new ElementData();
 			for(Component comp: comps){
-				ElementData e = new ElementData();
 				switch(comp.getName()){
 				case "texture":
 					e.setTexture(((Preview)comp).getPath());
@@ -259,8 +252,8 @@ public class ElementEditor extends JPanel implements MouseListener, ActionListen
 				case "density":
 					e.setDensity(Float.valueOf(((JTextField)comp).getText()));
 				}
-				elements.put(e.getName(), e);
 			}
+			elements.put(e.getName(), e);
 		}
 	}
 
@@ -280,8 +273,9 @@ public class ElementEditor extends JPanel implements MouseListener, ActionListen
 
 	@Override
 	public void focusLost(FocusEvent e) {
-		if((JTextField)e.getSource() instanceof JTextField &&
-				!((JTextField)e.getSource()).getText().equals(tempname)){
+		if((JTextField)e.getSource() instanceof JTextField
+				&& ((JTextField)e.getSource()).getName().equals("name")
+				&& !((JTextField)e.getSource()).getText().equals(tempname)){
 			String newname = ((JTextField) e.getSource()).getText();
 			Component[] tempcomps = id.get(tempname);
 			ElementData tempelement = elements.get(tempname);

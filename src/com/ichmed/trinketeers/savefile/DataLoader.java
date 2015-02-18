@@ -57,9 +57,9 @@ public class DataLoader
 			{
 				JSONObject e = (JSONObject) a.get(i);
 				ElementData elementGame = new ElementData(e.getString("name"),
-						(float) e.getDouble("color_red"),
-						(float) e.getDouble("color_green"),
-						(float) e.getDouble("color_blue"),
+						(float) e.getDouble("color_red")/255,
+						(float) e.getDouble("color_green")/255,
+						(float) e.getDouble("color_blue")/255,
 						(float) e.getDouble("brightness"),
 						(float) e.getDouble("density"),
 						e.getBoolean("break_on_impact"),
