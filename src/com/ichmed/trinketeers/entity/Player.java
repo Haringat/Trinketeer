@@ -17,14 +17,12 @@ import com.ichmed.trinketeers.world.World;
 
 public class Player extends Entity
 {
-	public int shotCooldownLeft = 0, shotCooldownRight = 0;
-	public float mana = 150f, maxMana = 150.0f;
 	public int coins = 0;
-	public int fuel = 10000000;
+	public int fuel = 0;
 
 	public Spell currentSpellLeft;
 	public Spell currentSpellRight;
-	
+
 	BehaviourLight light;
 
 	public Player(World w)
@@ -38,12 +36,14 @@ public class Player extends Entity
 		this.maxHealth = this.health = 25;
 		light = new BehaviourLight(w, new Vector4f(20f, 20f, 4f, 0f), 1.0f, 1f);
 		this.behaviours.add(light);
-		this.isSolid = false;
+		this.isSolid = true;
+		mana = 150f;
+		maxMana = 150.0f;
 	}
 
 	public float getManaRegen()
 	{
-		return 0.05f;
+		return 0.15f;
 	}
 
 	@Override
@@ -64,42 +64,41 @@ public class Player extends Entity
 		if (Game.isKeyDown(GLFW_KEY_D)) this.direction.x = this.preferredDirection.x = 1f;
 		else if (Game.isKeyDown(GLFW_KEY_A)) this.direction.x = this.preferredDirection.x = -1f;
 		else this.direction.x = this.preferredDirection.x = 0;
-		shotCooldownLeft--;
-		shotCooldownRight--;
 
-		if (this.currentSpellLeft != null && glfwGetMouseButton(Game.window, GLFW_MOUSE_BUTTON_1) == 1 && shotCooldownLeft <= 0 && this.mana >= currentSpellLeft.getManaCost())
+		DoubleBuffer b1 = BufferUtils.createDoubleBuffer(1);
+		DoubleBuffer b2 = BufferUtils.createDoubleBuffer(1);
+		glfwGetCursorPos(Game.window, b1, b2);
+
+		float min = Math.min(Game.WIDTH, Game.HEIGHT);
+
+		float x = ((float) b1.get(0) - Game.WIDTH / 2) * (min / (float) Game.WIDTH) + this.getCenter().x;
+		float y = (Game.HEIGHT / 2 - (float) b2.get(0)) * (min / (float) Game.HEIGHT) + this.getCenter().y;
+		Vector2f v = (Vector2f) new Vector2f(x, y);
+		Vector3f v2 = this.getCenter();
+
+		if (this.currentSpellLeft != null)
 		{
-			DoubleBuffer b1 = BufferUtils.createDoubleBuffer(1);
-			DoubleBuffer b2 = BufferUtils.createDoubleBuffer(1);
-			glfwGetCursorPos(Game.window, b1, b2);
+			this.currentSpellLeft.tick(world, this);
 
-			Vector2f v = (Vector2f) new Vector2f((float) b1.get(0) - Game.WIDTH / 2, Game.HEIGHT / 2 - (float) b2.get(0)).normalise(null);
-			Vector3f v2 = this.getCenter();
-			currentSpellLeft.cast(world, this, v2.x, v2.y, v);
-			shotCooldownLeft = currentSpellLeft.cooldown;
-			mana -= currentSpellLeft.getManaCost();
+			if (glfwGetMouseButton(Game.window, GLFW_MOUSE_BUTTON_1) == 1) mana -= currentSpellLeft.cast(world, this, v2.x, v2.y, v);
+			else mana -= this.currentSpellLeft.release(world, this, v2.x, v2.y, v);
+
 		}
 
-		if (this.currentSpellRight != null && glfwGetMouseButton(Game.window, GLFW_MOUSE_BUTTON_2) == 1 && shotCooldownRight <= 0 && this.mana >= currentSpellRight.getManaCost())
+		if (this.currentSpellRight != null)
 		{
-			DoubleBuffer b1 = BufferUtils.createDoubleBuffer(1);
-			DoubleBuffer b2 = BufferUtils.createDoubleBuffer(1);
-			glfwGetCursorPos(Game.window, b1, b2);
-
-			Vector2f v = (Vector2f) new Vector2f((float) b1.get(0) - Game.WIDTH / 2, Game.HEIGHT / 2 - (float) b2.get(0)).normalise(null);
-			Vector3f v2 = this.getCenter();
-			currentSpellRight.cast(world, this, v2.x, v2.y, v);
-			shotCooldownRight = currentSpellRight.cooldown;
-			mana -= currentSpellRight.getManaCost();
+			this.currentSpellRight.tick(world, this);
+			if (glfwGetMouseButton(Game.window, GLFW_MOUSE_BUTTON_2) == 1) mana -= currentSpellRight.cast(world, this, v2.x, v2.y, v);
+			else mana -= this.currentSpellRight.release(world, this, v2.x, v2.y, v);
 		}
 
 		super.tick(world);
 	}
-	
+
 	public void rerollSpells()
 	{
-		//this.currentSpellLeft = Spell.generateSpell(1000);
-		//this.currentSpellRight = Spell.generateSpell(1000);
+		// this.currentSpellLeft = Spell.generateSpell(1000);
+		// this.currentSpellRight = Spell.generateSpell(1000);
 		this.currentSpellLeft = new Spell();
 		this.currentSpellRight = new Spell();
 	}
@@ -109,5 +108,4 @@ public class Player extends Entity
 	{
 		return new AxisAllignedBoundingBox(this.position.x - 0.0375f, this.position.y, this.size.x + 0.075f, this.size.y + 0.075f);
 	}
-
 }

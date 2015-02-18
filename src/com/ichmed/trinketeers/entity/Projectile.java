@@ -31,21 +31,11 @@ public class Projectile extends Entity
 		this.despawnCountDown = 1;
 	}
 
-//	public ILight createLight()
-//	{
-//		SimpleLight lightSource = new SimpleLight();
-//		float f = Element.elements.get(element).getBrightness();
-//		lightSource.setActive(f > 0);
-//		Vector3f v = Element.elements.get(element).getColor();
-//		lightSource.setColor((Vector4f) new Vector4f(v.x, v.y, v.z, f).scale(f * this.size.x * this.size.y));
-//		lightSource.setPosition(new Vector2f(this.getCenter()));
-//		return lightSource;
-//	}
-
 	@Override
 	public void tick(World world)
 	{
 		super.tick(world);
+		if(world.isPositionStuckInGeometry(this.getColissionBox(), (int)this.position.z)) this.kill(world);
 		this.rotation = (float) Math.toDegrees(Math.atan(this.direction.y / this.direction.x));
 		if (this.direction.x < 0) rotation += 180;
 		if (!this.isDead)

@@ -10,9 +10,9 @@ import com.ichmed.trinketeers.world.World;
 public class Single extends Formation
 {
 	@Override
-	public void modProjectile(Projectile p, World world, Entity controller, float x, float y, Vector2f direction, Spell spell)
+	public Projectile[] apply(Projectile[] projectiles, World world, Entity controller, float x, float y, Vector2f direction, Spell spell)
 	{
-		if(controller == null) System.out.println(Thread.currentThread().getStackTrace());
+		return projectiles;
 	}
 
 }

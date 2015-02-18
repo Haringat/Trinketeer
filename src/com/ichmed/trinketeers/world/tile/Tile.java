@@ -1,8 +1,10 @@
 package com.ichmed.trinketeers.world.tile;
 
+import static org.lwjgl.opengl.GL11.glTranslated;
+
 import org.lwjgl.opengl.GL11;
 
-import com.ichmed.trinketeers.util.render.GLHelper;
+import com.ichmed.trinketeers.util.render.RenderUtil;
 import com.ichmed.trinketeers.world.Chunk;
 import com.ichmed.trinketeers.world.World;
 
@@ -30,7 +32,7 @@ public class Tile
 		this.breakable = breakable;
 		this.massive = massive;
 	}
-	
+
 	public boolean renderInFront(World w, int x, int y)
 	{
 		return this.renderInFront;
@@ -41,7 +43,7 @@ public class Tile
 		this.renderInFront = b;
 		return this;
 	}
-	
+
 	public String getTexture(World w, int x, int y, int z)
 	{
 		return texture;
@@ -50,12 +52,17 @@ public class Tile
 	public void render(World w, int x, int y)
 	{
 		float f = 1f / (float) Chunk.chunkSize;
-		if (this.getTexture(w, x, y, (int)w.player.position.z) != null) GLHelper.renderTexturedQuad(f * x, f * y, f, f, this.getTexture(w, x, y, (int)w.player.position.z));
-		else
+		if (this.getTexture(w, x, y, (int) w.player.position.z) != null)
+		{
+			glTranslated(f * x, f * y, 0);
+			RenderUtil.renderTexturedQuad(0, 0, f, f, this.getTexture(w, x, y, (int) w.player.position.z));
+			glTranslated(-f * x, -f * y, 0);
+			RenderUtil.renderTexturedQuad(f * x, f * y, f, f, this.getTexture(w, x, y, (int) w.player.position.z));
+		} else
 		{
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glColor3f(0, 0, 0);
-			GLHelper.drawRect((f * x), (f * y), f, f);
+			// RenderUtil.drawRect((f * x), (f * y), f, f);
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			GL11.glColor3f(1, 1, 1);
 		}

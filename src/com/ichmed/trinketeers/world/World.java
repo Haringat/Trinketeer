@@ -19,7 +19,7 @@ import com.ichmed.trinketeers.entity.mob.Zombie;
 import com.ichmed.trinketeers.entity.pickup.Torch;
 import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
 import com.ichmed.trinketeers.util.InputUtil;
-import com.ichmed.trinketeers.util.render.GLHelper;
+import com.ichmed.trinketeers.util.render.RenderUtil;
 import com.ichmed.trinketeers.util.render.GraphicSorterYAxis;
 import com.ichmed.trinketeers.util.render.IGraphic;
 import com.ichmed.trinketeers.util.render.IWorldGraphic;
@@ -59,28 +59,45 @@ public class World
 		uiGraphics.add(new IGraphic()
 		{
 
-			int deg;
-			int acc;
+			int degLeft, degRight;
+			float accLeft, accRight;
 
 			@Override
 			public void render()
 			{
-				if(deg % 360 == 0) deg = 0;
-				if(GLFW.glfwGetMouseButton(Game.window, GLFW_MOUSE_BUTTON_1) == 1)
+				if (degLeft % 360 == 0) degLeft = 0;
+				if (player.currentSpellLeft != null)
 				{
-					if(acc < 20)acc++;
-					deg += acc;
+					if (accLeft < 20) accLeft += player.currentSpellLeft.charge / 100f;
+					degLeft += accLeft;
+					if (player.currentSpellLeft.charge == 0)
+					{
+						if (accLeft > 2) accLeft -= 10;
+						else accLeft = 0;
+					}
 				}
-				else if(acc > 2) acc--;
-				deg++;
+				degLeft++;
+				if (degRight % 360 == 0) degRight = 0;
+				if (player.currentSpellRight != null)
+				{
+					if (accRight < 20) accRight += player.currentSpellRight.charge / 100f;
+					degRight += accRight;
+					if (player.currentSpellRight.charge == 0)
+					{
+						if (accRight > 2) accRight -= 10;
+						else accRight = 0;
+					}
+				}
+				degRight++;
 				Vector2f v = InputUtil.getMouseRelativToScreenCenter();
 				glPushMatrix();
 				glTranslatef(v.x, v.y, 0);
-				GLHelper.renderTexturedQuad(-0.0625f, -0.0625f, 0.125f, 0.125f, "crosshair_1");
-				glRotated(deg, 0, 0, 1);
-				GLHelper.renderTexturedQuad(-0.0625f, -0.0625f, 0.125f, 0.125f, "crosshair_0");
-				glRotated(-1.5 * deg, 0, 0, 1);
-				GLHelper.renderTexturedQuad(-0.0625f, -0.0625f, 0.125f, 0.125f, "crosshair_2");
+				RenderUtil.renderTexturedQuad(-0.0625f, -0.0625f, 0.125f, 0.125f, "crosshair_1");
+				glRotated(degLeft, 0, 0, 1);
+				RenderUtil.renderTexturedQuad(-0.0625f, -0.0625f, 0.125f, 0.125f, "crosshair_0");
+				glRotated(-degLeft, 0, 0, 1);
+				glRotated(-degRight, 0, 0, 1);
+				RenderUtil.renderTexturedQuad(-0.0625f, -0.0625f, 0.125f, 0.125f, "crosshair_2");
 				glPopMatrix();
 			}
 		});
@@ -94,30 +111,41 @@ public class World
 				boolean b1 = player.currentSpellLeft != null;
 				boolean b2 = player.currentSpellRight != null;
 
-				if (b1) GLHelper.renderTexturedQuad(-1, 0.8f, 0.2f, 0.2f, "scroll");
-				if (b2) GLHelper.renderTexturedQuad(0.8f, 0.8f, 0.2f, 0.2f, "scroll");
-
-				if (b1) GLHelper.renderTexturedQuad(-0.79f, 0.8f, 0.02f, 0.2f - Math.max(0, ((float) player.shotCooldownLeft / (float) player.currentSpellLeft.cooldown) * 0.2f), "spellCooldownBar");
-				if (b2) GLHelper.renderTexturedQuad(0.78f, 0.8f, 0.02f, 0.2f - Math.max(0, ((float) player.shotCooldownRight / (float) player.currentSpellRight.cooldown) * 0.2f), "spellCooldownBar");
+				if (b1) RenderUtil.renderTexturedQuad(-1, 0.8f, 0.2f, 0.2f, "scroll");
+				if (b2) RenderUtil.renderTexturedQuad(0.8f, 0.8f, 0.2f, 0.2f, "scroll");
 
 				if (b1)
 				{
-					GLHelper.renderTexturedQuad(-0.975f, 0.825f, 0.15f, 0.15f, player.currentSpellLeft.element.toLowerCase() + "Projectile");
+					RenderUtil.renderTexturedQuad(-0.79f, 0.8f, 0.02f, 0.2f - Math.max(0, ((float) player.currentSpellLeft.cooldown / (float) player.currentSpellLeft.maxCooldown) * 0.2f),
+							"spellCooldownBar");
+					RenderUtil.renderTexturedQuad(-0.76f, 0.8f, 0.02f, Math.max(0, ((float) player.currentSpellLeft.charge / (float) player.currentSpellLeft.maxCooldown) * 0.2f), "spellChargeBar");
+
+				}
+				if (b2)
+				{
+					RenderUtil.renderTexturedQuad(0.78f, 0.8f, 0.02f, 0.2f - Math.max(0, ((float) player.currentSpellRight.cooldown / (float) player.currentSpellRight.maxCooldown) * 0.2f),
+							"spellCooldownBar");
+					RenderUtil.renderTexturedQuad(0.75f, 0.8f, 0.02f, Math.max(0, ((float) player.currentSpellRight.charge / (float) player.currentSpellRight.maxCooldown) * 0.2f), "spellChargeBar");
+				}
+
+				if (b1)
+				{
+					RenderUtil.renderTexturedQuad(-0.975f, 0.825f, 0.15f, 0.15f, player.currentSpellLeft.element.toLowerCase() + "Projectile");
 				}
 
 				if (b2)
 				{
-					GLHelper.renderTexturedQuad(0.825f, 0.825f, 0.15f, 0.15f, player.currentSpellRight.element.toLowerCase() + "Projectile");
+					RenderUtil.renderTexturedQuad(0.825f, 0.825f, 0.15f, 0.15f, player.currentSpellRight.element.toLowerCase() + "Projectile");
 				}
 				if (b1)
 				{
-					GLHelper.renderText(-0.98f, 0.76f, player.currentSpellLeft.getName());
-					GLHelper.renderText(-0.98f, 0.70f, "" + (int) player.currentSpellLeft.getManaCost());
+					RenderUtil.renderText(-0.98f, 0.76f, player.currentSpellLeft.getName());
+					RenderUtil.renderText(-0.98f, 0.70f, "" + (int) player.currentSpellLeft.getManaCost());
 				}
 				if (b2)
 				{
-					GLHelper.renderText(0.98f, 0.76f, player.currentSpellRight.getName(), 0.001f, 0.001f, TrueTypeFont.ALIGN_RIGHT);
-					GLHelper.renderText(0.98f, 0.70f, "" + (int) player.currentSpellRight.getManaCost(), 0.001f, 0.001f, TrueTypeFont.ALIGN_RIGHT);
+					RenderUtil.renderText(0.98f, 0.76f, player.currentSpellRight.getName(), 0.001f, 0.001f, TrueTypeFont.ALIGN_RIGHT);
+					RenderUtil.renderText(0.98f, 0.70f, "" + (int) player.currentSpellRight.getManaCost(), 0.001f, 0.001f, TrueTypeFont.ALIGN_RIGHT);
 
 				}
 			}
@@ -131,9 +159,9 @@ public class World
 			{
 				float mana = player.mana / player.maxMana;
 				float start = -0.5f;
-				GLHelper.renderTexturedQuad(start, 0.92f, 1, 0.05f, "manaBarEmpty");
-				GLHelper.renderTexturedQuad(start + (1 - mana) / 2f, 0.92f, mana, 0.05f, "manaBarFull");
-				GLHelper.renderText(0, 0.9f, "" + (int) player.mana, 0.002f, 0.002f, TrueTypeFont.ALIGN_CENTER);
+				RenderUtil.renderTexturedQuad(start, 0.92f, 1, 0.05f, "manaBarEmpty");
+				RenderUtil.renderTexturedQuad(start + (1 - mana) / 2f, 0.92f, mana, 0.05f, "manaBarFull");
+				RenderUtil.renderText(0, 0.9f, "" + (int) player.mana, 0.002f, 0.002f, TrueTypeFont.ALIGN_CENTER);
 			}
 		});
 
@@ -143,14 +171,14 @@ public class World
 			public void render()
 			{
 				if (!Game.debugMode) return;
-				GLHelper.renderText(-1f, -0.9f, "E: " + Chunk.getAllLoadedEntities().size());
-				GLHelper.renderText(-1, -0.5f, "X: " + player.position.x);
-				GLHelper.renderText(-1, -0.55f, "Y: " + player.position.y);
-				GLHelper.renderText(-1, -0.6f, "Height: " + (int) player.position.z);
+				RenderUtil.renderText(-1f, -0.9f, "E: " + Chunk.getAllLoadedEntities().size());
+				RenderUtil.renderText(-1, -0.5f, "X: " + player.position.x);
+				RenderUtil.renderText(-1, -0.55f, "Y: " + player.position.y);
+				RenderUtil.renderText(-1, -0.6f, "Height: " + (int) player.position.z);
 				Chunk c = Chunk.getChunk(World.wordObj, player.position);
-				GLHelper.renderText(-1, -0.67f, "Chunk: " + Chunk.getHashString(c.posX, c.posY, c.posZ));
+				RenderUtil.renderText(-1, -0.67f, "Chunk: " + Chunk.getHashString(c.posX, c.posY, c.posZ));
 				Vector3f v = Chunk.getClusterForChunk(wordObj, c);
-				GLHelper.renderText(-1, -0.72f, "Cluster: " + v.x + " " + v.y + " " + v.z);
+				RenderUtil.renderText(-1, -0.72f, "Cluster: " + v.x + " " + v.y + " " + v.z);
 			}
 		});
 
@@ -162,9 +190,9 @@ public class World
 			{
 				float health = (player.health / player.maxHealth);
 				float start = -0.5f;
-				GLHelper.renderTexturedQuad(start, 0.85f, 1, 0.05f, "healthBarEmpty");
-				GLHelper.renderTexturedQuad(start + (1 - health) / 2f, 0.85f, health, 0.05f, "healthBarFull");
-				GLHelper.renderText(0, 0.83f, "" + (int) player.health, 0.002f, 0.002f, TrueTypeFont.ALIGN_CENTER);
+				RenderUtil.renderTexturedQuad(start, 0.85f, 1, 0.05f, "healthBarEmpty");
+				RenderUtil.renderTexturedQuad(start + (1 - health) / 2f, 0.85f, health, 0.05f, "healthBarFull");
+				RenderUtil.renderText(0, 0.83f, "" + (int) player.health, 0.002f, 0.002f, TrueTypeFont.ALIGN_CENTER);
 
 			}
 		});
@@ -230,8 +258,8 @@ public class World
 
 	private void renderChunks(boolean b)
 	{
-		for (int i = -Chunk.chunkSize - 1; i < Chunk.chunkSize + 1; i++)
-			for (int j = -Chunk.chunkSize - 1; j < Chunk.chunkSize + 1; j++)
+		for (int i = -2 * Chunk.chunkSize; i < 2 * Chunk.chunkSize + 10; i++)
+			for (int j = -2 * Chunk.chunkSize; j < 2 * Chunk.chunkSize + 10; j++)
 			{
 				int x = i + (int) ((player.getCenter().x) * Chunk.chunkSize);
 				int y = j + (int) ((player.getCenter().y) * Chunk.chunkSize);

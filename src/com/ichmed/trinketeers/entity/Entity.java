@@ -13,7 +13,7 @@ import com.ichmed.trinketeers.ai.Behaviour;
 import com.ichmed.trinketeers.ai.waypoint.Waypoint;
 import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
 import com.ichmed.trinketeers.util.Loot;
-import com.ichmed.trinketeers.util.render.GLHelper;
+import com.ichmed.trinketeers.util.render.RenderUtil;
 import com.ichmed.trinketeers.util.render.IWorldGraphic;
 import com.ichmed.trinketeers.world.World;
 
@@ -33,6 +33,7 @@ public class Entity implements IWorldGraphic, Waypoint
 	protected final int MAX_COLLISION_ITERATIONS = 10;
 
 	public Vector3f position = new Vector3f();
+	public float mana = -1, maxMana = -1;
 	public Vector2f direction = new Vector2f(1, 0), size = new Vector2f(.125f, .125f);
 	public Vector2f preferredDirection = new Vector2f(1, 0);
 	public float speed = 0f;
@@ -178,8 +179,7 @@ public class Entity implements IWorldGraphic, Waypoint
 		glTranslated(renderArea.size.x / 2, renderArea.size.x / 2, 0);
 		glRotated(this.rotation, 0, 0, 1);
 		glTranslated(-renderArea.size.x / 2, -renderArea.size.y / 2, 0);
-		// GLHelper.drawRect(this.size.x, this.size.y);
-		GLHelper.renderTexturedQuad(0, 0, renderArea.size.x, renderArea.size.y, this.getTextureForState(w));
+		RenderUtil.renderTexturedQuad(0, 0, renderArea.size.x, renderArea.size.y, this.getTextureForState(w));
 		glColor3f(1, 1, 1);
 		glPopMatrix();
 	}
@@ -198,7 +198,7 @@ public class Entity implements IWorldGraphic, Waypoint
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		glDisable(GL_TEXTURE_2D);
 		glTranslatef(this.position.x, this.position.y, 0);
-		GLHelper.drawRect(this.size.x, this.size.y);
+		RenderUtil.renderTexturedQuad(0, 0, this.size.x, this.size.y, "test");
 		glColor3f(1, 1, 1);
 		glEnable(GL_TEXTURE_2D);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

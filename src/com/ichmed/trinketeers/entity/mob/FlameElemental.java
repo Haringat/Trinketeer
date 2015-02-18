@@ -22,7 +22,7 @@ public class FlameElemental extends Entity
 		this.size = new Vector2f(.075f, .075f);
 		this.speed = 0.005f;
 		this.preferredSpeed = 0.005f;
-		this.despawnCountDown = 1;
+		this.despawnCountDown = 100;
 		this.renderWhenDead = true;
 		this.lootRange = 0.1f;
 		this.dropLootOnDeath = true;

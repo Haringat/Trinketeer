@@ -17,7 +17,7 @@ public class SpellSteamblast extends Spell
 		lifespan = 60;
 		lifespanVar = 20;
 		wobble = 0.1f;
-		cooldown = 1;
+		maxCooldown = 1;
 		texture = "steamPuff.png";
 		this.destroyOnImpact = false;
 

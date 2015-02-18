@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,8 +32,8 @@ public class Game
 	private GLFWErrorCallback errorCallback;
 	private GLFWKeyCallback keyCallback;
 
-	public static final int WIDTH = 1024;
-	public static final int HEIGHT = 1024;
+	public static int WIDTH = 1024;
+	public static int HEIGHT = 1024;
 	public static float zoom = -4;
 
 	static public Map<Integer, Boolean> keys = new HashMap<>();
@@ -83,11 +84,13 @@ public class Game
 									// already the default
 		glfwWindowHint(GLFW_VISIBLE, GL_FALSE); // the window will stay hidden
 												// after creation
-		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE); // the window will be
+		glfwWindowHint(GLFW_RESIZABLE, GL_TRUE); // the window will be
 													// resizable
 
 		// Create the window
 		window = glfwCreateWindow(WIDTH, HEIGHT, "Trinketeers", NULL, NULL);
+//		WIDTH = 1920;
+//		HEIGHT = 1080;
 		if (window == NULL) throw new RuntimeException("Failed to create the GLFW window");
 
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
@@ -107,10 +110,11 @@ public class Game
 				if (key == GLFW_KEY_F5 && action == GLFW_RELEASE)
 				{
 					Vector3f v = Chunk.getClusterForPoint(world, world.player.position);
-					ChunkSave.saveChunkClusterToDisk(world, (int)v.x, (int)v.y, (int)v.z);
+					ChunkSave.saveChunkClusterToDisk(world, (int) v.x, (int) v.y, (int) v.z);
 				}
 				if (key == GLFW_KEY_T && action == GLFW_RELEASE) Chunk.setTile(world, (int) (world.player.position.x * 8), (int) (world.player.position.y * 8), (int) world.player.position.z, 5);
 				if (key == GLFW_KEY_KP_ADD && action == GLFW_RELEASE) world.player.changeHeight(world, 1);
+				if (debugMode && key == GLFW_KEY_V && action == GLFW_RELEASE) world.player.isSolid = !world.player.isSolid;
 				if (key == GLFW_KEY_KP_SUBTRACT && action == GLFW_RELEASE) world.player.changeHeight(world, -1);
 
 				if (action == GLFW_PRESS) keys.put(key, true);
@@ -122,7 +126,7 @@ public class Game
 		// Get the resolution of the primary monitor
 		ByteBuffer vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		// Center our window
-		glfwSetWindowPos(window, (GLFWvidmode.width(vidmode) - WIDTH) / 2, (GLFWvidmode.height(vidmode) - HEIGHT) / 2);
+//		glfwSetWindowPos(window, (GLFWvidmode.width(vidmode) - WIDTH) / 2, (GLFWvidmode.height(vidmode) - HEIGHT) / 2);
 
 		// Make the OpenGL context current
 		glfwMakeContextCurrent(window);
@@ -184,7 +188,7 @@ public class Game
 			{
 				debugMode = true;
 			}
-			
+
 		}
 		DataLoader.loadElements();
 		new Game().run();
