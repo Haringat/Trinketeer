@@ -5,7 +5,7 @@ import org.lwjgl.glfw.GLFW;
 import com.ichmed.trinketeers.Game;
 import com.ichmed.trinketeers.entity.Player;
 import com.ichmed.trinketeers.spell.Spell;
-import com.ichmed.trinketeers.util.render.GLHelper;
+import com.ichmed.trinketeers.util.render.RenderUtil;
 import com.ichmed.trinketeers.util.render.TrueTypeFont;
 import com.ichmed.trinketeers.world.World;
 
@@ -67,16 +67,16 @@ public class SpellScroll extends Pickup
 	@Override
 	public void actualRender(World w)
 	{
-		GLHelper.renderTexturedQuad(this.position.x, this.position.y - 0.03f, this.size.x, this.size.y, "shadow");
+		RenderUtil.renderTexturedQuad(this.position.x, this.position.y - 0.03f, this.size.x, this.size.y, "shadow");
 		float f = (float) (Math.sin((this.ticksExisted / 100d)) + 1) * 0.02f;
-		GLHelper.renderTexturedQuad(this.position.x, this.position.y + f, this.size.x, this.size.y, "scroll");
-		GLHelper.renderTexturedQuad(this.position.x, this.position.y + f, this.size.x, this.size.y, this.spell.element.toLowerCase() + "Projectile");
+		RenderUtil.renderTexturedQuad(this.position.x, this.position.y + f, this.size.x, this.size.y, "scroll");
+		RenderUtil.renderTexturedQuad(this.position.x, this.position.y + f, this.size.x, this.size.y, this.spell.element.toLowerCase() + "Projectile");
 		if (this.canBePickedUp(w))
 		{
 			float fx = this.getCenter().x - 0.01f;
 			float fy = this.position.y + 0.11f + f;
-			GLHelper.renderText(fx, fy + 0.08f, this.spell.getName(), 0.001f, 0.001f, TrueTypeFont.ALIGN_CENTER);
-			GLHelper.renderText(fx, fy, "Q  or  E", 0.002f, 0.002f, TrueTypeFont.ALIGN_CENTER);
+			RenderUtil.renderText(fx, fy + 0.08f, this.spell.getName(), 0.001f, 0.001f, TrueTypeFont.ALIGN_CENTER);
+			RenderUtil.renderText(fx, fy, "Q  or  E", 0.002f, 0.002f, TrueTypeFont.ALIGN_CENTER);
 		}
 	}
 }

@@ -20,7 +20,7 @@ public class Chest extends Pickup
 		this.size = new Vector2f(0.25f, 0.125f);
 		this.isSolid = true;
 		this.pickupRange = 0.2f;
-		this.solidWhenDead = true;
+		this.solidWhenDead = false;
 		this.lootRange = 0.2f;
 		this.dropLootOnDeath = true;
 		this.isVulnerable = false;

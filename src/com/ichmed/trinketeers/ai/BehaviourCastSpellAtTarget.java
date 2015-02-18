@@ -12,7 +12,6 @@ public class BehaviourCastSpellAtTarget extends Behaviour
 	private Spell spell;
 	private float range;
 	private Class<? extends Entity> target;
-	private int cooldown;
 
 	public BehaviourCastSpellAtTarget(World w, Spell spell, float range, Class<? extends Entity> target)
 	{
@@ -37,16 +36,12 @@ public class BehaviourCastSpellAtTarget extends Behaviour
 	@Override
 	public boolean perform(Entity performer, World w)
 	{
-		this.cooldown--;
 		Entity e = w.getClosestEntityToSource(performer, range, target);
-		if (this.cooldown <= 0 && e != null)
-		{
-			spell.cast(w, performer, performer.getCenter().x, performer.getCenter().y, new Vector2f(Vector3f.sub(e.getCenter(), performer.getCenter(), null).normalise(null)));
-			this.cooldown = spell.cooldown;
-			return true;
-		}
-		else if(this.cooldown < spell.cooldown / 2 && e != null) performer.behaviourString = "Casting";
-		return false;
+		this.spell.tick(w, performer);
+		if(e == null) return false;
+		spell.cast(w, performer, performer.getCenter().x, performer.getCenter().y, new Vector2f(Vector3f.sub(e.getCenter(), performer.getCenter(), null).normalise(null)));
+		if(this.spell.cooldown < spell.maxCooldown / 2 && e != null) performer.behaviourString = "Casting";
+		return true;
 	}
 
 }
