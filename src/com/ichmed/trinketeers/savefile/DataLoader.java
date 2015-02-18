@@ -119,6 +119,7 @@ public class DataLoader
 				entityGame.setName(e.getString("name"));
 				entityGame.setType(e.getString("type"));
 				entityGame.setStrength(e.getInt("strength"));
+				entityGame.setSize(new Vector2f((float)e.getDouble("sizex"),(float)e.getDouble("sizey")));
 				entityGame.setRenderSize(new Vector2f((float)e.getDouble("rendersizex"),(float)e.getDouble("rendersizey")));
 				entityGame.setRarity(e.getInt("rarity"));
 				JSONArray behavioursjson = e.getJSONArray("behaviours");
@@ -140,6 +141,8 @@ public class DataLoader
 				e.put("name", entitys.get(key).getName());
 				e.put("type", entitys.get(key).getType());
 				e.put("strength", entitys.get(key).getStrength());
+				e.put("sizex", entitys.get(key).getSize().getX());
+				e.put("sizey", entitys.get(key).getSize().getY());
 				e.put("rendersizex", entitys.get(key).getRenderSize().getX());
 				e.put("rendersizey", entitys.get(key).getRenderSize().getY());
 				e.put("rarity", entitys.get(key).getRarity());
