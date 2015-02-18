@@ -5,17 +5,10 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 import org.lwjgl.Sys;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -56,7 +49,6 @@ public class Game
 		try
 		{
 			init();
-			createDefaultTextureLibrary();
 			world = new World();
 			TextureLibrary.loadTextureLibrary("resc/textures/defaultLibrary");
 			loop();
@@ -97,8 +89,8 @@ public class Game
 
 		// Create the window
 		window = glfwCreateWindow(WIDTH, HEIGHT, "Trinketeers", NULL, NULL);
-		// WIDTH = 1920;
-		// HEIGHT = 1080;
+//		WIDTH = 1920;
+//		HEIGHT = 1080;
 		if (window == NULL) throw new RuntimeException("Failed to create the GLFW window");
 
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
@@ -134,8 +126,7 @@ public class Game
 		// Get the resolution of the primary monitor
 		ByteBuffer vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		// Center our window
-		// glfwSetWindowPos(window, (GLFWvidmode.width(vidmode) - WIDTH) / 2,
-		// (GLFWvidmode.height(vidmode) - HEIGHT) / 2);
+//		glfwSetWindowPos(window, (GLFWvidmode.width(vidmode) - WIDTH) / 2, (GLFWvidmode.height(vidmode) - HEIGHT) / 2);
 
 		// Make the OpenGL context current
 		glfwMakeContextCurrent(window);
@@ -206,35 +197,6 @@ public class Game
 	public static boolean isKeyDown(int key)
 	{
 		if (keys.get(key) != null) return keys.get(key);
-		return false;
-	}
-
-	public boolean createDefaultTextureLibrary()
-	{
-		File lib = new File("resc/textures/defaultLibrary.png");
-		File raw = new File("resc/raw/defaultLibrary");
-		List<File> files = new ArrayList<>();
-		
-		for (File file : raw.listFiles())
-			if(file.getAbsolutePath().endsWith(".png")) files.add(file);
-		for(File file : files)
-			if(file.lastModified() > lib.lastModified())
-			{
-				List<String[]> l = new ArrayList<>();
-				for(File f : files)
-					l.add(new String[]{f.getAbsolutePath(), f.getName().substring(0, f.getName().lastIndexOf('.'))});
-				try
-				{
-					if(debugMode) System.out.println("Found new Texture, generating texture library");
-					TextureLibrary.generateTextureLibrary(lib.getAbsolutePath().substring(0, lib.getAbsolutePath().lastIndexOf('.')), l);
-					if(debugMode) System.out.println("Succesfully generated texture library");
-					
-				} catch (Exception e)
-				{
-					e.printStackTrace();
-				}
-				return true;
-			}
 		return false;
 	}
 }
