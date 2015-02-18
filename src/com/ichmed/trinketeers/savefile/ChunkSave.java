@@ -85,11 +85,11 @@ public class ChunkSave
 
 			if (Game.debugMode)
 			{
-				 System.out.println("loaded cluster " + f);
-				 System.out.println("Cluster Data:\n" + content);
-				 for (StackTraceElement e :
-				 Thread.currentThread().getStackTrace())
-				 System.out.println(e);
+//				 System.out.println("loaded cluster " + f);
+//				 System.out.println("Cluster Data:\n" + content);
+//				 for (StackTraceElement e :
+//				 Thread.currentThread().getStackTrace())
+//				 System.out.println(e);
 			}
 
 			int clusterIndexB = 0;
