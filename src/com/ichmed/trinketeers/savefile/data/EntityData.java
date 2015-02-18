@@ -11,10 +11,10 @@ public class EntityData
 	public static HashMap<String, EntityData> entityData = new HashMap<>();
 	public static HashMap<String, List<EntityData>> entityDataByType = new HashMap<>();
 	
-	public String name;
-	public String type;
-	public int strength;
-	public int rarity;
+	private String name;
+	private String type;
+	private int strength;
+	private int rarity;
 	
 	public List<String> behaviours;
 	
@@ -31,5 +31,77 @@ public class EntityData
 			entityDataByType.put(type, l);
 		}
 		return l;
+	}
+
+	public EntityData(String name, String type, int strength, int rarity,
+			List<String> behaviours, Vector2f size, Vector2f renderSize) {
+		this.name = name;
+		this.type = type;
+		this.strength = strength;
+		this.rarity = rarity;
+		this.behaviours = behaviours;
+		this.size = size;
+		this.renderSize = renderSize;
+	}
+
+	public EntityData(){
+		this("new Entity", "misc", 0, 0, new ArrayList<String>(),
+				new Vector2f(0.0f,0.0f), new Vector2f(0.0f,0.0f));
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public int getStrength() {
+		return strength;
+	}
+
+	public void setStrength(int strength) {
+		this.strength = strength;
+	}
+
+	public int getRarity() {
+		return rarity;
+	}
+
+	public void setRarity(int rarity) {
+		this.rarity = rarity;
+	}
+
+	public List<String> getBehaviours() {
+		return behaviours;
+	}
+
+	public void setBehaviours(List<String> behaviours) {
+		this.behaviours = behaviours;
+	}
+
+	public Vector2f getSize() {
+		return size;
+	}
+
+	public void setSize(Vector2f size) {
+		this.size = size;
+	}
+
+	public Vector2f getRenderSize() {
+		return renderSize;
+	}
+
+	public void setRenderSize(Vector2f renderSize) {
+		this.renderSize = renderSize;
 	}
 }
