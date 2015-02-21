@@ -26,7 +26,7 @@ public class FlameElemental extends Entity
 		this.renderWhenDead = true;
 		this.lootRange = 0.1f;
 		this.dropLootOnDeath = true;
-		this.name = "flameElemental";
+		this.entityType = "flameElemental";
 		this.behaviours.add(new BehaviourTurnToCurrentWaypoint(w));
 		this.behaviours.add(new BehaviourFollowTarget(w, 0.008f, Player.class));
 		this.behaviours.add(new BehaviourWander(w, 0.003f, 0, 0));

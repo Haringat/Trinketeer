@@ -4,7 +4,9 @@ import java.util.HashMap;
 
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
+import com.ichmed.trinketeers.ai.BehaviourLight;
 import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.entity.Projectile;
 import com.ichmed.trinketeers.savefile.data.ElementData;
@@ -58,6 +60,13 @@ public class Spell
 		Projectile p = new Projectile(world, this.size, this.element, this.childSpell, this.wobble, this.trailSpell);
 		p.speed = p.preferredSpeed = this.speed;
 		p.direction = p.preferredDirection = new Vector2f(direction);
+		
+		float f = ElementData.elements.get(this.element).getBrightness();
+		if(f > 0)
+		{
+			Vector3f c = ElementData.elements.get(this.element).getColor();
+			p.behaviours.add(new BehaviourLight(world, new Vector4f(c.x * f, c.y * f, c.z * f, 0), f, 1f));
+		}
 
 		p.setController(controller);
 		p.setCenter(new Vector3f(x + p.direction.x * (controller.size.x / 2), y + p.direction.y * (controller.size.y / 2), controller.position.z));

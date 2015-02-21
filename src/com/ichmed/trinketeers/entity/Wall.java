@@ -13,7 +13,7 @@ public class Wall extends Entity implements IShadow
 		super(w);
 		this.isMoveable = false;
 		this.isVulnerable = false;
-		this.name = "wall";
+		this.entityType = "wall";
 	}
 
 	@Override

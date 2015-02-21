@@ -20,7 +20,7 @@ public class Foliage extends Entity
 		this.isMoveable = false;
 		this.isSolid = false;
 		this.isVulnerable = false;
-		this.name = name;
+		this.entityType = name;
 		this.size = new Vector2f(.25f, .25f);
 	}
 	

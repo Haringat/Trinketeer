@@ -26,7 +26,7 @@ public class Zombie extends Entity
 		this.renderWhenDead = true;
 		this.lootRange = 0.1f;
 		this.dropLootOnDeath = true;
-		this.name = "zombie";
+		this.entityType = "zombie";
 		this.behaviours.add(new BehaviourTurnToCurrentWaypoint(w));
 		this.behaviours.add(new BehaviourFollowTarget(w, 0.005f, Player.class));
 		this.behaviours.add(new BehaviourWander(w, 0.001f, 110, 30));

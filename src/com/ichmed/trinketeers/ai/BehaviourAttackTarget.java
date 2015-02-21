@@ -1,5 +1,7 @@
 package com.ichmed.trinketeers.ai;
 
+import org.json.JSONObject;
+
 import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.world.World;
 

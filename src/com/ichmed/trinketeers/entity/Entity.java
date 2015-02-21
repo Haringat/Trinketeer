@@ -5,16 +5,19 @@ import static org.lwjgl.opengl.GL11.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.ichmed.trinketeers.Game;
 import com.ichmed.trinketeers.ai.Behaviour;
 import com.ichmed.trinketeers.ai.waypoint.Waypoint;
+import com.ichmed.trinketeers.savefile.data.EntityData;
 import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
 import com.ichmed.trinketeers.util.Loot;
-import com.ichmed.trinketeers.util.render.RenderUtil;
 import com.ichmed.trinketeers.util.render.IWorldGraphic;
+import com.ichmed.trinketeers.util.render.RenderUtil;
 import com.ichmed.trinketeers.world.World;
 
 public class Entity implements IWorldGraphic, Waypoint
@@ -22,12 +25,13 @@ public class Entity implements IWorldGraphic, Waypoint
 
 	// Universal
 	public float acceleration = 0.01f;
-	public String name = "test";
+	public String entityType = "test";
 	public float visionRange = 0.7f;
 	public int lootValue = 5; // implied via Mob-Strength
 	public float maxHealth = 10;
 	public List<Behaviour> behaviours = new ArrayList<>();
 	public String type = "Misc";
+	public boolean essential = true;
 
 	// Specific
 	protected final int MAX_COLLISION_ITERATIONS = 10;
@@ -54,6 +58,8 @@ public class Entity implements IWorldGraphic, Waypoint
 	public float lootRange = 2.0f;
 	public Waypoint currentWaypoint;
 	public String behaviourString = null;
+	private Object age;
+	private Vector2f renderArea = null;
 
 	public Entity(World w)
 	{
@@ -186,10 +192,10 @@ public class Entity implements IWorldGraphic, Waypoint
 
 	public String getTextureForState(World w)
 	{
-		if (this.behaviourString != null) return this.name + behaviourString;
-		if (this.isDead) return this.name + "Dead";
-		if (this.speed > 0) return this.name + "Moving";
-		return this.name + "Idle_" + (this.ticksExisted % 240) / 60;
+		if (this.behaviourString != null) return this.entityType + behaviourString;
+		if (this.isDead) return this.entityType + "Dead";
+		if (this.speed > 0) return this.entityType + "Moving";
+		return this.entityType + "Idle_" + (this.ticksExisted % 240) / 60;
 	}
 
 	protected void renderHitBox(World w)
@@ -228,6 +234,12 @@ public class Entity implements IWorldGraphic, Waypoint
 	public Entity setPosition(Vector2f v)
 	{
 		this.position = new Vector3f(v.x, v.y, this.position.z);
+		return this;
+	}
+	
+	public Entity setPosition(Vector3f v)
+	{
+		this.position = new Vector3f(v.x, v.y, v.z);
 		return this;
 	}
 
@@ -276,7 +288,9 @@ public class Entity implements IWorldGraphic, Waypoint
 
 	public AxisAllignedBoundingBox getRenderArea()
 	{
-		return this.getColissionBox();
+		if(this.renderArea == null) return this.getColissionBox();
+		Vector3f v = this.getCenter();
+		return new AxisAllignedBoundingBox(v.x - this.renderArea.x, v.y - this.renderArea.y, this.renderArea.x, this.renderArea.y);
 	}
 
 	public boolean isHostile()
@@ -307,7 +321,7 @@ public class Entity implements IWorldGraphic, Waypoint
 		return this.position.z == w.player.position.z && this.position.x > w.player.position.x - 1.5f && this.position.x < w.player.position.x + 1.5f && this.position.y > w.player.position.y - 1.5f
 				&& this.position.y < w.player.position.y + 1.5f;
 	}
-	
+
 	public boolean changeHeight(World w, int heightMod)
 	{
 		w.removeEntityFromChunk(this);
@@ -316,16 +330,70 @@ public class Entity implements IWorldGraphic, Waypoint
 		return true;
 	}
 
-	public String getSaveData()
+	public JSONObject getSaveData()
 	{
-		String s = "";
-		s += this.name;
-		s += " ";
-		s += this.position.x;
-		s += " ";
-		s += this.position.y;
-		s += " ";
-		s += this.position.z;
-		return s;
+		JSONObject j = new JSONObject();
+		try
+		{
+			j.put("name", this.entityType);
+			j.put("posX", this.position.x);
+			j.put("posY", this.position.y);
+			j.put("posZ", this.position.z);
+			j.put("speed", this.speed);
+			j.put("dirX", this.direction.x);
+			j.put("dirY", this.direction.y);
+			j.put("age", this.age);
+			for(int i = 0; i < this.behaviours.size(); i++)
+			{
+				Behaviour b = this.behaviours.get(i);
+				if(b.getSaveData() != null) j.put("behaviour" + i, b.getSaveData());
+			}
+		} catch (JSONException e)
+		{
+			e.printStackTrace();
+		}
+		return j;
+	}
+	
+	public static Entity createEntityFromSaveData(World w, String entityName, JSONObject jso)
+	{
+		EntityData universalData = EntityData.entityData.get(entityName);
+		Entity dummy;
+		try
+		{
+			dummy = (Entity) universalData.clazz.getConstructor(World.class).newInstance(w);
+		} catch (Exception e)
+		{
+			dummy = new Entity(w);
+			e.printStackTrace();
+		}
+		
+		dummy.size = universalData.getSize();
+		dummy.renderArea = universalData.getRenderSize();
+		
+		for(String b : universalData.behaviours)
+		{
+			String[] s = new String[b.split(" ").length - 1];
+			for(int i = 1; i < b.split(" ").length; i++)s[i - 1] = b.split(" ")[i];
+			try
+			{
+				dummy.behaviours.add((Behaviour) Class.forName("com.ichmed.trinketeers.ai.Behaviour" + b).getConstructor(World.class, Object[].class).newInstance(w, s));
+			} catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		try
+		{
+			dummy.setPosition(new Vector3f((float)jso.getDouble("posX"), (float)jso.getDouble("posY"), (float)jso.getDouble("posZ")));
+			dummy.speed = (float) jso.getDouble("speed");
+			dummy.direction = new Vector2f((float) jso.getDouble("dirX"), (float)jso.getDouble("dirY"));
+			dummy.age = jso.getInt("age");
+		} catch (JSONException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return dummy;
 	}
 }

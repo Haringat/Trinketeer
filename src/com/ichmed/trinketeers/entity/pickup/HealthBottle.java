@@ -17,7 +17,7 @@ public class HealthBottle extends Pickup
 	public HealthBottle(World w)
 	{
 		super(w);
-		this.name = "healthBottle";
+		this.entityType = "healthBottle";
 		this.size.x = this.size.y = 0.05f;
 	}
 

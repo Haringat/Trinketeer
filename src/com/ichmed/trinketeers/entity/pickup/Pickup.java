@@ -24,7 +24,7 @@ public abstract class Pickup extends Entity
 	@Override
 	public String getTextureForState(World w)
 	{
-		return this.name;
+		return this.entityType;
 	}
 
 	@Override

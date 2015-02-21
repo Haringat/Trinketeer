@@ -1,7 +1,6 @@
 package com.ichmed.trinketeers.ai;
 
 import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
 
 import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.spell.Spell;
@@ -39,7 +38,7 @@ public class BehaviourCastSpellAtTarget extends Behaviour
 		Entity e = w.getClosestEntityToSource(performer, range, target);
 		this.spell.tick(w, performer);
 		if(e == null) return false;
-		spell.cast(w, performer, performer.getCenter().x, performer.getCenter().y, new Vector2f(Vector3f.sub(e.getCenter(), performer.getCenter(), null).normalise(null)));
+		spell.cast(w, performer, performer.getCenter().x, performer.getCenter().y, new Vector2f(e.getCenter()));
 		if(this.spell.cooldown < spell.maxCooldown / 2 && e != null) performer.behaviourString = "Casting";
 		return true;
 	}

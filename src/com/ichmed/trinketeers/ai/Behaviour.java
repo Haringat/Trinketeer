@@ -1,5 +1,7 @@
 package com.ichmed.trinketeers.ai;
 
+import org.json.JSONObject;
+
 import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.world.World;
 
@@ -20,5 +22,10 @@ public abstract class Behaviour
 	public void cleanUp(World w)
 	{
 
+	}
+	
+	public JSONObject getSaveData()
+	{
+		return null;
 	}
 }

@@ -18,7 +18,7 @@ public class Torch extends Pickup
 		super(world);
 		this.size = new Vector2f(0.01f, 0.01f);
 		this.speed = 0;
-		this.name = "torch";
+		this.entityType = "torch";
 		this.isSolid = true;
 		this.isVulnerable = false;
 		this.behaviours.add(new BehaviourLight(world, new Vector4f(20f, 20f, 4f, 0f), 1.0f, 2f));
@@ -50,6 +50,6 @@ public class Torch extends Pickup
 	@Override
 	public String getTextureForState(World w)
 	{
-		return this.name + "_" + (this.ticksExisted / 10) % 4;
+		return this.entityType + "_" + (this.ticksExisted / 10) % 4;
 	}
 }

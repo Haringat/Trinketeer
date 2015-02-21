@@ -12,7 +12,7 @@ public class ManaBottle extends Pickup
 	public ManaBottle(World w, float min, float max)
 	{
 		super(w);
-		this.name = "healthBottle";
+		this.entityType = "healthBottle";
 		this.mana = min + (float) Math.random() * (max - min);
 		this.size.x = this.size.y = (float) (Math.sqrt(this.mana)) / 100f;
 		this.movementDelay = 15;

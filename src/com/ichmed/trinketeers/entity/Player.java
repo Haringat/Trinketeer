@@ -31,7 +31,7 @@ public class Player extends Entity
 		this.size = new Vector2f(.075f, .075f);
 		this.speed = 0.01f;
 		this.preferredSpeed = 0.01f;
-		this.name = "player";
+		this.entityType = "player";
 		this.maxDamageCooldown = 30;
 		this.maxHealth = this.health = 25;
 		light = new BehaviourLight(w, new Vector4f(20f, 20f, 4f, 0f), 1.0f, 1f);

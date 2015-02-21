@@ -187,7 +187,11 @@ public class Chunk
 		for (int i = 0; i < clusterSize; i++)
 			for (int j = 0; j < clusterSize; j++)
 				for (int k = 0; k < clusterSize; k++)
-					chunks.put(getHashString(i + (x * clusterSize), j + (y * clusterSize), k + (z * clusterSize)), null);
+				{
+					Chunk c = chunks.get(getHashString(i + (x * clusterSize), j + (y * clusterSize), k + (z * clusterSize)));
+					c.onUnload(w);
+					chunks.put(getHashString(i + (x * clusterSize), j + (y * clusterSize), k + (z * clusterSize)), null);					
+				}
 	}
 
 	public static List<Entity> getAllLoadedEntitiesForLayer(int layer)
@@ -250,5 +254,10 @@ public class Chunk
 
 		for (Vector3f v : l)
 			ChunkSave.saveChunkClusterToDisk(w, (int) v.x, (int) v.y, (int) v.z);
+	}
+
+	public String getHashString()
+	{
+		return getHashString(posX, posY, posZ);
 	}
 }

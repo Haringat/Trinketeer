@@ -8,7 +8,7 @@ public class Coin extends Pickup
 	public Coin(World w)
 	{
 		super(w);
-		this.name = "coin";
+		this.entityType = "coin";
 		this.size.x = this.size.y = 0.035f;
 		this.movementDelay = 25;
 	}
