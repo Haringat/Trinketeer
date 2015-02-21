@@ -111,7 +111,7 @@ public class DataLoader
 		
 	public static void loadEntitys(){
 		try{
-			JSONObject entitys = JSONUtil.getJSONObjectFromFile(entitysFile);
+			JSONObject entitys = JSONUtil.getJSONObjectFromFile(entitiesFile);
 			JSONArray a = entitys.getJSONArray("entitys");
 			for(int i = 0; i < a.length(); i++){
 				JSONObject e = (JSONObject) a.get(i);
@@ -153,8 +153,8 @@ public class DataLoader
 				e.put("behaviours", behavioursjson);
 				a.put(e);
 			}
-			root.put("elements", a);
-			JSONUtil.putJSONObjectIntoFile(entitysFile, root);
+			root.put("entities", a);
+			JSONUtil.putJSONObjectIntoFile(entitiesFile, root);
 
 		}catch(JSONException e){}
 

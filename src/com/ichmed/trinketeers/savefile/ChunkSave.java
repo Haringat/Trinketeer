@@ -111,6 +111,9 @@ public class ChunkSave
 				for (int j = 0; j < tiles.split(",").length; j++)
 					c.tiles[j] = Integer.valueOf(tiles.split(",")[j]);
 				Chunk.chunks.put(c.getHashString(), c);
+				JSONArray entities = chunkData.getJSONArray("entities");
+				for(int j = 0; j < entities.length(); j++)
+					world.spawn(Entity.createEntityFromSaveData(world, entities.getJSONObject(j).getString("name"), entities.getJSONObject(j)), false);				
 			}
 		} catch (Exception e)
 		{

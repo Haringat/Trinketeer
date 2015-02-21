@@ -1,13 +1,7 @@
 package com.ichmed.trinketeers.util.render;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.*;
-
 import java.awt.Font;
-import java.nio.DoubleBuffer;
-import java.nio.FloatBuffer;
-
-import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Vector4f;
 
 import com.ichmed.trinketeers.Game;
