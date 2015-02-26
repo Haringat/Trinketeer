@@ -4,14 +4,13 @@ import java.util.HashMap;
 
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.util.vector.Vector4f;
 
 import com.ichmed.trinketeers.ai.BehaviourLight;
 import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.entity.Projectile;
 import com.ichmed.trinketeers.savefile.data.ElementData;
-import com.ichmed.trinketeers.spell.formation.Formation;
 import com.ichmed.trinketeers.spell.formation.Arc;
+import com.ichmed.trinketeers.spell.formation.Formation;
 import com.ichmed.trinketeers.spell.formation.Single;
 import com.ichmed.trinketeers.world.World;
 
@@ -36,7 +35,7 @@ public class Spell
 	public int travelBeforeStandStill = -1;
 	public boolean destroyOnImpact = true;
 	public int cooldown;
-	public float charge = 0, chargeRate = 0.5f;
+	public float charge = 0, chargeRate = 5f;
 	public SpellMode mode = SpellMode.PROJECTILE;
 	public int durationLeft = -1;
 	public Vector2f lockedTarget;
@@ -65,7 +64,7 @@ public class Spell
 		if(f > 0)
 		{
 			Vector3f c = ElementData.elements.get(this.element).getColor();
-			p.behaviours.add(new BehaviourLight(world, new Vector4f(c.x * f, c.y * f, c.z * f, 0), f, 1f));
+			p.behaviours.add(new BehaviourLight(world, new Float(c.x * f).toString(), new Float(c.y * f).toString(), new Float(c.z * f).toString(), "0", new Float(f).toString(), "1"));
 		}
 
 		p.setController(controller);
@@ -224,8 +223,8 @@ public class Spell
 	public String getName()
 	{
 		String shape = "Thingemagigure";
-		if (this.formation instanceof Single) shape = this.isConstant() ? " Ray" : " Ball";
-		if (this.formation instanceof Arc) shape = this.isConstant() ? " Wave" : " Blast";
+		if (this.formation instanceof Single) shape = this.isConstant() || SpellMode.isCharged(this.mode) ? " Ray" : " Ball";
+		if (this.formation instanceof Arc) shape = this.isConstant() || SpellMode.isCharged(this.mode) ? " Wave" : " Blast";
 		String size = "";
 		if (this.size.x < 0.03f) size = "Tiny ";
 		else if (this.size.x < 0.05f) size = "Small ";
@@ -275,5 +274,11 @@ public class Spell
 		{
 			return s == PROJECTILE_CHARGE_AMOUNT || s == PROJECTILE_CHARGE_SIZE || s == PROJECTILE_CHARGE_SPRAY || s == PROJECTILE_CHARGE_DURATION;
 		}
+	}
+
+	public static Spell getSpellFromSaveData(String string)
+	{
+		//TODO
+		return null;
 	}
 }

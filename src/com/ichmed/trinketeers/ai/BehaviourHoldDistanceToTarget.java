@@ -10,10 +10,14 @@ public class BehaviourHoldDistanceToTarget extends Behaviour
 	private Class<? extends Entity> target;
 	
 	@SuppressWarnings("unchecked")
-	public BehaviourHoldDistanceToTarget(World w, Object... args)
+	public BehaviourHoldDistanceToTarget(World w, String... args)
 	{
-		this.distance = (float)args[0];
-		this.target = (Class<? extends Entity>)args[1];
+		this.distance = Float.valueOf(args[0]);
+		try
+		{
+			this.target = (Class<? extends Entity>)Class.forName(args[1]);
+		} catch (ClassNotFoundException e)
+		{}
 	}
 	
 	@Override

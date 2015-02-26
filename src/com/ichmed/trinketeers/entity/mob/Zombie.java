@@ -8,7 +8,6 @@ import com.ichmed.trinketeers.ai.BehaviourHiveMindFollowTarget;
 import com.ichmed.trinketeers.ai.BehaviourTurnToCurrentWaypoint;
 import com.ichmed.trinketeers.ai.BehaviourWander;
 import com.ichmed.trinketeers.entity.Entity;
-import com.ichmed.trinketeers.entity.Player;
 import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
 import com.ichmed.trinketeers.world.World;
 
@@ -23,17 +22,16 @@ public class Zombie extends Entity
 		this.speed = 0.005f;
 		this.preferredSpeed = 0.005f;
 		this.despawnCountDown = 8000;
-		this.renderWhenDead = true;
 		this.lootRange = 0.1f;
 		this.dropLootOnDeath = true;
 		this.entityType = "zombie";
 		this.behaviours.add(new BehaviourTurnToCurrentWaypoint(w));
-		this.behaviours.add(new BehaviourFollowTarget(w, 0.005f, Player.class));
-		this.behaviours.add(new BehaviourWander(w, 0.001f, 110, 30));
-		this.behaviours.add(new BehaviourAttackTarget(w, 2f, 0.1f, Player.class));
-		this.behaviours.add(new BehaviourHiveMindFollowTarget(w, Player.class, Zombie.class, this.visionRange * 2.5f, 0.005f));
+		this.behaviours.add(new BehaviourFollowTarget(w, "0.005", "com.ichmed.trinketeers.entity.Player"));
+		this.behaviours.add(new BehaviourWander(w, "0.001", "110", "30"));
+		this.behaviours.add(new BehaviourAttackTarget(w, "2", "0.1", "com.ichmed.trinketeers.entity.Player"));
+		this.behaviours.add(new BehaviourHiveMindFollowTarget(w, "com.ichmed.trinketeers.entity.Player", "com.ichmed.trinketeers.entity.mob.Zombie", "000.25", "0.005"));
 	}
-	
+
 	@Override
 	public AxisAllignedBoundingBox getRenderArea()
 	{
@@ -44,5 +42,17 @@ public class Zombie extends Entity
 	public boolean isHostile()
 	{
 		return !this.isDead;
-	}	
+	}
+
+	@Override
+	public void tick(World world)
+	{
+		super.tick(world);
+	}
+
+	@Override
+	protected void onDeath(World world)
+	{
+		super.onDeath(world);
+	}
 }

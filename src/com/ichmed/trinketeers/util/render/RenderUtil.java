@@ -9,53 +9,40 @@ import com.ichmed.trinketeers.world.World;
 
 public class RenderUtil
 {
-	
+
 	static Font font = new Font("Arial Black", Font.BOLD, 24);
 	static TrueTypeFont ttf = new TrueTypeFont(font, false);
-	
+
 	public static void drawRect(float width, float height)
 	{
 		drawRect(0, 0, width, height);
 	}
 
-	
 	public static void renderTexturedQuad(float x, float y, float width, float height, String s)
 	{
 		renderTexturedQuad(x, y, width, height, TextureLibrary.getTextureVector(s));
 	}
-	
+
 	public static void renderTexturedQuad(float x, float y, float width, float height, Vector4f v)
 	{
+		renderTexturedQuad(x, y, width, height, v, 0, 0, 1, 1);
+	}
+
+	public static void renderTexturedQuad(float x, float y, float width, float height, Vector4f v, float textureOffSetX, float textureOffSetY, float scaleX, float scaleY)
+	{
 		TextureLibrary.bindTexture(TextureLibrary.textureLibrary.textureName);
-		double tx = v.x / (double) TextureLibrary.LIBRARY_SIZE;
-		double ty = v.y / (double) TextureLibrary.LIBRARY_SIZE;
-		double th = v.z / (double) TextureLibrary.LIBRARY_SIZE;
-		double tw = v.w / (double) TextureLibrary.LIBRARY_SIZE;
-		
+		double tx = (v.x + textureOffSetX) / (double) TextureLibrary.LIBRARY_SIZE;
+		double ty = (v.y + textureOffSetY) / (double) TextureLibrary.LIBRARY_SIZE;
+		double th = v.z / (double) TextureLibrary.LIBRARY_SIZE * scaleX;
+		double tw = v.w / (double) TextureLibrary.LIBRARY_SIZE * scaleY;
+
 		int min = Math.min(Game.HEIGHT, Game.WIDTH);
-		int max = Math.max(Game.HEIGHT, Game.WIDTH);
-		
+
 		double qx = x + (1 - Game.WIDTH / min) * 0.5;
-		double qy = y + (1 - Game.HEIGHT/ min) * 0.5;
+		double qy = y + (1 - Game.HEIGHT / min) * 0.5;
 		double qw = width;
 		double qh = height;
-//		double qw = width * (min / (double)Game.WIDTH);
-//		double qh = height * (min / (double)Game.HEIGHT);
-		
-		
-//		DoubleBuffer vertices = BufferUtils.createDoubleBuffer(4 * 5);
-//		vertices.put(qx).put(qy).put(tx).put(ty + th);
-//		vertices.put(qx + qw).put(qy).put(tx + tw).put(ty + th);	
-//		vertices.put(qx + qw).put(qy + qh).put(tx + tw).put(ty);	
-//		vertices.put(qx).put(qy + qh).put(tx + tw).put(ty + th);
-//		vertices.flip();
-//		
-//		int vbo = glGenBuffers();
-//		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-//		glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
-		
-		
-		
+
 		glBegin(GL_QUADS);
 		glTexCoord2d(tx, ty + tw);
 		glVertex2d(qx, qy);
@@ -128,7 +115,6 @@ public class RenderUtil
 		glVertex2f(x, y + height / 20f);
 		glEnd();
 	}
-	
 
 	public static void renderText(float x, float y, String text)
 	{
@@ -137,7 +123,7 @@ public class RenderUtil
 
 	public static void renderText(float x, float y, String text, float scaleX, float scaleY, int allignMode)
 	{
-		ttf.drawString(x, y, text, 0, text.length()-1, scaleX, scaleY, allignMode);
+		ttf.drawString(x, y, text, 0, text.length() - 1, scaleX, scaleY, allignMode);
 		TextureLibrary.rebind();
 	}
 }

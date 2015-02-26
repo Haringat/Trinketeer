@@ -14,12 +14,18 @@ public class BehaviourLight extends Behaviour
 	private float brightness, flicker;
 	private boolean init = false;
 	
-	public BehaviourLight(World w, Object...objects)
+	public BehaviourLight(World w, String...objects)
 	{
 		light = new SimpleLight();
-		color = (Vector4f) objects[0];
-		this.brightness = (Float)objects[1];
-		this.flicker = (Float)objects[2];
+		float r = Float.valueOf(objects[0]);
+		float g = Float.valueOf(objects[1]);
+		float b = Float.valueOf(objects[2]);
+		float a = Float.valueOf(objects[3]);
+		
+		this.color = new Vector4f(r, g, b, a);
+		
+		this.brightness = Float.valueOf(objects[4]);
+		this.flicker = Float.valueOf(objects[5]);
 		w.addLight(light);
 		this.light.setActive(false);
 	}

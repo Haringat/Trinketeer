@@ -7,7 +7,6 @@ import java.nio.DoubleBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.util.vector.Vector4f;
 
 import com.ichmed.trinketeers.Game;
 import com.ichmed.trinketeers.ai.BehaviourLight;
@@ -34,7 +33,7 @@ public class Player extends Entity
 		this.entityType = "player";
 		this.maxDamageCooldown = 30;
 		this.maxHealth = this.health = 25;
-		light = new BehaviourLight(w, new Vector4f(20f, 20f, 4f, 0f), 1.0f, 1f);
+		light = new BehaviourLight(w, "20", "20", "4", "0", "1.0", "1");
 		this.behaviours.add(light);
 		this.isSolid = true;
 		mana = 150f;

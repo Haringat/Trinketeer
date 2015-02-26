@@ -8,12 +8,19 @@ public class BehaviourHiveMindFollowTarget extends Behaviour
 	private Class<?> target, hive;
 	private float range, speed;
 
-	public BehaviourHiveMindFollowTarget(World world, Object...w)
+	@SuppressWarnings("unchecked")
+	public BehaviourHiveMindFollowTarget(World world, String...args)
+	{try
 	{
-		this.target = (Class<?>)w[0];
-		this.hive = (Class<?>)w[1];
-		this.range = (float)w[2];
-		this.speed = (float)w[3];
+		this.target = (Class<? extends Entity>)Class.forName(args[0]);
+	} catch (ClassNotFoundException e)
+	{}try
+	{
+		this.hive = (Class<? extends Entity>)Class.forName(args[1]);
+	} catch (ClassNotFoundException e)
+	{}
+		this.range = Float.valueOf(args[2]);
+		this.speed = Float.valueOf(args[3]);
 	}
 	
 	@Override

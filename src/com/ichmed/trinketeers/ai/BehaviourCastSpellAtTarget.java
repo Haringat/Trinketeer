@@ -12,12 +12,17 @@ public class BehaviourCastSpellAtTarget extends Behaviour
 	private float range;
 	private Class<? extends Entity> target;
 
-	public BehaviourCastSpellAtTarget(World w, Spell spell, float range, Class<? extends Entity> target)
+	@SuppressWarnings({ "unchecked" })
+	public BehaviourCastSpellAtTarget(World w, String...args)
 	{
 		super();
-		this.spell = spell;
-		this.range = range;
-		this.target = target;
+		this.spell = Spell.getSpellFromSaveData(args[0]);
+		this.range = Float.valueOf(args[1]);
+		try
+		{
+			this.target = (Class<? extends Entity>)Class.forName(args[2]);
+		} catch (ClassNotFoundException e)
+		{}
 	}
 
 	@Override

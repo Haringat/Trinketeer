@@ -24,9 +24,4 @@ public class Grave extends Entity
 		}
 		super.tick(world);
 	}
-	
-	
-	
-	
-
 }

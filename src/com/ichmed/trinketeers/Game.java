@@ -5,7 +5,10 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.lwjgl.Sys;
@@ -47,6 +50,7 @@ public class Game
 		{
 			init();
 			world = new World();
+			createDefaultTextureLibrary();
 			TextureLibrary.loadTextureLibrary("resc/textures/defaultLibrary");
 			loop();
 
@@ -194,6 +198,35 @@ public class Game
 	public static boolean isKeyDown(int key)
 	{
 		if (keys.get(key) != null) return keys.get(key);
+		return false;
+	}
+	
+	public boolean createDefaultTextureLibrary()
+	{
+		File lib = new File("resc/textures/defaultLibrary.png");
+		File raw = new File("resc/textures/raw/defaultLibrary");
+		List<File> files = new ArrayList<>();
+		
+		for (File file : raw.listFiles())
+			if(file.getAbsolutePath().endsWith(".png")) files.add(file);
+		for(File file : files)
+			if(file.lastModified() > lib.lastModified())
+			{
+				List<String[]> l = new ArrayList<>();
+				for(File f : files)
+					l.add(new String[]{f.getAbsolutePath(), f.getName().substring(0, f.getName().lastIndexOf('.'))});
+				try
+				{
+					if(debugMode) System.out.println("Found new Texture, generating texture library");
+					TextureLibrary.generateTextureLibrary(lib.getAbsolutePath().substring(0, lib.getAbsolutePath().lastIndexOf('.')), l);
+					if(debugMode) System.out.println("Succesfully generated texture library");
+					
+				} catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+				return true;
+			}
 		return false;
 	}
 }

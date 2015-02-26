@@ -9,8 +9,6 @@ import com.ichmed.trinketeers.ai.BehaviourHoldDistanceToTarget;
 import com.ichmed.trinketeers.ai.BehaviourTurnToCurrentWaypoint;
 import com.ichmed.trinketeers.ai.BehaviourWander;
 import com.ichmed.trinketeers.entity.Entity;
-import com.ichmed.trinketeers.entity.Player;
-import com.ichmed.trinketeers.spell.SpellFireball;
 import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
 import com.ichmed.trinketeers.world.World;
 
@@ -28,11 +26,11 @@ public class FlameElemental extends Entity
 		this.dropLootOnDeath = true;
 		this.entityType = "flameElemental";
 		this.behaviours.add(new BehaviourTurnToCurrentWaypoint(w));
-		this.behaviours.add(new BehaviourFollowTarget(w, 0.008f, Player.class));
-		this.behaviours.add(new BehaviourWander(w, 0.003f, 0, 0));
-		this.behaviours.add(new BehaviourHoldDistanceToTarget(w, 0.45f, Player.class));
-		this.behaviours.add(new BehaviourCastSpellAtTarget(w, new SpellFireball(), 0.55f, Player.class));
-		this.behaviours.add(new BehaviourAttackTarget(w, 1f, 0.01f, Player.class));
+		this.behaviours.add(new BehaviourFollowTarget(w, "0.008", "com.ichmed.trinketeers.entity.Player"));
+		this.behaviours.add(new BehaviourWander(w, "0.003", "0", "0"));
+		this.behaviours.add(new BehaviourHoldDistanceToTarget(w, "0.45", "com.ichmed.trinketeers.entity.Player"));
+		this.behaviours.add(new BehaviourCastSpellAtTarget(w, "", "0.55", "com.ichmed.trinketeers.entity.Player"));
+		this.behaviours.add(new BehaviourAttackTarget(w, "1", "0.01", "com.ichmed.trinketeers.entity.Player"));
 	}
 	
 //	public ILight createLight()

@@ -19,7 +19,7 @@ public class Tile
 	{
 		tiles[0] = new Tile(null, false, false);
 		tiles[1] = new Tile("floorMud", false, false);
-		tiles[2] = new TileWallBrick("wallBrick", true, true);
+		tiles[2] = new TileWallBrick("wallStone", true, true);
 		tiles[3] = new TileWallTop("wallTop", true, false).setRenderInFront(true);
 		tiles[4] = new Tile("floorGrass", false, false);
 		tiles[5] = new Tile("floorStone", false, false);
@@ -62,7 +62,7 @@ public class Tile
 		{
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glColor3f(0, 0, 0);
-			// RenderUtil.drawRect((f * x), (f * y), f, f);
+			RenderUtil.drawRect((f * x), (f * y), f, f);
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			GL11.glColor3f(1, 1, 1);
 		}

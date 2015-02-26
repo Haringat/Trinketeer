@@ -9,11 +9,16 @@ public class BehaviourFollowTarget extends Behaviour
 	private Class<? extends Entity> targetClass;
 
 	@SuppressWarnings("unchecked")
-	public BehaviourFollowTarget(World w, Object... args)
+	public BehaviourFollowTarget(World w, String... args)
 	{
-		super(args);
-		this.speed = (float)args[0];
-		this.targetClass = (Class<? extends Entity>)args[1];
+		this.speed = Float.valueOf(args[0]);
+		try
+		{
+			this.targetClass = (Class<? extends Entity>)Class.forName(args[1]);
+		} catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	@Override

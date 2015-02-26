@@ -13,6 +13,7 @@ import org.lwjgl.util.vector.Vector3f;
 import com.ichmed.trinketeers.Game;
 import com.ichmed.trinketeers.ai.Behaviour;
 import com.ichmed.trinketeers.ai.waypoint.Waypoint;
+import com.ichmed.trinketeers.entity.particle.Particle;
 import com.ichmed.trinketeers.savefile.data.EntityData;
 import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
 import com.ichmed.trinketeers.util.Loot;
@@ -31,7 +32,7 @@ public class Entity implements IWorldGraphic, Waypoint
 	public float maxHealth = 10;
 	public List<Behaviour> behaviours = new ArrayList<>();
 	public String type = "Misc";
-	public boolean essential = true;
+	public boolean isEssential = true;
 
 	// Specific
 	protected final int MAX_COLLISION_ITERATIONS = 10;
@@ -60,6 +61,7 @@ public class Entity implements IWorldGraphic, Waypoint
 	public String behaviourString = null;
 	private Object age;
 	private Vector2f renderArea = null;
+	private GibMode gibMode = GibMode.DEFAULT;
 
 	public Entity(World w)
 	{
@@ -67,8 +69,6 @@ public class Entity implements IWorldGraphic, Waypoint
 
 	public void tick(World world)
 	{
-		// System.out.println("I'm a " + name + " and I'm on level " +
-		// (int)this.position.z);
 		behaviourString = null;
 		if (direction.length() > 0) direction.normalise();
 		if (this.isDead) despawnCountDown--;
@@ -214,6 +214,7 @@ public class Entity implements IWorldGraphic, Waypoint
 	public boolean kill(World world)
 	{
 		if (this.isDead) return true;
+		if(this.gibMode == GibMode.DEFAULT) this.renderWhenDead = true;
 		this.isDead = true;
 		this.isSolid = this.solidWhenDead;
 		this.onDeath(world);
@@ -247,6 +248,11 @@ public class Entity implements IWorldGraphic, Waypoint
 	{
 		for (Behaviour b : this.behaviours)
 			b.cleanUp(world);
+		
+		if(this.gibMode  == GibMode.GIB)
+		{
+			this.gib(world);
+		}
 
 		if (this.dropLootOnDeath)
 		{
@@ -358,7 +364,8 @@ public class Entity implements IWorldGraphic, Waypoint
 	public static Entity createEntityFromSaveData(World w, String entityName, JSONObject jso)
 	{
 		EntityData universalData = EntityData.entityData.get(entityName);
-		Entity dummy;
+		Entity dummy = null;
+		if(universalData == null) return new Entity(w);
 		try
 		{
 			dummy = (Entity) universalData.clazz.getConstructor(World.class).newInstance(w);
@@ -367,6 +374,7 @@ public class Entity implements IWorldGraphic, Waypoint
 			dummy = new Entity(w);
 			e.printStackTrace();
 		}
+		
 		
 		dummy.size = universalData.getSize();
 		dummy.renderArea = universalData.getRenderSize();
@@ -395,5 +403,49 @@ public class Entity implements IWorldGraphic, Waypoint
 		}
 		
 		return dummy;
+	}
+	
+
+	
+	public void gib(World world)
+	{		
+		int r = (int) (Math.random() * 5) + 5;
+		for (int i = 0; i < r; i++)
+		{
+			Particle p = new Particle(world);
+			p.setTexture(this.entityType + "Dead");
+			p.speed = 0.02f;
+			p.preferredSpeed = 0; 
+			p.setLifeSpan((int) (Math.random() * 50) + 50);
+			p.acceleration = 0.0005f;
+			p.setTextureOffSet((int)(Math.random() * 24), (int)(Math.random() * 16) + 8);
+			p.setScale(0.25f, 0.25f);
+			Vector3f v = this.getCenter();
+			p.size = new Vector2f(0.05f, 0.05f);
+			p.setCenter(new Vector3f(v.x + (float)(Math.random() - 0.5) * 0.1f, v.y + (float)(Math.random() - 0.5f) * 0.1f, v.z));
+			p.direction = p.preferredDirection = new Vector2f(v.x - p.getCenter().x, v.y - p.getCenter().y);
+			world.spawn(p, false);
+		}
+		r = (int) (Math.random() * 5) + 5;
+		for (int i = 0; i < r; i++)
+		{
+			Particle p = new Particle(world);
+			p.setTexture("blood_1");
+			p.speed = 0.01f + (float)Math.random() * 0.02f;
+			p.preferredSpeed = 0;
+			p.setLifeSpan((int) (Math.random() * 50) + 50);
+			p.acceleration = 0.0005f;
+			Vector3f v = this.getCenter();
+			float f = (float)Math.random() * 0.05f + 0.02f;
+			p.size = new Vector2f(f, f);
+			p.setCenter(new Vector3f(v.x + (float)(Math.random() - 0.5) * 0.1f, v.y + (float)(Math.random() - 0.5f) * 0.1f, v.z));
+			p.direction = p.preferredDirection = new Vector2f(v.x - p.getCenter().x, v.y - p.getCenter().y);
+			world.spawn(p, false);
+		}
+	}
+	
+	public static enum GibMode
+	{
+		GIB, DISSAPEAR, DEFAULT;
 	}
 }
