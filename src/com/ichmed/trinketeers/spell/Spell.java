@@ -2,6 +2,8 @@ package com.ichmed.trinketeers.spell;
 
 import java.util.HashMap;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -18,7 +20,7 @@ public class Spell
 {
 	public Spell childSpell, trailSpell;
 
-	public String element;
+	public String element = "DEFAULT";
 	public int trailDelay = -1;
 	public int amount;
 	public Formation formation;
@@ -59,9 +61,9 @@ public class Spell
 		Projectile p = new Projectile(world, this.size, this.element, this.childSpell, this.wobble, this.trailSpell);
 		p.speed = p.preferredSpeed = this.speed;
 		p.direction = p.preferredDirection = new Vector2f(direction);
-		
+
 		float f = ElementData.elements.get(this.element).getBrightness();
-		if(f > 0)
+		if (f > 0)
 		{
 			Vector3f c = ElementData.elements.get(this.element).getColor();
 			p.behaviours.add(new BehaviourLight(world, new Float(c.x * f).toString(), new Float(c.y * f).toString(), new Float(c.z * f).toString(), "0", new Float(f).toString(), "1"));
@@ -237,7 +239,17 @@ public class Spell
 
 	public Spell()
 	{
-		element = (String) ElementData.elements.keySet().toArray()[(int) (ElementData.elements.keySet().size() * Math.random())];
+		this(true);
+	}
+
+	public Spell(boolean b)
+	{
+		if (b) this.generate();
+	}
+
+	private void generate()
+	{
+		if (this.element.equals("DEFAULT")) element = (String) ElementData.elements.keySet().toArray()[(int) (ElementData.elements.keySet().size() * Math.random())];
 		float manaMod = ElementData.elements.get(element).getManaMod();
 		float sizeMod = ElementData.elements.get(element).getSizeMod();
 		boolean multi = Math.random() >= 0.5f;
@@ -276,9 +288,53 @@ public class Spell
 		}
 	}
 
+	public JSONObject getSaveData()
+	{
+		JSONObject jso = new JSONObject();
+
+		try
+		{
+			jso.put("element", this.element);
+			jso.put("amount", this.amount);
+			jso.put("formation", this.formation instanceof Single ? 0 : 1);
+			jso.put("size", this.size.x);
+			jso.put("speed", this.speed);
+			jso.put("wobble", this.wobble);
+			jso.put("maxCooldown", this.maxCooldown);
+			jso.put("mode", this.mode);
+		} catch (JSONException e)
+		{
+			e.printStackTrace();
+		}
+
+		return jso;
+	}
+
 	public static Spell getSpellFromSaveData(String string)
 	{
-		//TODO
-		return null;
+		if (string.startsWith("create"))
+		{
+			Spell s = new Spell(false);
+			s.element = string.split(" ")[1];
+			s.generate();
+			return s;
+		}
+		Spell s = new Spell();
+		try
+		{
+			JSONObject jso = new JSONObject(string);
+			s.element = jso.getString("element");
+			s.amount = jso.getInt("amount");
+			s.formation = jso.getInt("formation") == 0 ? new Single() : new Arc();
+			s.size = new Vector2f((float)jso.getDouble("size"), (float)jso.getDouble("size"));
+			s.speed = (float) jso.getDouble("speed");
+			s.wobble = (float) jso.getDouble("wobble");
+			s.maxCooldown = jso.getInt("maxCooldown");
+			s.mode = SpellMode.valueOf(jso.getString("mode"));
+		} catch (JSONException e)
+		{
+			e.printStackTrace();
+		}
+		return s;
 	}
 }

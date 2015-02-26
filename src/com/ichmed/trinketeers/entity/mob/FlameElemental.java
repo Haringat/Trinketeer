@@ -29,7 +29,7 @@ public class FlameElemental extends Entity
 		this.behaviours.add(new BehaviourFollowTarget(w, "0.008", "com.ichmed.trinketeers.entity.Player"));
 		this.behaviours.add(new BehaviourWander(w, "0.003", "0", "0"));
 		this.behaviours.add(new BehaviourHoldDistanceToTarget(w, "0.45", "com.ichmed.trinketeers.entity.Player"));
-		this.behaviours.add(new BehaviourCastSpellAtTarget(w, "", "0.55", "com.ichmed.trinketeers.entity.Player"));
+		this.behaviours.add(new BehaviourCastSpellAtTarget(w, "create Fire", "0.55", "com.ichmed.trinketeers.entity.Player"));
 		this.behaviours.add(new BehaviourAttackTarget(w, "1", "0.01", "com.ichmed.trinketeers.entity.Player"));
 	}
 	
