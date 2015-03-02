@@ -2,6 +2,7 @@ package com.ichmed.trinketeers.world.generator;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import com.ichmed.trinketeers.entity.Foliage;
 import com.ichmed.trinketeers.entity.pickup.Chest;
 import com.ichmed.trinketeers.entity.pickup.Ladder;
 import com.ichmed.trinketeers.entity.pickup.SpellScroll;
@@ -22,9 +23,7 @@ public class WorldGenerator
 			{
 				if (z != 0) Chunk.setTile(world, i, -8, z, 3);
 				for (int j = -7; j < 8; j++)
-
 					Chunk.setTile(world, tileX + i, tileY + j, z, floor);
-
 			}
 			for (int i = 0; i < 4; i++)
 			{

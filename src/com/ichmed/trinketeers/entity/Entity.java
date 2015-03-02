@@ -90,7 +90,7 @@ public class Entity implements IWorldGraphic, Waypoint
 		if (this.damageCooldown > 0) this.color = new Vector3f(0.75f, 0.2f, 0.2f);
 		else this.color = this.getColor();
 
-		if (!this.isDead)
+		if (!this.isDead && this.isMoveable)
 		{
 			world.removeEntityFromChunk(this);
 			performRecursiveCollisionX(0, world, exclude);
