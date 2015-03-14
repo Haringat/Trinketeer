@@ -128,9 +128,11 @@ public class Editor extends JFrame implements ActionListener{
 				}
 			}
 			if(src.getName().equals(saveelementslabel)){
+				System.out.println("Saving elements");
 				elementeditor.saveElements();
 			}
 			if(src.getName().equals(saveentityslabel)){
+				System.out.println("Saving entitys");
 				entityeditor.saveEntitys();
 			}
 			if(src.getName().equals(closelabel)){

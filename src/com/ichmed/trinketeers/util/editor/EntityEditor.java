@@ -12,6 +12,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.HashMap;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -19,8 +20,14 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
 
+import org.lwjgl.util.vector.Vector2f;
+
+import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.savefile.DataLoader;
 import com.ichmed.trinketeers.savefile.data.EntityData;
 
@@ -33,16 +40,13 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 	private JTextField behaviourfield = new JTextField();
 	private HashMap<String, JComponent> fields = new HashMap<>();
 	private JButton entityadd = new JButton("+");
+	private JButton behaveadd = new JButton("+");
+	private JButton behaveremove = new JButton("-");
 	
 
 	public EntityEditor(){
 		
 		loadEntitys();
-		//entityselector = new JComboBox<EntityData>();
-		ents.put(new EntityData().getName(), new EntityData());
-		EntityData ent2 = new EntityData();
-		ent2.setName("hallo");
-		ents.put(ent2.getName(), ent2);
 		for(String key: ents.keySet()){
 			entityselector.addItem(key);
 		}
@@ -110,26 +114,57 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 		add(fields.get("class"), c);
 		
 		c.gridx = 0;
+		c.gridwidth = REMAINDER;
 		c.gridy = 9;
 		add(new JLabel("behaviours"), c);
 		
 		c.gridy = 10;
-		c.gridwidth = REMAINDER;
 		c.fill = BOTH;
 		((JList<?>) fields.get("behaviours")).setLayoutOrientation(JList.VERTICAL);
-		add(fields.get("behaviours"), c);
+		((JList<?>) fields.get("behaviours")).setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		JScrollPane sp = new JScrollPane(fields.get("behaviours"));
+		sp.setSize(200, 200);
+		add(sp, c);
 		
+		c.fill = HORIZONTAL;
 		c.gridwidth = 1;
 		c.gridy = 11;
 		add(behaviourfield, c);
 		
+		c.gridwidth = 1;
+		c.gridx = RELATIVE;
+		add(behaveadd, c);
+		
+		add(behaveremove, c);
+		
 		entityselector.addItemListener(this);
 		entityadd.addActionListener(this);
 		fields.get("name").addFocusListener(this);
+		behaveadd.addActionListener(this);
+		behaveremove.addActionListener(this);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void refreshListEntry(){
+		try {
+			if(!ents.isEmpty()){
+				EntityData oldentity = ents.get(((JTextField)fields.get("name")).getText());
+				oldentity.setRarity(Integer.valueOf(((JTextField)fields.get("rarity")).getText()));
+				oldentity.setStrength(Integer.valueOf(((JTextField)fields.get("strength")).getText()));
+				oldentity.setSize(new Vector2f(Float.valueOf(((JTextField)fields.get("strength")).getText()),
+						Float.valueOf(((JTextField)fields.get("strength")).getText())));
+				oldentity.setStrength(Integer.valueOf(((JTextField)fields.get("strength")).getText()));
+				oldentity.setStrength(Integer.valueOf(((JTextField)fields.get("strength")).getText()));
+				oldentity.setClasspath((Class<? extends Entity>) Class.forName(((JTextField)fields.get("strength")).getText()));
+				ents.replace(((JTextField)fields.get("name")).getText(), oldentity);
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void selectEntity(EntityData entity){
-		// TODO: save state of current entity
+		refreshListEntry();
 		((JTextField) fields.get("name")).setText(entity.getName());
 		((JTextField) fields.get("rarity")).setText(String.valueOf(entity.getRarity()));
 		((JTextField) fields.get("strength")).setText(String.valueOf(entity.getStrength()));
@@ -137,6 +172,7 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 		((JTextField) fields.get("sizey")).setText(String.valueOf(entity.getSize().getY()));
 		((JTextField) fields.get("rendersizex")).setText(String.valueOf(entity.getRenderSize().getX()));
 		((JTextField) fields.get("rendersizey")).setText(String.valueOf(entity.getRenderSize().getY()));
+		((JTextField) fields.get("class")).setText(String.valueOf(entity.getClasspath().getCanonicalName()));
 	}
 	
 	private void addEntity(){
@@ -165,12 +201,32 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(entityadd)){
 			addEntity();
 		}
-		
+		if(e.getSource().equals(behaveadd)){
+			ListModel<String> model = ((JList<String>) fields.get("behaviours")).getModel();
+			String[] data = new String[model.getSize()+1];
+			for(int i = 0; i < model.getSize(); i++){
+				data[i] = model.getElementAt(i);
+			}
+			data[model.getSize()] = behaviourfield.getText();
+			((JList<String>) fields.get("behaviours")).setListData(data);
+		}
+		if(e.getSource().equals(behaveremove)){
+			ListModel<String> model = ((JList<String>) fields.get("behaviours")).getModel();
+			Vector<String> data = new Vector<>();
+			for(int i = 0; i < model.getSize(); i++){
+				if(i == ((JList<String>)fields.get("behaviours")).getSelectedIndex()){
+					continue;
+				}
+				data.add(model.getElementAt(i));
+			}
+			((JList<String>) fields.get("behaviours")).setListData(data);
+		}
 	}
 
 	@Override
@@ -195,6 +251,8 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 					ents.put(newname, buffer);
 					entityselector.removeItemAt(index);
 					entityselector.insertItemAt(newname, index);
+					refreshListEntry();
+					entityselector.setSelectedItem(src.getText());
 				}
 			}
 		}

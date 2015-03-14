@@ -124,6 +124,11 @@ public class DataLoader
 				entityGame.setRarity(e.getInt("rarity"));
 				JSONArray behavioursjson = e.getJSONArray("behaviours");
 				List<String> behaviours = new ArrayList<>();
+				System.out.printf("found entity:\nname: %s\ntype %s\nsize: %fx%f\nrendersize: %fx%f\nrarity: %d\n",
+						entityGame.getName(), entityGame.getType(), entityGame.getStrength(),
+						entityGame.getSize().getX(), entityGame.getSize().getY(),
+						entityGame.getRenderSize().getX(), entityGame.getRenderSize().getY(),
+						entityGame.getRarity());
 				for(int j = 0; j < behavioursjson.length(); j++){
 					behaviours.add(behavioursjson.getString(j));
 				}

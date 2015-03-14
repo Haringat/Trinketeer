@@ -274,16 +274,22 @@ public class ElementEditor extends JPanel implements MouseListener, ActionListen
 	@Override
 	public void focusLost(FocusEvent e) {
 		if((JTextField)e.getSource() instanceof JTextField
-				&& ((JTextField)e.getSource()).getName().equals("name")
-				&& !((JTextField)e.getSource()).getText().equals(tempname)){
-			String newname = ((JTextField) e.getSource()).getText();
-			Component[] tempcomps = id.get(tempname);
-			ElementData tempelement = elements.get(tempname);
-			id.remove(tempname);
-			id.put(newname, tempcomps);
-			elements.remove(tempname);
-			elements.put(newname, tempelement);
-			tempcomps[7].setName("remove "+newname);
+				&& ((JTextField)e.getSource()).getName().equals("name")){
+			JTextField src = (JTextField) e.getSource();
+			if(
+				//&& !((JTextField)e.getSource()).getText().equals(tempname)){
+					!elements.containsKey(src.getText())){
+				String newname = ((JTextField) e.getSource()).getText();
+				Component[] tempcomps = id.get(tempname);
+				ElementData tempelement = elements.get(tempname);
+				id.remove(tempname);
+				id.put(newname, tempcomps);
+				elements.remove(tempname);
+				elements.put(newname, tempelement);
+				tempcomps[7].setName("remove "+newname);
+			}else{
+				src.grabFocus();
+			}
 		}
 		try{
 			refreshHashmap();

@@ -17,7 +17,7 @@ public class EntityData
 	private String type;
 	private int strength;
 	private int rarity;
-	public Class<? extends Entity> clazz;
+	private Class<? extends Entity> clazz;
 
 	@Override
 	public String toString()
@@ -59,10 +59,10 @@ public class EntityData
 		this.renderSize = renderSize;
 		try
 		{
-			this.clazz = (Class<? extends Entity>) Class.forName(classPath);
+			this.setClasspath((Class<? extends Entity>) Class.forName(classPath));
 		} catch (ClassNotFoundException e)
 		{
-			this.clazz = Entity.class;
+			this.setClasspath(Entity.class);
 		}
 		
 	}
@@ -140,5 +140,13 @@ public class EntityData
 	public void setRenderSize(Vector2f renderSize)
 	{
 		this.renderSize = renderSize;
+	}
+
+	public Class<? extends Entity> getClasspath() {
+		return clazz;
+	}
+
+	public void setClasspath(Class<? extends Entity> clazz) {
+		this.clazz = clazz;
 	}
 }

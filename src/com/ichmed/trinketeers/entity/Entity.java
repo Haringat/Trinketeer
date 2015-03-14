@@ -368,7 +368,7 @@ public class Entity implements IWorldGraphic, Waypoint
 		if(universalData == null) return new Entity(w);
 		try
 		{
-			dummy = (Entity) universalData.clazz.getConstructor(World.class).newInstance(w);
+			dummy = (Entity) universalData.getClasspath().getConstructor(World.class).newInstance(w);
 		} catch (Exception e)
 		{
 			dummy = new Entity(w);
