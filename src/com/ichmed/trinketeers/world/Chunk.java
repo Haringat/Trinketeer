@@ -171,7 +171,8 @@ public class Chunk
 		{
 			if (loadFromDisk && ChunkSave.isChunkOnDisk(world, (int) x, (int) y, (int) z))
 			{
-				ChunkSave.loadCluster(world, (int) x, (int) y, (int) z);
+				Vector3f v = Chunk.getClusterForChunk(world, x, y, z);
+				ChunkSave.loadCluster(world, (int) v.x, (int) v.y, (int) v.z);
 				c = chunks.get(getHashString(x, y, z));
 			}
 			return c == null ? createNewChunk(world, x, y, z, generate) : c;
