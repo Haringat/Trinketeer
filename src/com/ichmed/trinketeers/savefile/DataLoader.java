@@ -1,5 +1,8 @@
 package com.ichmed.trinketeers.savefile;
 
+import static com.ichmed.trinketeers.util.DataRef.elementsFile;
+import static com.ichmed.trinketeers.util.DataRef.entitiesFile;
+
 import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -7,6 +10,8 @@ import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,25 +25,31 @@ import com.ichmed.trinketeers.savefile.data.ElementData;
 import com.ichmed.trinketeers.savefile.data.EntityData;
 import com.ichmed.trinketeers.util.JSONUtil;
 
-import static com.ichmed.trinketeers.util.DataRef.*;
-
 public class DataLoader
 {
 	/**
 	 * loads an image from the file at <code>path</code>.
-	 * @param path the path to the image file
-	 * @param observer the observer which should be notified
+	 * 
+	 * @param path
+	 *            the path to the image file
+	 * @param observer
+	 *            the observer which should be notified
 	 * @return the loaded image or null if an error occured
 	 */
-	public static Image loadImage( String path, ImageObserver observer ){
+	public static Image loadImage(String path, ImageObserver observer)
+	{
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		MediaTracker tracker = new MediaTracker((Component) observer);
 		Image tempimg = toolkit.getImage(path);
 		tracker.addImage(tempimg, 0);
-		try {
+		try
+		{
 			tracker.waitForAll();
-		} catch (InterruptedException e) {}
-		if(tracker.isErrorAny()){
+		} catch (InterruptedException e)
+		{
+		}
+		if (tracker.isErrorAny())
+		{
 			return null;
 		}
 		BufferedImage img = new BufferedImage(tempimg.getWidth(observer), tempimg.getHeight(observer), BufferedImage.TYPE_INT_ARGB);
@@ -46,7 +57,7 @@ public class DataLoader
 		g.drawImage(tempimg, 0, 0, tempimg.getWidth(observer), tempimg.getHeight(observer), observer);
 		return img;
 	}
-	
+
 	public static void loadElements()
 	{
 		try
@@ -56,26 +67,18 @@ public class DataLoader
 			for (int i = 0; i < a.length(); i++)
 			{
 				JSONObject e = (JSONObject) a.get(i);
-				ElementData elementGame = new ElementData(e.getString("name"),
-						(float) e.getDouble("color_red")/255,
-						(float) e.getDouble("color_green")/255,
-						(float) e.getDouble("color_blue")/255,
-						(float) e.getDouble("brightness"),
-						(float) e.getDouble("density"),
-						e.getBoolean("break_on_impact"),
-						(float) e.getDouble("damage"),
-						e.getString("texture"),
-						0f, 0f);
+				ElementData elementGame = new ElementData(e.getString("name"), (float) e.getDouble("color_red") / 255, (float) e.getDouble("color_green") / 255,
+						(float) e.getDouble("color_blue") / 255, (float) e.getDouble("brightness"), (float) e.getDouble("density"), e.getBoolean("break_on_impact"), (float) e.getDouble("damage"),
+						"", 0f, 0f);
 				String name = e.getString("name");
-				
-				/*@SuppressWarnings("unchecked")
-				Iterator<String> iterator = e.keys();
-				while (iterator.hasNext())
-				{
-					String field = iterator.next();
-					elementGame.values.put(field, e.getString(field));
-				}*/
-				
+
+				/*
+				 * @SuppressWarnings("unchecked") Iterator<String> iterator =
+				 * e.keys(); while (iterator.hasNext()) { String field =
+				 * iterator.next(); elementGame.values.put(field,
+				 * e.getString(field)); }
+				 */
+
 				ElementData.elements.put(name, elementGame);
 			}
 		} catch (JSONException e)
@@ -83,65 +86,74 @@ public class DataLoader
 			e.printStackTrace();
 		}
 	}
-
-	public static void saveElements(HashMap<String, ElementData> elements) {
-		try{
+	
+	public static void saveElements(HashMap<String, ElementData> elements)
+	{
+		try
+		{
 			JSONObject root = new JSONObject();
 			JSONArray a = new JSONArray();
-			for(String key: elements.keySet().toArray(new String[0])){
+			for (ElementData element : ElementData.elements.values())
+			{
 				JSONObject e = new JSONObject();
-				e.put("color_red", elements.get(key).getColor().getX());
-				e.put("color_green", elements.get(key).getColor().getY());
-				e.put("color_blue", elements.get(key).getColor().getZ());
-				e.put("brightness", elements.get(key).getBrightness());
-				e.put("density", elements.get(key).getDensity());
-				e.put("break_on_impact", elements.get(key).shouldBreakOnImpact());
-				e.put("damage", elements.get(key).getDamage());
-				e.put("texture", elements.get(key).getTexture());
-				e.put("manamod", elements.get(key).getManaMod());
-				e.put("sizemod", elements.get(key).getSizeMod());
-				e.put("name", elements.get(key).getName());
+				e.put("color_red", element.getColor().getX() * 255);
+				e.put("color_green", element.getColor().getY() * 255);
+				e.put("color_blue", element.getColor().getZ() * 255);
+				e.put("brightness", element.getBrightness());
+				e.put("density", element.getDensity());
+				e.put("break_on_impact", element.shouldBreakOnImpact());
+				e.put("damage", element.getDamage());
+				e.put("name", element.getName());
 				a.put(e);
 			}
 			root.put("elements", a);
 			JSONUtil.putJSONObjectIntoFile(elementsFile, root);
-			
-		}catch(JSONException e){}
+
+		} catch (JSONException e)
+		{
+			e.printStackTrace();
+		}
 	}
-		
-	public static void loadEntitys(){
-		try{
+
+	public static void loadEntitys()
+	{
+		try
+		{
 			JSONObject entitys = JSONUtil.getJSONObjectFromFile(entitiesFile);
 			JSONArray a = entitys.getJSONArray("entitys");
-			for(int i = 0; i < a.length(); i++){
+			for (int i = 0; i < a.length(); i++)
+			{
 				JSONObject e = (JSONObject) a.get(i);
 				EntityData entityGame = new EntityData();
 				entityGame.setName(e.getString("name"));
 				entityGame.setType(e.getString("type"));
 				entityGame.setStrength(e.getInt("strength"));
-				entityGame.setSize(new Vector2f((float)e.getDouble("sizex"),(float)e.getDouble("sizey")));
-				entityGame.setRenderSize(new Vector2f((float)e.getDouble("rendersizex"),(float)e.getDouble("rendersizey")));
+				entityGame.setSize(new Vector2f((float) e.getDouble("sizex"), (float) e.getDouble("sizey")));
+				entityGame.setRenderSize(new Vector2f((float) e.getDouble("rendersizex"), (float) e.getDouble("rendersizey")));
 				entityGame.setRarity(e.getInt("rarity"));
 				JSONArray behavioursjson = e.getJSONArray("behaviours");
 				List<String> behaviours = new ArrayList<>();
-				System.out.printf("found entity:\nname: %s\ntype %s\nsize: %fx%f\nrendersize: %fx%f\nrarity: %d\n",
-						entityGame.getName(), entityGame.getType(), entityGame.getStrength(),
-						entityGame.getSize().getX(), entityGame.getSize().getY(),
-						entityGame.getRenderSize().getX(), entityGame.getRenderSize().getY(),
-						entityGame.getRarity());
-				for(int j = 0; j < behavioursjson.length(); j++){
+				System.out.printf("found entity:\nname: %s\ntype %s\nsize: %fx%f\nrendersize: %fx%f\nrarity: %d\n", entityGame.getName(), entityGame.getType(), entityGame.getStrength(), entityGame
+						.getSize().getX(), entityGame.getSize().getY(), entityGame.getRenderSize().getX(), entityGame.getRenderSize().getY(), entityGame.getRarity());
+				for (int j = 0; j < behavioursjson.length(); j++)
+				{
 					behaviours.add(behavioursjson.getString(j));
 				}
 				EntityData.entityData.put(entityGame.getName(), entityGame);
 			}
-		} catch (JSONException e){}
+		} catch (JSONException e)
+		{
+		}
 	}
 
-	public static void saveEntitys(HashMap<String, EntityData> entitys) {
-		try{
+	public static void saveEntitys(HashMap<String, EntityData> entitys)
+	{
+		try
+		{
 			JSONObject root = new JSONObject();
 			JSONArray a = new JSONArray();
-			for(String key: entitys.keySet().toArray(new String[0])){
+			for (String key : entitys.keySet().toArray(new String[0]))
+			{
 				JSONObject e = new JSONObject();
 				e.put("name", entitys.get(key).getName());
 				e.put("type", entitys.get(key).getType());
@@ -152,7 +164,8 @@ public class DataLoader
 				e.put("rendersizey", entitys.get(key).getRenderSize().getY());
 				e.put("rarity", entitys.get(key).getRarity());
 				JSONArray behavioursjson = new JSONArray();
-				for(String behaviour: entitys.get(key).getBehaviours()){
+				for (String behaviour : entitys.get(key).getBehaviours())
+				{
 					behavioursjson.put(behaviour);
 				}
 				e.put("behaviours", behavioursjson);
@@ -161,7 +174,9 @@ public class DataLoader
 			root.put("entities", a);
 			JSONUtil.putJSONObjectIntoFile(entitiesFile, root);
 
-		}catch(JSONException e){}
+		} catch (JSONException e)
+		{
+		}
 
 	}
 }

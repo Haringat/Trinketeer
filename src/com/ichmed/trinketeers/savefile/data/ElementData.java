@@ -1,6 +1,8 @@
 package com.ichmed.trinketeers.savefile.data;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -21,6 +23,8 @@ public class ElementData
 	private float manamod;
 	@SuppressWarnings("unused")
 	private float sizemod;
+	
+	public List<String> effects = new ArrayList<>();
 	
 	public ElementData(String name, float r, float g, float b, float brightness, float density,
 			boolean boi, float dmg, String tex, float manamod, float sizemod){

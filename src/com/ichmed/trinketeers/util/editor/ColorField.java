@@ -54,6 +54,12 @@ public class ColorField extends JComponent implements MouseListener, ActionListe
 	public Color getColor(){
 		return color;
 	}
+	
+	public void setColor(Color c)
+	{
+		this.color = c;
+		repaint();
+	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {

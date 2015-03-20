@@ -2,7 +2,6 @@ package com.ichmed.trinketeers.world.generator;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import com.ichmed.trinketeers.entity.Foliage;
 import com.ichmed.trinketeers.entity.pickup.Chest;
 import com.ichmed.trinketeers.entity.pickup.Ladder;
 import com.ichmed.trinketeers.entity.pickup.SpellScroll;

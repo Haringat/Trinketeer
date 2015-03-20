@@ -44,7 +44,6 @@ public class JSONUtil
 	
 	public static void putJSONObjectIntoFile(File f, JSONObject src){
 		FileWriter w;
-		System.out.printf("hallo");
 		try {
 			String res = src.toString();
 			if(res != null){
@@ -52,6 +51,6 @@ public class JSONUtil
 				w.write(res);
 				w.close();
 			}
-		}catch(IOException e){}
+		}catch(IOException e){e.printStackTrace();}
 	}
 }

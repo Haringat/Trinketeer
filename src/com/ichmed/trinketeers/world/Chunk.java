@@ -164,16 +164,14 @@ public class Chunk
 	{
 		return getChunk(world, x, y, z, true, true);
 	}
-
 	public static Chunk getChunk(World world, int x, int y, int z, boolean generate, boolean loadFromDisk)
 	{
 		Chunk c = chunks.get(getHashString(x, y, z));
 		if (c == null)
 		{
-			Vector3f cluster = getClusterForChunk(world, x, y, z);
-			if (loadFromDisk && ChunkSave.isClusterOnDisk(world, (int) cluster.x, (int) cluster.y, (int) cluster.z))
+			if (loadFromDisk && ChunkSave.isChunkOnDisk(world, (int) x, (int) y, (int) z))
 			{
-				ChunkSave.loadCluster(world, (int) cluster.x, (int) cluster.y, (int) cluster.z);
+				ChunkSave.loadCluster(world, (int) x, (int) y, (int) z);
 				c = chunks.get(getHashString(x, y, z));
 			}
 			return c == null ? createNewChunk(world, x, y, z, generate) : c;

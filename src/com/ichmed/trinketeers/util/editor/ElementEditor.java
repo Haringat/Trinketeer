@@ -1,300 +1,238 @@
 package com.ichmed.trinketeers.util.editor;
 
-import static java.awt.GridBagConstraints.*;
+import static java.awt.GridBagConstraints.HORIZONTAL;
+import static java.awt.GridBagConstraints.NORTH;
+import static java.awt.GridBagConstraints.REMAINDER;
+import static java.awt.GridBagConstraints.SOUTH;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.lwjgl.util.vector.Vector3f;
+
 import com.ichmed.trinketeers.savefile.DataLoader;
 import com.ichmed.trinketeers.savefile.data.ElementData;
 
-public class ElementEditor extends JPanel implements MouseListener, ActionListener, FocusListener, ChangeListener
+public class ElementEditor extends JPanel
 {
 	private static final long serialVersionUID = -1549438543620749797L;
-	private JButton add;
-	
+
+	JPanel view = new JPanel();
+
 	private HashMap<String, ElementData> elements = new HashMap<String, ElementData>();
 	private HashMap<String, Component[]> id = new HashMap<String, Component[]>();
 
-	private String tempname;
+	ElementData currentElementData;
+	JComboBox<Object> list;
+	ColorField colorChooser;
 
-	public ElementEditor(){
+	JTextField damageText = new JTextField(5);
+	JTextField densityText = new JTextField(5);
+	JTextField brightnessText = new JTextField(5);
+	JCheckBox breakBox = new JCheckBox();
+
+	DefaultListModel<String> effectListModel = new DefaultListModel<String>();
+	JList<String> effectList = new JList<String>(effectListModel);
+
+	public ElementEditor()
+	{
 		DataLoader.loadElements();
 		elements = ElementData.elements;
-		add = new JButton("+");
-		add.addActionListener(this);
-		this.addMouseListener(this);
-		this.setLayout(new GridBagLayout());
-		
-		addHeaders();
-		addRows();
-		addButtons();
-		
-		this.setMaximumSize(new Dimension(this.getSize().width+10, this.getSize().height + 10));
+
+		JPanel elementList = new JPanel();
+		list = new JComboBox<>(ElementData.elements.keySet().toArray());
+
+		list.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				if (currentElementData != null)
+				{
+					safeCurrentElement();
+				}
+
+				// Change Entry
+				currentElementData = ElementData.elements.get(list.getSelectedItem());
+				for (String s : currentElementData.effects)
+					effectListModel.addElement(s);
+				Vector3f v = currentElementData.getColor();
+				colorChooser.setColor(new Color((int) (v.x * 255), (int) (v.y * 255), (int) (v.z * 255)));
+				brightnessText.setText("" + currentElementData.getBrightness());
+				damageText.setText("" + currentElementData.getDamage());
+				densityText.setText("" + currentElementData.getDensity());
+				breakBox.setSelected(currentElementData.shouldBreakOnImpact());
+			}
+		});
+
+		list.setMaximumSize(new Dimension(20, 5));
+		elementList.add(list);
+		JButton newElementButton = new JButton("New Element");
+		newElementButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				String s = JOptionPane.showInputDialog("Name:", "");
+				if (s != null && !s.equals("")) ElementData.elements.put(s, new ElementData());
+				list.addItem(s);
+			}
+		});
+		elementList.add(newElementButton);
+		JButton deleteElement = new JButton("Delete Element");
+		elementList.add(deleteElement);
+
+		setLayout(new GridLayout(0, 1));
+		colorChooser = new ColorField(0, 0, 0);
+		view.setLayout(new GridLayout(0, 1));
+		addSegments();
+		add(elementList);
+		add(view);
+
+		// this.setLayout(new GridBagLayout());
+		//
+		// addHeaders();
+		// addRows();
+		// addButtons();
+
+		this.setMaximumSize(new Dimension(this.getSize().width + 10, this.getSize().height + 10));
 		this.repaint();
 	}
 
-	private void addRows(){
-		String[] ea = elements.keySet().toArray(new String[0]);
-		for(int i = 1; i <= elements.size(); i++){
-			addRow(elements.get(ea[i-1]),i);
-		}
+	public void safeCurrentElement()
+	{
+		float r = (float) colorChooser.getColor().getRed() / 255f;
+		float g = (float) colorChooser.getColor().getGreen() / 255f;
+		float b = (float) colorChooser.getColor().getBlue() / 255f;
+		currentElementData.setColor(r, g, b);
+		currentElementData.setDamage(Float.valueOf(damageText.getText()));
+		currentElementData.setDensity(Float.valueOf(densityText.getText()));
+		currentElementData.setBreakOnImpact(breakBox.isSelected());
+		currentElementData.effects = new ArrayList<String>();
+		for (int i = 0; i < effectListModel.size(); i++)
+			currentElementData.effects.add(effectListModel.get(i));
+		effectListModel.clear();
 	}
 
-	private void addHeaders(){
+	public void addSegments()
+	{
 		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(5,5,5,5);
-		c.gridy = 0;
 		c.anchor = NORTH;
-		
+		c.insets = new Insets(5, 5, 5, 5);
 		c.gridx = 0;
-		this.add(new JLabel("texture"), c);
-		
-		c.gridx = 1;
-		this.add(new JLabel("name"), c);
-		
-		c.gridx = 2;
-		this.add(new JLabel("damage"), c);
-		
-		c.gridx = 3;
-		this.add(new JLabel("color"), c);
-		
-		c.gridx = 4;
-		this.add(new JLabel("brightness"), c);
-		
-		c.gridx = 5;
-		this.add(new JLabel("breaks on impact"), c);
-		
-		c.gridx = 6;
-		this.add(new JLabel("density"), c);
-		
-		c.gridx = 7;
-		this.add(new JLabel("remove"), c);
-	}
 
-	private void addRow(){
-		ElementData e = new ElementData();
-		elements.put(e.getName(), e);
-		addRow(e, elements.size());
-	}
+		JPanel tempPanel;
 
-	private void addRow(ElementData e, int i) {
-		if(elements.containsValue(e)){
-			this.remove(add);
-			Component[] comps = new Component[8];
-			GridBagConstraints c = new GridBagConstraints();
-		
-			c.insets = new Insets(5,5,5,5);
-			c.gridy = i+1;
-			c.gridx = 0;
-			c.anchor = CENTER;
-			Preview preview = new Preview(e.getTexture());
-			preview.setVisible(true);
-			preview.repaint();
-			comps[0] = preview;
-			comps[0].setName("texture");
-			preview.addChangeListener(this);
-			this.add(comps[0], c);
-		
-			c.gridx = 1;
-			comps[1] = new JTextField(e.getName(), 10);
-			comps[1].setName("name");
-			comps[1].addFocusListener(this);
-			this.add(comps[1], c);
-		
-			c.gridx = 2;
-			comps[2] = new JTextField(String.valueOf(e.getDamage()), 4);
-			comps[2].addFocusListener(this);
-			comps[2].setName("damage");
-			this.add(comps[2], c);
-		
-			c.gridx = 3;
-			comps[3] = new ColorField(e.getColor());
-			((ColorField) comps[3]).addChangeListener(this);
-			comps[3].setName("color");
-			this.add(comps[3], c);
-		
-			c.gridx = 4;
-			comps[4] = new JTextField(String.valueOf(e.getBrightness()),5);
-			comps[4].addFocusListener(this);
-			comps[4].setName("brightness");
-			this.add(comps[4], c);
-		
-			c.gridx = 5;
-			comps[5] = new JCheckBox("", e.shouldBreakOnImpact());
-			((JCheckBox) comps[5]).addChangeListener(this);
-			comps[5].setName("boi");
-			this.add(comps[5], c);
-		
-			c.gridx = 6;
-			comps[6] = new JTextField(String.valueOf(e.getDensity()),5);
-			comps[6].addFocusListener(this);
-			comps[6].setName("density");
-			this.add(comps[6], c);
-		
-			c.gridx = 7;
-			JButton remove = new JButton("X");
-			remove.setName("remove "+e.getName());
-			addButtons();
-			remove.addActionListener(this);
-			comps[7] = remove;
-			this.add(remove, c);
-			
-			this.revalidate();
-			this.repaint();
-			
-			id.put(e.getName(), comps);
-		}
-	}
-	
-	private void addButtons(){
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridy = elements.size()+2;
-		c.fill = HORIZONTAL;
-		c.anchor = SOUTH;
-		c.gridx = 0;
-		c.gridwidth = REMAINDER;
-		this.add(add,c);
-		this.repaint();
-	}
+		c.gridy = 0;
+		JPanel light = new JPanel();
+		light.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Lighting"));
+		light.setLayout(new GridLayout(0, 1));
+		light.add(colorChooser);
+		tempPanel = new JPanel();
+		tempPanel.add(new JLabel("Brightness"));
+		tempPanel.add(brightnessText);
+		light.add(tempPanel);
+		view.add(light, c);
 
-	private void removeRow(String index){
-		elements.remove(index);
-		for(Component a : id.get(index)){
-			this.remove(a);
-		}
-		this.revalidate();
-		this.repaint();
-	}
+		c.gridy = 1;
+		JPanel stats = new JPanel();
+		stats.setLayout(new GridLayout(0, 2));
+		tempPanel = new JPanel();
+		tempPanel.add(new JLabel("Damage"));
+		tempPanel.add(damageText);
+		stats.add(tempPanel);
 
-	@Override
-	public void mouseClicked(MouseEvent e) {}
+		tempPanel = new JPanel();
+		tempPanel.add(new JLabel("Density"));
+		tempPanel.add(densityText);
+		stats.add(tempPanel);
 
-	@Override
-	public void mousePressed(MouseEvent e) {}
+		tempPanel = new JPanel();
+		tempPanel.add(new JLabel("Break on hit"));
+		tempPanel.add(breakBox);
+		stats.add(tempPanel);
 
-	@Override
-	public void mouseReleased(MouseEvent e) {}
+		stats.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Stats"));
 
-	@Override
-	public void mouseEntered(MouseEvent e) {}
+		JPanel effects = new JPanel();
+		effects.setLayout(new GridLayout(0, 1));
+		JButton addEffect = new JButton("Add Effect");
+		addEffect.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				String s = JOptionPane.showInputDialog("Add new effect");
+				if (s != null && !s.equals("")) effectListModel.addElement(s);
+			}
+		});
+		effectList.addKeyListener(new KeyListener()
+		{
+			@Override
+			public void keyTyped(KeyEvent e)
+			{
+			}
 
-	@Override
-	public void mouseExited(MouseEvent e) {}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() instanceof JButton
-				&& e.getSource().equals(add)){
-			addRow();
-		}
-		if(e.getSource() instanceof JButton
-				&& ((JButton) e.getSource()).getName() != null
-				&& ((JButton) e.getSource()).getName().contains("remove")){
-			String index = ((JButton) e.getSource()).getName().substring(
-					((JButton) e.getSource()).getName().indexOf(" ")+1);
-			removeRow(index);
-		}
-	}
-
-	public void saveElements(){
-		refreshHashmap();
-		DataLoader.saveElements(elements);
-	}
-
-	private void refreshHashmap() {
-		for(String key: elements.keySet().toArray(new String[0])){
-			elements.remove(key);
-		}
-		for(String key: id.keySet().toArray(new String[0])){
-			Component[] comps = id.get(key);
-			ElementData e = new ElementData();
-			for(Component comp: comps){
-				switch(comp.getName()){
-				case "texture":
-					e.setTexture(((Preview)comp).getPath());
-					break;
-				case "name":
-					e.setName(((JTextField)comp).getText());
-					break;
-				case "damage":
-					e.setDamage(Float.valueOf(((JTextField)comp).getText()));
-					break;
-				case "color":
-					Color c = ((ColorField)comp).getColor();
-					e.setColor(c.getRed(),c.getGreen(),c.getBlue());
-					break;
-				case "brightness":
-					e.setBrightness(Float.valueOf(((JTextField) comp).getText()));
-					break;
-				case "boi":
-					e.setBreakOnImpact(((JCheckBox) comp).isSelected());
-					break;
-				case "density":
-					e.setDensity(Float.valueOf(((JTextField)comp).getText()));
+			@Override
+			public void keyReleased(KeyEvent e)
+			{
+				if (e.getKeyCode() == KeyEvent.VK_DELETE && !effectList.isSelectionEmpty() && JOptionPane.showConfirmDialog(null, "Delete effect?") == 0)
+				{
+					effectListModel.removeElement(effectList.getSelectedValue());
 				}
 			}
-			elements.put(e.getName(), e);
-		}
-	}
 
-	@Override
-	public void stateChanged(ChangeEvent e) {
-		refreshHashmap();
-		
-	}
-
-	@Override
-	public void focusGained(FocusEvent e) {
-		if((JTextField)e.getSource() instanceof JTextField &&
-				((JTextField)e.getSource()).getName().equals("name")){
-			tempname = ((JTextField)e.getSource()).getText();
-		}
-	}
-
-	@Override
-	public void focusLost(FocusEvent e) {
-		if((JTextField)e.getSource() instanceof JTextField
-				&& ((JTextField)e.getSource()).getName().equals("name")){
-			JTextField src = (JTextField) e.getSource();
-			if(
-				//&& !((JTextField)e.getSource()).getText().equals(tempname)){
-					!elements.containsKey(src.getText())){
-				String newname = ((JTextField) e.getSource()).getText();
-				Component[] tempcomps = id.get(tempname);
-				ElementData tempelement = elements.get(tempname);
-				id.remove(tempname);
-				id.put(newname, tempcomps);
-				elements.remove(tempname);
-				elements.put(newname, tempelement);
-				tempcomps[7].setName("remove "+newname);
-			}else{
-				src.grabFocus();
+			@Override
+			public void keyPressed(KeyEvent e)
+			{
 			}
-		}
-		try{
-			refreshHashmap();
-		} catch(NumberFormatException e1){
-			((JTextField) e.getSource()).setText("0.0");
-		}
+		});
+		tempPanel = new JPanel();
+		tempPanel.add(addEffect);
+		effects.add(tempPanel);
+		effects.add(effectList);
+		effects.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Effects"));
+
+		view.add(stats, c);
+		view.add(effects);
+		JButton b = new JButton("Safe");
+		b.addActionListener(new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				safeCurrentElement();
+				DataLoader.saveElements(ElementData.elements);
+			}
+		});
+		view.add(b);
 	}
+
 }
