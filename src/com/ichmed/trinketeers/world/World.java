@@ -102,7 +102,6 @@ public class World
 
 		uiGraphics.add(new IGraphic()
 		{
-
 			@Override
 			public void render()
 			{
@@ -144,7 +143,6 @@ public class World
 				{
 					RenderUtil.renderText(0.98f, 0.76f, player.currentSpellRight.getName(), 0.001f, 0.001f, TrueTypeFont.ALIGN_RIGHT);
 					RenderUtil.renderText(0.98f, 0.70f, "" + (int) player.currentSpellRight.getManaCost(), 0.001f, 0.001f, TrueTypeFont.ALIGN_RIGHT);
-
 				}
 			}
 		});
@@ -182,7 +180,6 @@ public class World
 
 		uiGraphics.add(new IGraphic()
 		{
-
 			@Override
 			public void render()
 			{
@@ -191,7 +188,6 @@ public class World
 				RenderUtil.renderTexturedQuad(start, 0.85f, 1, 0.05f, "healthBarEmpty");
 				RenderUtil.renderTexturedQuad(start + (1 - health) / 2f, 0.85f, health, 0.05f, "healthBarFull");
 				RenderUtil.renderText(0, 0.83f, "" + (int) player.health, 0.002f, 0.002f, TrueTypeFont.ALIGN_CENTER);
-
 			}
 		});
 	}
@@ -262,7 +258,8 @@ public class World
 				int x = i + (int) ((player.getCenter().x) * Chunk.chunkSize);
 				int y = j + (int) ((player.getCenter().y) * Chunk.chunkSize);
 				Tile t = Tile.tiles[Chunk.getTile(this, x, y, (int) player.position.z)];
-				if (t.renderInFront(this, x, y) == b) t.render(this, x, y);
+				if (b) t.renderOnTop(this, x, y);
+				else t.renderBeneath(this, x, y);
 			}
 	}
 
@@ -371,33 +368,18 @@ public class World
 
 	public boolean isPositionStuckInGeometry(AxisAllignedBoundingBox predictedPosition, int height)
 	{
-		int x1 = (int) (predictedPosition.pos.x * Chunk.chunkSize);
-		int x2 = (int) ((predictedPosition.pos.x + predictedPosition.size.x) * Chunk.chunkSize);
-		int y1 = (int) (predictedPosition.pos.y * Chunk.chunkSize);
-		int y2 = (int) ((predictedPosition.pos.y + predictedPosition.size.y) * Chunk.chunkSize);
-
-		if ((predictedPosition.pos.x + predictedPosition.size.x) > 0) x2++;
-		if ((predictedPosition.pos.y + predictedPosition.size.y) > 0) y2++;
-
-		int i = x1;
-		do
-		{
-			int j = y1;
-			do
-			{
-				if (isPointStuckInGeometry(new Vector3f(i, j, height))) return true;
-				j++;
-			} while (j < y2);
-			i++;
-		} while (i < x2);
+		if (isPointStuckInGeometry(new Vector3f(predictedPosition.pos.x, predictedPosition.pos.y, height))) return true;
+		if (isPointStuckInGeometry(new Vector3f(predictedPosition.pos.x + predictedPosition.size.x, predictedPosition.pos.y, height))) return true;
+		if (isPointStuckInGeometry(new Vector3f(predictedPosition.pos.x + predictedPosition.size.x, predictedPosition.pos.y + predictedPosition.size.y, height))) return true;
+		if (isPointStuckInGeometry(new Vector3f(predictedPosition.pos.x, predictedPosition.pos.y + predictedPosition.size.y, height))) return true;
 
 		return false;
 	}
 
 	public boolean isPointStuckInGeometry(Vector3f point)
 	{
-		int pointX = (int) (point.x);
-		int pointY = (int) (point.y);
+		int pointX = (int) (point.x * Chunk.chunkSize);
+		int pointY = (int) (point.y * Chunk.chunkSize);
 		if (point.x < 0) pointX--;
 		if (point.y < 0) pointY--;
 		return Tile.tiles[Chunk.getTile(this, pointX, pointY, (int) point.z)].massive;

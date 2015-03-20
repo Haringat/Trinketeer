@@ -4,10 +4,10 @@ import static com.ichmed.trinketeers.world.Chunk.*;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.lwjgl.util.vector.Vector3f;
 
 import com.ichmed.trinketeers.Game;
 import com.ichmed.trinketeers.entity.Entity;
@@ -23,21 +23,37 @@ public class ChunkSave
 		return f.exists();
 	}
 
+	public static boolean isChunkOnDisk(World world, int x, int y, int z)
+	{
+		Vector3f cluster = Chunk.getClusterForChunk(world, x, y, z);
+		if (isClusterOnDisk(world, (int) cluster.x, (int) cluster.y, (int) cluster.z))
+		{
+			File f = new File("resc/data/world/" + world.name + "/" + (int) cluster.x + "x" + (int) cluster.y + "x" + (int) cluster.z + ".ccd");
+
+			JSONArray jsa;
+			try
+			{
+				JSONObject jso = JSONUtil.getJSONObjectFromFile(f);
+				jsa = jso.getJSONArray("chunks");
+				for (int i = 0; i < jsa.length(); i++)
+				{
+					JSONObject c = (JSONObject) jsa.get(i);
+					if(c.getInt("posX") == x && c.getInt("posY") == y && c.getInt("posZ") == z)return true;
+				}
+			} catch (JSONException e)
+			{
+				e.printStackTrace();
+			}
+
+		}
+		return false;
+	}
+
 	public static void saveChunkClusterToDisk(World w, int x, int y, int z)
 	{
-		File f = new File("resc/data/world/" + w.name + "/" + x + "x" + y + "x" + z + ".ccd");
-		// System.out.println("starting " + f.getAbsolutePath());
-
 		JSONObject jso = new JSONObject();
 		JSONArray jsa = new JSONArray();
 
-		try
-		{
-			f.createNewFile();
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		}
 		try
 		{
 			for (int i = 0; i < clusterSize; i++)
@@ -46,7 +62,7 @@ public class ChunkSave
 					{
 						StringBuilder tiles = new StringBuilder();
 						JSONObject chunk = new JSONObject();
-						Chunk c = getChunk(w, i + (x * clusterSize), j + (y * clusterSize), k + (z * clusterSize), false, false);
+						Chunk c = getChunk(w, i + (x * clusterSize), j + (y * clusterSize), k + (z * clusterSize), true, false);
 						if (c == null)
 						{
 							System.err.println("Chunk was null");
@@ -74,12 +90,14 @@ public class ChunkSave
 		{
 			e1.printStackTrace();
 		}
-		
+		File f = new File("resc/data/world/" + w.name + "/" + x + "x" + y + "x" + z + ".ccd");
 		try
 		{
+			f.getParentFile().mkdirs();
+			f.createNewFile();
 			jso.put("chunks", jsa);
 			FileWriter fw = new FileWriter(f);
-			fw.append(jso.toString());
+			jso.write(fw);
 			fw.close();
 		} catch (Exception e)
 		{
@@ -100,20 +118,24 @@ public class ChunkSave
 				for (StackTraceElement e : Thread.currentThread().getStackTrace())
 					System.out.println(e);
 			}
-			
+
 			JSONArray jsa = jso.getJSONArray("chunks");
-			
-			for(int i = 0; i < jsa.length(); i++)
+
+			for (int i = 0; i < jsa.length(); i++)
 			{
 				JSONObject chunkData = jsa.getJSONObject(i);
-				Chunk c = Chunk.createNewChunk(world, chunkData.getInt("posX"),  chunkData.getInt("posY"),  chunkData.getInt("posZ"), false);
+				Chunk c = Chunk.createNewChunk(world, chunkData.getInt("posX"), chunkData.getInt("posY"), chunkData.getInt("posZ"), false);
 				String tiles = chunkData.getString("tiles");
 				for (int j = 0; j < tiles.split(",").length; j++)
 					c.tiles[j] = Integer.valueOf(tiles.split(",")[j]);
 				Chunk.chunks.put(c.getHashString(), c);
 				JSONArray entities = chunkData.getJSONArray("entities");
-				for(int j = 0; j < entities.length(); j++)
-					world.spawn(Entity.createEntityFromSaveData(world, entities.getJSONObject(j).getString("name"), entities.getJSONObject(j)), false);				
+				for (int j = 0; j < entities.length(); j++)
+				{
+					Entity e = Entity.createEntityFromSaveData(world, entities.getJSONObject(j).getString("name"), entities.getJSONObject(j));
+					if (e != null) world.spawn(e, false);
+
+				}
 			}
 		} catch (Exception e)
 		{

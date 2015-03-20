@@ -68,6 +68,7 @@ public class TextureLibrary
 				String p = textureName.split("\\.")[0].split("/")
 						[textureName.split("\\.")[0].split("/").length - 1];
 				File f = new File("resc/error/" + p + "_Textures_Not_Found.tef");
+				f.getParentFile().mkdirs();
 				f.createNewFile();
 				FileWriter writer = new FileWriter(f);
 				for (String s : this.nonExistentTextures)

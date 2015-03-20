@@ -19,7 +19,7 @@ public class Tile
 	{
 		tiles[0] = new Tile(null, false, false);
 		tiles[1] = new Tile("floorMud", false, false);
-		tiles[2] = new TileWallBrick("wallStone", true, true);
+		tiles[2] = new TileWall("wallStone", true, true);
 		tiles[3] = new TileWallTop("wallTop", true, false).setRenderInFront(true);
 		tiles[4] = new Tile("floorGrass", false, false);
 		tiles[5] = new Tile("floorStone", false, false);
@@ -33,7 +33,7 @@ public class Tile
 		this.massive = massive;
 	}
 
-	public boolean renderInFront(World w, int x, int y)
+	public boolean shouldRenderInFront(World w, int x, int y)
 	{
 		return this.renderInFront;
 	}
@@ -48,8 +48,18 @@ public class Tile
 	{
 		return texture;
 	}
+	
+	public void renderBeneath(World w, int x, int y)
+	{
+		if(!this.shouldRenderInFront(w, x, y)) render(w, x, y);
+	}
+	
+	public void renderOnTop(World w, int x, int y)
+	{
+		if(this.shouldRenderInFront(w, x, y))render(w, x, y);
+	}
 
-	public void render(World w, int x, int y)
+	protected void render(World w, int x, int y)
 	{
 		float f = 1f / (float) Chunk.chunkSize;
 		if (this.getTexture(w, x, y, (int) w.player.position.z) != null)
@@ -57,7 +67,6 @@ public class Tile
 			glTranslated(f * x, f * y, 0);
 			RenderUtil.renderTexturedQuad(0, 0, f, f, this.getTexture(w, x, y, (int) w.player.position.z));
 			glTranslated(-f * x, -f * y, 0);
-			RenderUtil.renderTexturedQuad(f * x, f * y, f, f, this.getTexture(w, x, y, (int) w.player.position.z));
 		} else
 		{
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
