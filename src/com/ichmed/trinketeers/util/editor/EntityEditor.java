@@ -7,8 +7,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
@@ -16,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -27,9 +24,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
-import javax.swing.MutableComboBoxModel;
-import javax.swing.event.ListDataListener;
-
 import org.lwjgl.util.vector.Vector2f;
 
 import com.ichmed.trinketeers.entity.Entity;
