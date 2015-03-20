@@ -14,6 +14,7 @@ import java.awt.event.ItemListener;
 import java.util.HashMap;
 import java.util.Vector;
 
+import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -24,6 +25,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
+import javax.swing.MutableComboBoxModel;
+import javax.swing.event.ListDataListener;
 
 import org.lwjgl.util.vector.Vector2f;
 
@@ -31,25 +34,26 @@ import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.savefile.DataLoader;
 import com.ichmed.trinketeers.savefile.data.EntityData;
 
-public class EntityEditor extends JPanel implements ItemListener, ActionListener, FocusListener {
+public class EntityEditor extends JPanel implements ItemListener, ActionListener {
 
 	private static final long serialVersionUID = 1840428064298141218L;
 
 	private HashMap<String, EntityData> ents = new HashMap<>();
-	private JComboBox<String> entityselector = new JComboBox<>();
+	private JComboBox<EntityData> entityselector;
 	private JTextField behaviourfield = new JTextField();
 	private HashMap<String, JComponent> fields = new HashMap<>();
 	private JButton entityadd = new JButton("+");
 	private JButton behaveadd = new JButton("+");
+	private JButton rename = new JButton("rename");
 	private JButton behaveremove = new JButton("-");
 	
 
 	public EntityEditor(){
 		
 		loadEntitys();
-		for(String key: ents.keySet()){
-			entityselector.addItem(key);
-		}
+		System.out.printf("%d Entities found\n", ents.entrySet().size());
+		
+		entityselector = new JComboBox<>(new EntityListModel<>(ents));
 		
 		fields.put("name", new JTextField(10));
 		fields.put("rarity", new JTextField(10));
@@ -73,6 +77,9 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 		c.gridwidth = 1;
 		add(entityadd, c);
 		
+		c.gridx = 3;
+		add(rename, c);
+		
 		c.gridx = 0;
 		c.gridwidth = 1;
 		c.anchor = WEST;
@@ -94,7 +101,7 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 		add(new JLabel("classpath"), c);
 		
 		c.gridx = 1;
-		c.gridwidth = 2;
+		c.gridwidth = 3;
 		c.fill = HORIZONTAL;
 		c.gridy = 1;
 		add(fields.get("name"), c);
@@ -127,7 +134,7 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 		add(sp, c);
 		
 		c.fill = HORIZONTAL;
-		c.gridwidth = 1;
+		c.gridwidth = 2;
 		c.gridy = 11;
 		add(behaviourfield, c);
 		
@@ -139,9 +146,10 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 		
 		entityselector.addItemListener(this);
 		entityadd.addActionListener(this);
-		fields.get("name").addFocusListener(this);
 		behaveadd.addActionListener(this);
 		behaveremove.addActionListener(this);
+		//selectEntity(EntityData.entityData.entrySet().iterator().next().getValue());
+		selectEntity(ents.get(entityselector.getSelectedItem().toString()));
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -164,7 +172,6 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 	}
 	
 	private void selectEntity(EntityData entity){
-		refreshListEntry();
 		((JTextField) fields.get("name")).setText(entity.getName());
 		((JTextField) fields.get("rarity")).setText(String.valueOf(entity.getRarity()));
 		((JTextField) fields.get("strength")).setText(String.valueOf(entity.getStrength()));
@@ -181,6 +188,15 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 		}
 		selectEntity(ents.get("new Entity"));
 		entityselector.setSelectedItem("new Entity");
+	}
+	
+	private void rename(EntityData e, String name){
+		ents.remove(e.getName());
+		entityselector.removeItem(e);
+		e.setName(name);
+		ents.put(name, e);
+		entityselector.addItem(e);
+		entityselector.setSelectedItem(e);
 	}
 	
 	public void saveEntitys(){
@@ -227,35 +243,11 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 			}
 			((JList<String>) fields.get("behaviours")).setListData(data);
 		}
-	}
-
-	@Override
-	public void focusGained(FocusEvent e) {}
-
-	@Override
-	public void focusLost(FocusEvent e) {
-		if(e.getSource() instanceof JTextField){
-			JTextField src = (JTextField) e.getSource();
-			if(e.getSource().equals(fields.get("name"))){
-				// if the name already exists put the focus back to the name
-				// field to avoid duplicate names
-				if(ents.containsKey(src.getText()))
-					src.grabFocus();
-				else{
-					String oldname = new String((String) entityselector.getSelectedItem());
-					String newname = new String(src.getText());
-					int index = entityselector.getSelectedIndex();
-					EntityData buffer = ents.get(oldname);
-					buffer.setName(newname);
-					ents.remove(oldname);
-					ents.put(newname, buffer);
-					entityselector.removeItemAt(index);
-					entityselector.insertItemAt(newname, index);
-					refreshListEntry();
-					entityselector.setSelectedItem(src.getText());
-				}
-			}
+		if(e.getSource().equals(rename)){
+			rename((EntityData) entityselector.getSelectedItem(), ((JTextField)fields.get("name")).getText());
 		}
 	}
+	
+	
 
 }
