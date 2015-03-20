@@ -16,10 +16,10 @@ public class EntityListModel<E extends EntityData> extends AbstractListModel<E> 
 	private E selectedItem;
 	
 	@SuppressWarnings("unchecked")
-	public EntityListModel(HashMap<String, E> data){
+	public EntityListModel(HashMap<? extends String, E> data){
 		this.data = new ArrayList<EntityData>();
-		for(EntityData value : data.entrySet().toArray(new EntityData[0])){
-			this.data.add(value);
+		for(String key : data.keySet().toArray(new String[0])){
+			this.data.add(data.get(key));
 		}
 		selectedItem = (E) this.data.get(0);
 	}
