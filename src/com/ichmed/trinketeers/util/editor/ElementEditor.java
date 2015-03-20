@@ -134,6 +134,7 @@ public class ElementEditor extends JPanel
 		currentElementData.setDamage(Float.valueOf(damageText.getText()));
 		currentElementData.setDensity(Float.valueOf(densityText.getText()));
 		currentElementData.setBreakOnImpact(breakBox.isSelected());
+		currentElementData.setBrightness(Float.valueOf(brightnessText.getText()));
 		currentElementData.effects = new ArrayList<String>();
 		for (int i = 0; i < effectListModel.size(); i++)
 			currentElementData.effects.add(effectListModel.get(i));
@@ -224,7 +225,6 @@ public class ElementEditor extends JPanel
 		JButton b = new JButton("Safe");
 		b.addActionListener(new ActionListener()
 		{
-
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
