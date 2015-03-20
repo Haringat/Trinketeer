@@ -68,8 +68,8 @@ public class DataLoader
 			{
 				JSONObject e = (JSONObject) a.get(i);
 				ElementData elementGame = new ElementData(e.getString("name"), (float) e.getDouble("color_red") / 255, (float) e.getDouble("color_green") / 255,
-						(float) e.getDouble("color_blue") / 255, (float) e.getDouble("brightness"), (float) e.getDouble("density"), e.getBoolean("break_on_impact"), (float) e.getDouble("damage"),
-						"", 0f, 0f);
+						(float) e.getDouble("color_blue") / 255, (float) e.getDouble("brightness"), (float) e.getDouble("density"), e.getBoolean("break_on_impact"), (float) e.getDouble("damage"), "",
+						0f, 0f);
 				String name = e.getString("name");
 
 				/*
@@ -86,7 +86,7 @@ public class DataLoader
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void saveElements(HashMap<String, ElementData> elements)
 	{
 		try
@@ -120,7 +120,8 @@ public class DataLoader
 		try
 		{
 			JSONObject entitys = JSONUtil.getJSONObjectFromFile(entitiesFile);
-			JSONArray a = entitys.getJSONArray("entitys");
+
+			JSONArray a = entitys.getJSONArray("entities");
 			for (int i = 0; i < a.length(); i++)
 			{
 				JSONObject e = (JSONObject) a.get(i);
@@ -141,8 +142,10 @@ public class DataLoader
 				}
 				EntityData.entityData.put(entityGame.getName(), entityGame);
 			}
-		} catch (JSONException e)
+		}
+		catch (JSONException e)
 		{
+			e.printStackTrace();
 		}
 	}
 
