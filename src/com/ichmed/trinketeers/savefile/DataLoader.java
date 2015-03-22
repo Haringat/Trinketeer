@@ -126,16 +126,50 @@ public class DataLoader
 			{
 				JSONObject e = (JSONObject) a.get(i);
 				EntityData entityGame = new EntityData();
-				entityGame.setName(e.getString("name"));
-				entityGame.setType(e.getString("type"));
-				entityGame.setStrength(e.getInt("strength"));
-				entityGame.setSize(new Vector2f((float) e.getDouble("sizex"), (float) e.getDouble("sizey")));
-				entityGame.setRenderSize(new Vector2f((float) e.getDouble("rendersizex"), (float) e.getDouble("rendersizey")));
-				entityGame.setRarity(e.getInt("rarity"));
-				JSONArray behavioursjson = e.getJSONArray("behaviours");
-				List<String> behaviours = new ArrayList<>();
-				for (int j = 0; j < behavioursjson.length(); j++)
-					behaviours.add(behavioursjson.getString(j));
+				try{
+					entityGame.setName(e.getString("name"));
+				} catch(JSONException ex){
+					entityGame.setName("unknown entity");
+				}
+				try{
+					entityGame.setType(e.getString("type"));
+				} catch(JSONException ex){
+					entityGame.setType("misc");
+				}
+				try{
+					entityGame.setStrength(e.getInt("strength"));
+				} catch(JSONException ex){
+					entityGame.setStrength(0);
+				}
+				try{
+					entityGame.setSize(new Vector2f((float) e.getDouble("sizex"), (float) e.getDouble("sizey")));
+				} catch(JSONException ex){
+					entityGame.setSize(new Vector2f(0f,0f));
+				}
+				try{
+					entityGame.setRenderSize(new Vector2f((float) e.getDouble("rendersizex"), (float) e.getDouble("rendersizey")));
+				} catch(JSONException ex){
+					entityGame.setRenderSize(new Vector2f(0f,0f));
+				}
+				try{
+					entityGame.setRarity(e.getInt("rarity"));
+				} catch(JSONException ex){
+					entityGame.setRarity(0);
+				}
+				try{
+					entityGame.setRenderOffset(new Vector2f((float) e.getDouble("offsetx"), (float) e.getDouble("offsety")));
+				} catch(JSONException ex){
+					entityGame.setRenderOffset(new Vector2f(0f,0f));
+				}
+				try{
+					JSONArray behavioursjson = e.getJSONArray("behaviours");
+					List<String> behaviours = new ArrayList<>();
+					for (int j = 0; j < behavioursjson.length(); j++)
+						behaviours.add(behavioursjson.getString(j));
+					entityGame.setBehaviours(behaviours);
+				} catch(JSONException ex){
+					entityGame.setBehaviours(new ArrayList<String>());
+				}
 				EntityData.entityData.put(entityGame.getName(), entityGame);
 			}
 		}
