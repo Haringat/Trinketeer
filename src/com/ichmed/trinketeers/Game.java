@@ -205,7 +205,7 @@ public class Game
 	
 	public static boolean createDefaultTextureLibrary()
 	{
-		File lib = DataRef.defaultLibrary;
+		File lib = new File(DataRef.defaultLibrary + ".png");
 		File raw = DataRef.defaultLibraryRaw;
 		List<File> files = new ArrayList<>();
 		
