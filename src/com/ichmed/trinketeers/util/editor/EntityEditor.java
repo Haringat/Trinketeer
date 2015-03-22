@@ -217,6 +217,7 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 	}
 	
 	void saveEntitys(){
+		refreshEntityData();
 		DataLoader.saveEntitys(EntityData.entityData);
 	}
 
