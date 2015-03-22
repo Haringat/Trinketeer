@@ -202,6 +202,8 @@ public class DataLoader
 					behavioursjson.put(behaviour);
 				}
 				e.put("behaviours", behavioursjson);
+				e.put("offsetx", entitys.get(key).getRenderOffset().getX());
+				e.put("offsety", entitys.get(key).getRenderOffset().getY());
 				a.put(e);
 			}
 			root.put("entities", a);
