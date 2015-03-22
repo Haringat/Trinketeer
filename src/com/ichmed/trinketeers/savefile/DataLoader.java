@@ -135,9 +135,7 @@ public class DataLoader
 				JSONArray behavioursjson = e.getJSONArray("behaviours");
 				List<String> behaviours = new ArrayList<>();
 				for (int j = 0; j < behavioursjson.length(); j++)
-				{
 					behaviours.add(behavioursjson.getString(j));
-				}
 				EntityData.entityData.put(entityGame.getName(), entityGame);
 			}
 		}

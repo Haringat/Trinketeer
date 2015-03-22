@@ -41,7 +41,7 @@ public class WorldGenerator
 			world.spawn((new Ladder(world, z % 2 == 0)).setCenter(new Vector3f(x, y + 1.1f, z)), false);
 			if(z < 0) world.spawn((new Ladder(world, z % 2 != 0)).setCenter(new Vector3f(x, y - .9f, z)), false);
 			world.spawn((new Chest(world)).setCenter(new Vector3f(x + 0.0f, y + 0.6f, z)));
-			world.generateZombies(-z, z);
+			world.generateZombies(-z + 1, z);
 			world.generateFlameElementals(-z / 5, z);
 
 			if (z == 0)
@@ -52,7 +52,7 @@ public class WorldGenerator
 		}
 		if(z == 0)
 		{
-			int r = (int)(Math.random() * 5) + 5;
+//			int r = (int)(Math.random() * 5) + 5;
 //			for(int i = 0; i < r; i++)
 //				world.spawn((new Foliage(world)).setCenter(new Vector3f(x + 1 - (float)Math.random(), y + 1 - (float)Math.random(), z)));
 		}

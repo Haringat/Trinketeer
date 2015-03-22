@@ -59,7 +59,7 @@ public class Entity implements IWorldGraphic, Waypoint
 	public float lootRange = 2.0f;
 	public Waypoint currentWaypoint;
 	public String behaviourString = null;
-	private Object age;
+	private Object age = 0;
 	private Vector2f renderArea = null;
 	private GibMode gibMode = GibMode.DEFAULT;
 
@@ -112,6 +112,7 @@ public class Entity implements IWorldGraphic, Waypoint
 
 	public void onSpawn(World w)
 	{
+		System.out.println("Spawned \"" + this.entityType + "\" at " + this.position); 
 	}
 
 	public void damage(float damage)
@@ -363,9 +364,14 @@ public class Entity implements IWorldGraphic, Waypoint
 	
 	public static Entity createEntityFromSaveData(World w, String entityName, JSONObject jso)
 	{
+		System.out.println(entityName);
 		EntityData universalData = EntityData.entityData.get(entityName);
 		Entity dummy = null;
-		if(universalData == null) return null;
+		if(universalData == null)
+		{
+			System.out.println("No data found");
+			return null;
+		}
 		try
 		{
 			dummy = (Entity) universalData.getClasspath().getConstructor(World.class).newInstance(w);
@@ -374,9 +380,9 @@ public class Entity implements IWorldGraphic, Waypoint
 			return null;
 		}
 		
-		
 		dummy.size = universalData.getSize();
 		dummy.renderArea = universalData.getRenderSize();
+		dummy.entityType = entityName;
 		
 		for(String b : universalData.behaviours)
 		{
@@ -403,8 +409,6 @@ public class Entity implements IWorldGraphic, Waypoint
 		
 		return dummy;
 	}
-	
-
 	
 	public void gib(World world)
 	{		

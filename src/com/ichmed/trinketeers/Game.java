@@ -192,6 +192,7 @@ public class Game
 
 		}
 		DataLoader.loadElements();
+		DataLoader.loadEntitys();
 		new Game().run();
 	}
 
