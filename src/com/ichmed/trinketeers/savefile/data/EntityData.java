@@ -8,8 +8,7 @@ import org.lwjgl.util.vector.Vector2f;
 
 import com.ichmed.trinketeers.entity.Entity;
 
-public class EntityData
-{
+public class EntityData {
 	public static HashMap<String, EntityData> entityData = new HashMap<>();
 	public static HashMap<String, List<EntityData>> entityDataByType = new HashMap<>();
 
@@ -46,6 +45,10 @@ public class EntityData
 	{
 		this(name, type, strength, rarity, behaviours, size, renderSize, "com.ichmed.trinketeers.entity.Entity");
 	}
+	
+	public EntityData(EntityData object){
+		this(object.getName(), object.getType(), object.getStrength(), object.getRarity(), object.getBehaviours(), object.getSize(), object.getRenderSize());
+	}
 
 	@SuppressWarnings("unchecked")
 	public EntityData(String name, String type, int strength, int rarity, List<String> behaviours, Vector2f size, Vector2f renderSize, String classPath)
@@ -64,7 +67,6 @@ public class EntityData
 		{
 			this.setClasspath(Entity.class);
 		}
-		
 	}
 
 	public EntityData()

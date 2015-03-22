@@ -1,7 +1,6 @@
 package com.ichmed.trinketeers.util.editor;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -93,28 +92,16 @@ public class ColorField extends JComponent implements MouseListener, ActionListe
     }
 
 	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mousePressed(MouseEvent e) {}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseReleased(MouseEvent e) {}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseEntered(MouseEvent e) {}
 
 	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseExited(MouseEvent e) {}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {;

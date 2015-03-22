@@ -24,6 +24,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
+
 import org.lwjgl.util.vector.Vector2f;
 
 import com.ichmed.trinketeers.entity.Entity;
@@ -34,7 +35,6 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 
 	private static final long serialVersionUID = 1840428064298141218L;
 
-	private HashMap<String, EntityData> ents = new HashMap<>();
 	private JComboBox<EntityData> entityselector;
 	private JTextField behaviourfield = new JTextField();
 	private HashMap<String, JComponent> fields = new HashMap<>();
@@ -47,9 +47,8 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 	public EntityEditor(){
 		
 		loadEntitys();
-		System.out.printf("%d Entities found\n", ents.entrySet().size());
 		
-		entityselector = new JComboBox<>(new EntityListModel<>(ents));
+		entityselector = new JComboBox<>(new DynamicComboBoxModel<>(EntityData.entityData));
 		
 		fields.put("name", new JTextField(10));
 		fields.put("rarity", new JTextField(10));
@@ -152,19 +151,19 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 		rename.addActionListener(this);
 		entityremove.addActionListener(this);
 		behaveremove.addActionListener(this);
-		selectEntity(ents.get(entityselector.getSelectedItem().toString()));
+		selectEntity(EntityData.entityData.get(entityselector.getSelectedItem().toString()));
 	}
 	
 	@SuppressWarnings("unchecked")
 	private void refreshEntityData(){
 		try {
-			if(!ents.isEmpty() && entityselector.getModel().getSelectedItem() != null){
-				ents.get(((EntityData)entityselector.getSelectedItem()).getName()).setRarity(Integer.valueOf(((JTextField)fields.get("rarity")).getText()));
-				ents.get(((EntityData)entityselector.getSelectedItem()).getName()).setRenderSize(new Vector2f(Float.valueOf(((JTextField)fields.get("rendersizex")).getText()),Float.valueOf(((JTextField)fields.get("rendersizey")).getText())));
-				ents.get(((EntityData)entityselector.getSelectedItem()).getName()).setSize(new Vector2f(Float.valueOf(((JTextField)fields.get("sizex")).getText()),Float.valueOf(((JTextField)fields.get("sizey")).getText())));
-				ents.get(((EntityData)entityselector.getSelectedItem()).getName()).setStrength(Integer.valueOf(((JTextField)fields.get("strength")).getText()));
-				ents.get(((EntityData)entityselector.getSelectedItem()).getName()).setType(((JTextField)fields.get("type")).getText());
-				ents.get(((EntityData)entityselector.getSelectedItem()).getName()).setClasspath((Class<? extends Entity>) Class.forName(((JTextField)fields.get("class")).getText()));
+			if(!EntityData.entityData.isEmpty() && entityselector.getModel().getSelectedItem() != null){
+				EntityData.entityData.get(((EntityData)entityselector.getSelectedItem()).getName()).setRarity(Integer.valueOf(((JTextField)fields.get("rarity")).getText()));
+				EntityData.entityData.get(((EntityData)entityselector.getSelectedItem()).getName()).setRenderSize(new Vector2f(Float.valueOf(((JTextField)fields.get("rendersizex")).getText()),Float.valueOf(((JTextField)fields.get("rendersizey")).getText())));
+				EntityData.entityData.get(((EntityData)entityselector.getSelectedItem()).getName()).setSize(new Vector2f(Float.valueOf(((JTextField)fields.get("sizex")).getText()),Float.valueOf(((JTextField)fields.get("sizey")).getText())));
+				EntityData.entityData.get(((EntityData)entityselector.getSelectedItem()).getName()).setStrength(Integer.valueOf(((JTextField)fields.get("strength")).getText()));
+				EntityData.entityData.get(((EntityData)entityselector.getSelectedItem()).getName()).setType(((JTextField)fields.get("type")).getText());
+				EntityData.entityData.get(((EntityData)entityselector.getSelectedItem()).getName()).setClasspath((Class<? extends Entity>) Class.forName(((JTextField)fields.get("class")).getText()));
 				List<String> behaviours = new ArrayList<String>();
 				for(int i = 0; i < ((JList<String>)fields.get("behaviours")).getModel().getSize(); i++){
 					behaviours.add((String) ((JList<String>)fields.get("behaviours")).getModel().getElementAt(i));
@@ -190,31 +189,35 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 	}
 	
 	private void addEntity(){
-		if(!ents.containsKey("new Entity")){
-			ents.put("new Entity", new EntityData());
-			entityselector.addItem(ents.get("new Entity"));
+		if(!EntityData.entityData.containsKey("new Entity")){
+			EntityData.entityData.put("new Entity", new EntityData());
+			entityselector.addItem(EntityData.entityData.get("new Entity"));
 		}
 		refreshEntityData();
-		selectEntity(ents.get("new Entity"));
-		entityselector.setSelectedItem(ents.get("new Entity"));
+		selectEntity(EntityData.entityData.get("new Entity"));
+		entityselector.setSelectedItem(EntityData.entityData.get("new Entity"));
+		for(int i = 0; i < entityselector.getItemCount(); i++){
+			System.out.printf("%s\n", entityselector.getItemAt(i).getName());
+		}
 	}
 	
 	private void rename(EntityData e, String name){
-		ents.remove(e.getName());
+		EntityData buffer = new EntityData(e);
+		EntityData.entityData.remove(e.getName());
 		entityselector.removeItem(e);
-		e.setName(name);
-		ents.put(name, e);
-		entityselector.addItem(e);
-		entityselector.setSelectedItem(e);
+		buffer.setName(name);
+		EntityData.entityData.put(name, buffer);
+		entityselector.addItem(buffer);
+		entityselector.setSelectedItem(buffer);
+		entityselector.repaint();
 	}
 	
 	private void loadEntitys(){
 		DataLoader.loadEntitys();
-		ents = EntityData.entityData;
 	}
 	
 	void saveEntitys(){
-		DataLoader.saveEntitys(ents);
+		DataLoader.saveEntitys(EntityData.entityData);
 	}
 
 	@Override
@@ -256,13 +259,13 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 			((JList<String>) fields.get("behaviours")).setListData(data);
 		}
 		if(e.getSource().equals(rename)){
-			rename((EntityData) entityselector.getSelectedItem(), ((JTextField)fields.get("name")).getText());
+			rename(EntityData.entityData.get(((EntityData) entityselector.getSelectedItem()).getName()), ((JTextField)fields.get("name")).getText());
 		}
 		if(e.getSource().equals(entityremove)){
 			EntityData buffer = (EntityData) entityselector.getSelectedItem();
 			entityselector.setSelectedIndex(0);
 			entityselector.removeItem(buffer);
-			ents.remove(buffer.getName());
+			EntityData.entityData.remove(buffer.getName());
 		}
 	}
 	
