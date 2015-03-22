@@ -19,6 +19,7 @@ public class Zombie extends Entity
 	{
 		super(w);
 		this.size = new Vector2f(.075f, .075f);
+		this.renderSize = new Vector2f(.15f, .15f);
 		this.speed = 0.005f;
 		this.preferredSpeed = 0.005f;
 		this.despawnCountDown = 8000;
@@ -30,12 +31,6 @@ public class Zombie extends Entity
 		this.behaviours.add(new BehaviourWander(w, "0.001", "110", "30"));
 		this.behaviours.add(new BehaviourAttackTarget(w, "2", "0.1", "com.ichmed.trinketeers.entity.Player"));
 		this.behaviours.add(new BehaviourHiveMindFollowTarget(w, "com.ichmed.trinketeers.entity.Player", "com.ichmed.trinketeers.entity.mob.Zombie", "000.25", "0.005"));
-	}
-
-	@Override
-	public AxisAllignedBoundingBox getRenderArea()
-	{
-		return new AxisAllignedBoundingBox(this.position.x - 0.0375f, this.position.y, this.size.x + 0.075f, this.size.y + 0.075f);
 	}
 
 	@Override

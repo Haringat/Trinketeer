@@ -59,8 +59,8 @@ public class Entity implements IWorldGraphic, Waypoint
 	public float lootRange = 2.0f;
 	public Waypoint currentWaypoint;
 	public String behaviourString = null;
-	private Object age = 0;
-	private Vector2f renderArea = null;
+	private int age;
+	protected Vector2f renderSize = null, renderOffset = new Vector2f();
 	private GibMode gibMode = GibMode.DEFAULT;
 
 	public Entity(World w)
@@ -295,9 +295,9 @@ public class Entity implements IWorldGraphic, Waypoint
 
 	public AxisAllignedBoundingBox getRenderArea()
 	{
-		if(this.renderArea == null) return this.getColissionBox();
+		if(this.renderSize == null) return this.getColissionBox();
 		Vector3f v = this.getCenter();
-		return new AxisAllignedBoundingBox(v.x - this.renderArea.x, v.y - this.renderArea.y, this.renderArea.x, this.renderArea.y);
+		return new AxisAllignedBoundingBox(v.x - this.renderSize.x, v.y - this.renderSize.y, this.renderSize.x, this.renderSize.y);
 	}
 
 	public boolean isHostile()
@@ -374,14 +374,15 @@ public class Entity implements IWorldGraphic, Waypoint
 		}
 		try
 		{
-			dummy = (Entity) universalData.getClasspath().getConstructor(World.class).newInstance(w);
+			dummy = universalData.getClasspath().getConstructor(World.class).newInstance(w);
 		} catch (Exception e)
 		{
 			return null;
 		}
 		
 		dummy.size = universalData.getSize();
-		dummy.renderArea = universalData.getRenderSize();
+		dummy.renderSize = universalData.getRenderSize();
+		dummy.renderOffset = universalData.getRenderOffset();
 		dummy.entityType = entityName;
 		
 		for(String b : universalData.behaviours)

@@ -26,7 +26,7 @@ public class EntityData {
 
 	public List<String> behaviours;
 
-	public Vector2f size, renderSize;
+	public Vector2f size, renderSize, renderOffset;
 
 	public static List<EntityData> getAllEntitesOfType(String type)
 	{
@@ -150,5 +150,15 @@ public class EntityData {
 
 	public void setClasspath(Class<? extends Entity> clazz) {
 		this.clazz = clazz;
+	}
+	
+	public void setRenderOffset(Vector2f v)
+	{
+		this.renderOffset = v;
+	}
+
+	public Vector2f getRenderOffset()
+	{
+		return renderOffset;
 	}
 }
