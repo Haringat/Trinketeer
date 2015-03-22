@@ -203,7 +203,7 @@ public class Game
 		return false;
 	}
 	
-	public boolean createDefaultTextureLibrary()
+	public static boolean createDefaultTextureLibrary()
 	{
 		File lib = DataRef.defaultLibrary;
 		File raw = DataRef.defaultLibraryRaw;

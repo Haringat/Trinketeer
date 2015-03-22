@@ -60,7 +60,7 @@ public class Entity implements IWorldGraphic, Waypoint
 	public Waypoint currentWaypoint;
 	public String behaviourString = null;
 	private int age;
-	protected Vector2f renderSize = null, renderOffset = new Vector2f();
+	protected Vector2f renderSize = new Vector2f(), renderOffset = new Vector2f();
 	private GibMode gibMode = GibMode.DEFAULT;
 
 	public Entity(World w)
@@ -297,7 +297,10 @@ public class Entity implements IWorldGraphic, Waypoint
 	{
 		if(this.renderSize == null) return this.getColissionBox();
 		Vector3f v = this.getCenter();
-		return new AxisAllignedBoundingBox(v.x - this.renderSize.x, v.y - this.renderSize.y, this.renderSize.x, this.renderSize.y);
+		if(this.renderOffset == null)
+			return new AxisAllignedBoundingBox(v.x - this.renderSize.x , v.y - this.renderSize.y, this.renderSize.x, this.renderSize.y);
+
+		else return new AxisAllignedBoundingBox(v.x - this.renderSize.x - this.renderOffset.x, v.y - this.renderSize.y - this.renderOffset.y, this.renderSize.x, this.renderSize.y);
 	}
 
 	public boolean isHostile()
