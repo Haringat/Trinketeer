@@ -60,6 +60,8 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 		fields.put("class", new JTextField(10));
 		fields.put("behaviours", new JList<String>());
 		fields.put("type", new JTextField(10));
+		fields.put("offsetx", new JTextField(10));
+		fields.put("offsety", new JTextField(10));
 		
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -99,6 +101,10 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 		add(new JLabel("classpath"), c);
 		c.gridy = 9;
 		add(new JLabel("type"), c);
+		c.gridy = 10;
+		add(new JLabel("offsetx"), c);
+		c.gridy = 11;
+		add(new JLabel("offsety"), c);
 		
 		c.gridx = 1;
 		c.gridwidth = REMAINDER;
@@ -121,12 +127,16 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 		add(fields.get("class"), c);
 		c.gridy = 9;
 		add(fields.get("type"), c);
+		c.gridy = 10;
+		add(fields.get("offsetx"), c);
+		c.gridy = 11;
+		add(fields.get("offsety"), c);
 		
 		c.gridx = 0;
-		c.gridy = 10;
+		c.gridy = 12;
 		add(new JLabel("behaviours"), c);
 		
-		c.gridy = 11;
+		c.gridy = 13;
 		c.fill = BOTH;
 		((JList<?>) fields.get("behaviours")).setLayoutOrientation(JList.VERTICAL);
 		((JList<?>) fields.get("behaviours")).setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -136,7 +146,7 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 		
 		c.fill = HORIZONTAL;
 		c.gridwidth = 3;
-		c.gridy = 12;
+		c.gridy = 14;
 		add(behaviourfield, c);
 		
 		c.gridwidth = 1;
@@ -168,6 +178,7 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 				for(int i = 0; i < ((JList<String>)fields.get("behaviours")).getModel().getSize(); i++){
 					behaviours.add((String) ((JList<String>)fields.get("behaviours")).getModel().getElementAt(i));
 				}
+				EntityData.entityData.get(((EntityData)entityselector.getSelectedItem()).getName()).setRenderOffset(new Vector2f(Float.valueOf(((JTextField)fields.get("offsetx")).getText()),Float.valueOf(((JTextField)fields.get("offsety")).getText())));
 			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -186,6 +197,8 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 		((JTextField) fields.get("class")).setText(String.valueOf(entity.getClasspath().getCanonicalName()));
 		((JTextField) fields.get("type")).setText(entity.getType());
 		((JList<String>) fields.get("behaviours")).setListData(new Vector<>(entity.getBehaviours()));
+		((JTextField) fields.get("offsetx")).setText(String.valueOf(entity.getRenderOffset().getX()));
+		((JTextField) fields.get("offsety")).setText(String.valueOf(entity.getRenderOffset().getY()));
 	}
 	
 	private void addEntity(){
