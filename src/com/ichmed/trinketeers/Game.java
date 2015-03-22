@@ -20,6 +20,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.ichmed.trinketeers.savefile.ChunkSave;
 import com.ichmed.trinketeers.savefile.DataLoader;
+import com.ichmed.trinketeers.util.DataRef;
 import com.ichmed.trinketeers.util.editor.Editor;
 import com.ichmed.trinketeers.util.render.TextureLibrary;
 import com.ichmed.trinketeers.world.Chunk;
@@ -204,8 +205,8 @@ public class Game
 	
 	public boolean createDefaultTextureLibrary()
 	{
-		File lib = new File("resc/textures/defaultLibrary.png");
-		File raw = new File("resc/textures/raw/defaultLibrary");
+		File lib = DataRef.defaultLibrary;
+		File raw = DataRef.defaultLibraryRaw;
 		List<File> files = new ArrayList<>();
 		
 		for (File file : raw.listFiles())
