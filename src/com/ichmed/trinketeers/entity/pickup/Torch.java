@@ -20,7 +20,6 @@ public class Torch extends Pickup
 		this.entityType = "torch";
 		this.isSolid = true;
 		this.isVulnerable = false;
-		this.behaviours.add(new BehaviourLight(world, "20", "20", "4", "0", "1.0", "2"));
 	}
 
 	@Override

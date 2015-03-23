@@ -180,9 +180,9 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 			EntityData.entityData.get(((EntityData)entityselector.getSelectedItem()).getName()).setType(((JTextField)fields.get("type")).getText());
 			EntityData.entityData.get(((EntityData)entityselector.getSelectedItem()).getName()).setClasspath(((JTextField)fields.get("class")).getText());
 			List<String> behaviours = new ArrayList<String>();
-			for(int i = 0; i < ((JList<String>)fields.get("behaviours")).getModel().getSize(); i++){
+			for(int i = 0; i < ((JList<String>)fields.get("behaviours")).getModel().getSize(); i++)
 				behaviours.add((String) ((JList<String>)fields.get("behaviours")).getModel().getElementAt(i));
-			}
+			EntityData.entityData.get(((EntityData)entityselector.getSelectedItem()).getName()).behaviours = behaviours;
 			EntityData.entityData.get(((EntityData)entityselector.getSelectedItem()).getName()).setRenderOffset(new Vector2f(Float.valueOf(((JTextField)fields.get("offsetx")).getText()),Float.valueOf(((JTextField)fields.get("offsety")).getText())));
 		}
 	}

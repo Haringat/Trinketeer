@@ -390,6 +390,7 @@ public class Entity implements IWorldGraphic, Waypoint
 		
 		for(String b : universalData.behaviours)
 		{
+			System.out.println(b);
 			String[] s = new String[b.split(" ").length - 1];
 			for(int i = 1; i < b.split(" ").length; i++)s[i - 1] = b.split(" ")[i];
 			try

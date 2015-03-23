@@ -222,17 +222,6 @@ public class ElementEditor extends JPanel
 
 		view.add(stats, c);
 		view.add(effects);
-		JButton b = new JButton("Safe");
-		b.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				safeCurrentElement();
-				DataLoader.saveElements(ElementData.elements);
-			}
-		});
-		view.add(b);
 	}
 
 }

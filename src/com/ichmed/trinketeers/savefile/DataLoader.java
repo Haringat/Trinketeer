@@ -221,9 +221,7 @@ public class DataLoader
 				e.put("classpath", entitys.get(key).getClasspath().getName());
 				JSONArray behavioursjson = new JSONArray();
 				for (String behaviour : entitys.get(key).getBehaviours())
-				{
 					behavioursjson.put(behaviour);
-				}
 				e.put("behaviours", behavioursjson);
 				e.put("offsetx", entitys.get(key).getRenderOffset().getX());
 				e.put("offsety", entitys.get(key).getRenderOffset().getY());
