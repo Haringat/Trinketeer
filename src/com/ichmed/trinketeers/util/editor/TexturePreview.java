@@ -14,27 +14,31 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
+import org.lwjgl.util.vector.Vector4f;
+
+import com.ichmed.trinketeers.Game;
 import com.ichmed.trinketeers.savefile.DataLoader;
 import com.ichmed.trinketeers.savefile.data.ElementData;
+import com.ichmed.trinketeers.util.DataRef;
+import com.ichmed.trinketeers.util.render.TextureLibrary;
 
-public class Preview extends JComponent implements MouseListener{
+public class TexturePreview extends JComponent implements MouseListener{
 	
 	private static final long serialVersionUID = 4743724722914037048L;
 
 	private Image image;
-	private String path;
     protected transient ChangeEvent changeEvent;
 
-	public Preview(String path) {
+	public TexturePreview(String name) {
+		Game.createDefaultTextureLibrary();
+		TextureLibrary.loadTextureLibrary(DataRef.defaultLibrary);
+		Vector4f vec = TextureLibrary.getTextureVector(name);
 		setMinimumSize(new Dimension(32,32));
 		setPreferredSize(new Dimension(32,32));
 		setMaximumSize(new Dimension(32,32));
 		setBackground(new Color(255,0,255));
 		setOpaque(true);
-		setToolTipText("change spell texture");
 		addMouseListener(this);
-		this.path = path;
-		setImage(this.path);
 	}
 
 	public void setImage(String path) throws NullPointerException{
@@ -60,33 +64,7 @@ public class Preview extends JComponent implements MouseListener{
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if(e.getButton() == MouseEvent.BUTTON1 && this.contains(e.getPoint())){
-			JFileChooser file = new JFileChooser();
-			file.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			file.setSelectedFile(new File(path).getAbsoluteFile());
-			file.setFileFilter(new FileFilter(){
-
-				@Override
-				public boolean accept(File f) {
-					if(f.isDirectory())
-						return true;
-					int index = f.getName().lastIndexOf('.'); 
-					if( index == -1)
-						return false;
-					if(f.getName().substring(index).equalsIgnoreCase(".png"))
-						return true;
-					return false;
-				}
-
-				@Override
-				public String getDescription() {
-					return "Portable Network Graphic (.png)";
-				}
-			});
-			file.setMultiSelectionEnabled(false);
-			if(file.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
-				setImage(new File(".").getAbsoluteFile().toURI().relativize(
-						file.getSelectedFile().toURI()).getPath());
-			}
+			
 		}
 		
 	}

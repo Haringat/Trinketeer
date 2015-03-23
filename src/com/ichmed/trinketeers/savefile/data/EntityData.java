@@ -43,7 +43,7 @@ public class EntityData {
 
 	public EntityData(String name, String type, int strength, int rarity, List<String> behaviours, Vector2f size, Vector2f renderSize)
 	{
-		this(name, type, strength, rarity, behaviours, size, renderSize, "com.ichmed.trinketeers.entity.Entity");
+		this(name, type, strength, rarity, behaviours, size, renderSize, "root.Entity");
 	}
 	
 	public EntityData(EntityData object){
@@ -62,6 +62,8 @@ public class EntityData {
 		this.renderSize = renderSize;
 		try
 		{
+			if(classPath.contains("root."))
+				classPath.replace("root.", "com.ichmed.trinketeers.entity.");
 			this.setClasspath((Class<? extends Entity>) Class.forName(classPath));
 		} catch (ClassNotFoundException e)
 		{

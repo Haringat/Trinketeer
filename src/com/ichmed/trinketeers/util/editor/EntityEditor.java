@@ -63,6 +63,8 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 		fields.put("offsetx", new JTextField(10));
 		fields.put("offsety", new JTextField(10));
 		
+		fields.get("class").setToolTipText("use \"root\" as prefix for the default package");
+		
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(5,5,5,5);
