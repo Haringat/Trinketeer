@@ -50,7 +50,6 @@ public class EntityData {
 		this(object.getName(), object.getType(), object.getStrength(), object.getRarity(), object.getBehaviours(), object.getSize(), object.getRenderSize());
 	}
 
-	@SuppressWarnings("unchecked")
 	public EntityData(String name, String type, int strength, int rarity, List<String> behaviours, Vector2f size, Vector2f renderSize, String classPath)
 	{
 		this.name = name;
@@ -60,15 +59,9 @@ public class EntityData {
 		this.behaviours = behaviours;
 		this.size = size;
 		this.renderSize = renderSize;
-		try
-		{
-			if(classPath.contains("root."))
-				classPath.replace("root.", "com.ichmed.trinketeers.entity.");
-			this.setClasspath((Class<? extends Entity>) Class.forName(classPath));
-		} catch (ClassNotFoundException e)
-		{
-			this.setClasspath(Entity.class);
-		}
+		if(classPath.contains("root."))
+			classPath.replace("root.", "com.ichmed.trinketeers.entity.");
+		this.setClasspath(classPath);
 	}
 
 	public EntityData()
@@ -150,8 +143,15 @@ public class EntityData {
 		return clazz;
 	}
 
-	public void setClasspath(Class<? extends Entity> clazz) {
-		this.clazz = clazz;
+	@SuppressWarnings("unchecked")
+	public void setClasspath(String classpath) {
+		try {
+			if(classpath.contains("root."))
+				classpath.replace("root.", "com.ichmed.trinketeers.entity.");
+			clazz = (Class<? extends Entity>) Class.forName(classpath);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void setRenderOffset(Vector2f v)

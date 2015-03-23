@@ -6,13 +6,10 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
 
 import javax.swing.JComponent;
-import javax.swing.JFileChooser;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.filechooser.FileFilter;
 
 import org.lwjgl.util.vector.Vector4f;
 
@@ -55,10 +52,6 @@ public class TexturePreview extends JComponent implements MouseListener{
 		g.setColor(new Color(255,0,255));
 		g.fillRect(0, 0, getWidth(), getHeight());
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
-	}
-	
-	public String getPath(){
-		return path;
 	}
 
 	@Override

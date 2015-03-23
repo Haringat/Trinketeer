@@ -1,6 +1,11 @@
 package com.ichmed.trinketeers.util.editor;
 
-import static java.awt.GridBagConstraints.*;
+import static java.awt.GridBagConstraints.BOTH;
+import static java.awt.GridBagConstraints.HORIZONTAL;
+import static java.awt.GridBagConstraints.NONE;
+import static java.awt.GridBagConstraints.RELATIVE;
+import static java.awt.GridBagConstraints.REMAINDER;
+import static java.awt.GridBagConstraints.WEST;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -27,7 +32,6 @@ import javax.swing.ListSelectionModel;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.savefile.DataLoader;
 import com.ichmed.trinketeers.savefile.data.EntityData;
 
@@ -168,22 +172,18 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 	
 	@SuppressWarnings("unchecked")
 	private void refreshEntityData(){
-		try {
-			if(!EntityData.entityData.isEmpty() && entityselector.getModel().getSelectedItem() != null){
-				EntityData.entityData.get(((EntityData)entityselector.getSelectedItem()).getName()).setRarity(Integer.valueOf(((JTextField)fields.get("rarity")).getText()));
-				EntityData.entityData.get(((EntityData)entityselector.getSelectedItem()).getName()).setRenderSize(new Vector2f(Float.valueOf(((JTextField)fields.get("rendersizex")).getText()),Float.valueOf(((JTextField)fields.get("rendersizey")).getText())));
-				EntityData.entityData.get(((EntityData)entityselector.getSelectedItem()).getName()).setSize(new Vector2f(Float.valueOf(((JTextField)fields.get("sizex")).getText()),Float.valueOf(((JTextField)fields.get("sizey")).getText())));
-				EntityData.entityData.get(((EntityData)entityselector.getSelectedItem()).getName()).setStrength(Integer.valueOf(((JTextField)fields.get("strength")).getText()));
-				EntityData.entityData.get(((EntityData)entityselector.getSelectedItem()).getName()).setType(((JTextField)fields.get("type")).getText());
-				EntityData.entityData.get(((EntityData)entityselector.getSelectedItem()).getName()).setClasspath((Class<? extends Entity>) Class.forName(((JTextField)fields.get("class")).getText()));
-				List<String> behaviours = new ArrayList<String>();
-				for(int i = 0; i < ((JList<String>)fields.get("behaviours")).getModel().getSize(); i++){
-					behaviours.add((String) ((JList<String>)fields.get("behaviours")).getModel().getElementAt(i));
-				}
-				EntityData.entityData.get(((EntityData)entityselector.getSelectedItem()).getName()).setRenderOffset(new Vector2f(Float.valueOf(((JTextField)fields.get("offsetx")).getText()),Float.valueOf(((JTextField)fields.get("offsety")).getText())));
+		if(!EntityData.entityData.isEmpty() && entityselector.getModel().getSelectedItem() != null){
+			EntityData.entityData.get(((EntityData)entityselector.getSelectedItem()).getName()).setRarity(Integer.valueOf(((JTextField)fields.get("rarity")).getText()));
+			EntityData.entityData.get(((EntityData)entityselector.getSelectedItem()).getName()).setRenderSize(new Vector2f(Float.valueOf(((JTextField)fields.get("rendersizex")).getText()),Float.valueOf(((JTextField)fields.get("rendersizey")).getText())));
+			EntityData.entityData.get(((EntityData)entityselector.getSelectedItem()).getName()).setSize(new Vector2f(Float.valueOf(((JTextField)fields.get("sizex")).getText()),Float.valueOf(((JTextField)fields.get("sizey")).getText())));
+			EntityData.entityData.get(((EntityData)entityselector.getSelectedItem()).getName()).setStrength(Integer.valueOf(((JTextField)fields.get("strength")).getText()));
+			EntityData.entityData.get(((EntityData)entityselector.getSelectedItem()).getName()).setType(((JTextField)fields.get("type")).getText());
+			EntityData.entityData.get(((EntityData)entityselector.getSelectedItem()).getName()).setClasspath(((JTextField)fields.get("class")).getText());
+			List<String> behaviours = new ArrayList<String>();
+			for(int i = 0; i < ((JList<String>)fields.get("behaviours")).getModel().getSize(); i++){
+				behaviours.add((String) ((JList<String>)fields.get("behaviours")).getModel().getElementAt(i));
 			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			EntityData.entityData.get(((EntityData)entityselector.getSelectedItem()).getName()).setRenderOffset(new Vector2f(Float.valueOf(((JTextField)fields.get("offsetx")).getText()),Float.valueOf(((JTextField)fields.get("offsety")).getText())));
 		}
 	}
 	
