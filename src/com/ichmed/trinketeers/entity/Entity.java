@@ -300,7 +300,7 @@ public class Entity implements IWorldGraphic, Waypoint
 		if(this.renderOffset == null)
 			return new AxisAllignedBoundingBox(v.x - this.renderSize.x , v.y - this.renderSize.y, this.renderSize.x, this.renderSize.y);
 
-		else return new AxisAllignedBoundingBox(v.x - this.renderSize.x - this.renderOffset.x, v.y - this.renderSize.y - this.renderOffset.y, this.renderSize.x, this.renderSize.y);
+		else return new AxisAllignedBoundingBox(v.x - this.renderSize.x + this.renderOffset.x, v.y - this.renderSize.y + this.renderOffset.y, this.renderSize.x, this.renderSize.y);
 	}
 
 	public boolean isHostile()

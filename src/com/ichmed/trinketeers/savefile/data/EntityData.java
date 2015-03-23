@@ -8,7 +8,8 @@ import org.lwjgl.util.vector.Vector2f;
 
 import com.ichmed.trinketeers.entity.Entity;
 
-public class EntityData {
+public class EntityData
+{
 	public static HashMap<String, EntityData> entityData = new HashMap<>();
 	public static HashMap<String, List<EntityData>> entityDataByType = new HashMap<>();
 
@@ -45,8 +46,9 @@ public class EntityData {
 	{
 		this(name, type, strength, rarity, behaviours, size, renderSize, "root.Entity");
 	}
-	
-	public EntityData(EntityData object){
+
+	public EntityData(EntityData object)
+	{
 		this(object.getName(), object.getType(), object.getStrength(), object.getRarity(), object.getBehaviours(), object.getSize(), object.getRenderSize());
 	}
 
@@ -59,8 +61,7 @@ public class EntityData {
 		this.behaviours = behaviours;
 		this.size = size;
 		this.renderSize = renderSize;
-		if(classPath.contains("root."))
-			classPath.replace("root.", "com.ichmed.trinketeers.entity.");
+		if (classPath.contains("root.")) classPath.replace("root.", "com.ichmed.trinketeers.entity.");
 		this.setClasspath(classPath);
 	}
 
@@ -139,21 +140,24 @@ public class EntityData {
 		this.renderSize = renderSize;
 	}
 
-	public Class<? extends Entity> getClasspath() {
+	public Class<? extends Entity> getClasspath()
+	{
 		return clazz;
 	}
 
 	@SuppressWarnings("unchecked")
-	public void setClasspath(String classpath) {
-		try {
-			if(classpath.contains("root."))
-				classpath.replace("root.", "com.ichmed.trinketeers.entity.");
-			clazz = (Class<? extends Entity>) Class.forName(classpath);
-		} catch (ClassNotFoundException e) {
+	public void setClasspath(String classpath)
+	{
+		try
+		{
+			if (classpath.contains("root.")) clazz = (Class<? extends Entity>) Class.forName(classpath.replace("root.", "com.ichmed.trinketeers.entity."));
+			else clazz = (Class<? extends Entity>) Class.forName(classpath);
+		} catch (ClassNotFoundException e)
+		{
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void setRenderOffset(Vector2f v)
 	{
 		this.renderOffset = v;
