@@ -179,7 +179,6 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 			EntityData.entityData.get(e.getName()).setStrength(Integer.valueOf(((JTextField)fields.get("strength")).getText()));
 			EntityData.entityData.get(e.getName()).setType(((JTextField)fields.get("type")).getText());
 			EntityData.entityData.get(e.getName()).setClasspath(((JTextField)fields.get("class")).getText());
-			System.out.printf("%s\n", ((JTextField)fields.get("class")).getText());
 			List<String> behaviours = new ArrayList<String>();
 			for(int i = 0; i < ((JList<String>)fields.get("behaviours")).getModel().getSize(); i++)
 				behaviours.add((String) ((JList<String>)fields.get("behaviours")).getModel().getElementAt(i));
@@ -198,7 +197,6 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 		((JTextField) fields.get("rendersizex")).setText(String.valueOf(entity.getRenderSize().getX()));
 		((JTextField) fields.get("rendersizey")).setText(String.valueOf(entity.getRenderSize().getY()));
 		((JTextField) fields.get("class")).setText(entity.getClasspath().getCanonicalName());
-		System.out.printf("%s\n", entity.getClasspath().getCanonicalName());
 		((JTextField) fields.get("type")).setText(entity.getType());
 		((JList<String>) fields.get("behaviours")).setListData(new Vector<>(entity.getBehaviours()));
 		((JTextField) fields.get("offsetx")).setText(String.valueOf(entity.getRenderOffset().getX()));
@@ -213,9 +211,6 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 		refreshEntityData(EntityData.entityData.get("new Entity"));
 		selectEntity(EntityData.entityData.get("new Entity"));
 		entityselector.setSelectedItem(EntityData.entityData.get("new Entity"));
-		for(int i = 0; i < entityselector.getItemCount(); i++){
-			System.out.printf("%s\n", entityselector.getItemAt(i).getName());
-		}
 	}
 	
 	private void rename(EntityData e, String name){
@@ -234,7 +229,7 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 	}
 	
 	void saveEntitys(){
-		refreshEntityData(EntityData.entityData.get((EntityData) entityselector.getSelectedItem()));
+		refreshEntityData(EntityData.entityData.get(((EntityData) entityselector.getSelectedItem()).getName()));
 		DataLoader.saveEntitys(EntityData.entityData);
 	}
 
@@ -243,11 +238,9 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 		if(e.getSource().equals(entityselector)){
 			if(e.getStateChange() == ItemEvent.SELECTED){
 				selectEntity( (EntityData) e.getItem());
-				System.out.printf("Item selected\n");
 			}
 			if(e.getStateChange() == ItemEvent.DESELECTED){
 				refreshEntityData( (EntityData)e.getItem());
-				System.out.printf("Item deselected\n");
 			}
 		}
 	}
