@@ -20,6 +20,8 @@ import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
+import com.ichmed.trinketeers.savefile.DataLoader;
+import com.ichmed.trinketeers.savefile.data.ElementData;
 import com.ichmed.trinketeers.util.render.TextureLibrary;
 
 public class Editor extends JFrame implements ActionListener
@@ -120,6 +122,8 @@ public class Editor extends JFrame implements ActionListener
 			}
 			if (src.getName().equals(saveelementslabel))
 			{
+				elementeditor.safeCurrentElement();
+				DataLoader.saveElements(ElementData.elements);
 				System.out.println("Saving elements");
 			}
 			if (src.getName().equals(saveentityslabel))

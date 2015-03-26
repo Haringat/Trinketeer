@@ -29,6 +29,7 @@ public class Projectile extends Entity
 		this.trailSpell = trailSpell;
 		this.wobble = wobble;
 		this.despawnCountDown = 1;
+		this.renderSize = null;
 	}
 
 	@Override
