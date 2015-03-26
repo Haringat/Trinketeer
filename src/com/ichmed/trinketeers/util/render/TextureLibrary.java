@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 import javax.imageio.ImageIO;
 
@@ -242,6 +243,10 @@ public class TextureLibrary
 
 	}
 
+	public Set<String> getNameSet(){
+		return libraryTextures.keySet();
+	}
+	
 	public boolean isPixelTransparent(int x, int y, BufferedImage bfrdImg)
 	{
 		if(x >= LIBRARY_SIZE || y >= LIBRARY_SIZE) return false;

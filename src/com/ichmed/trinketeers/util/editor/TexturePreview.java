@@ -23,6 +23,7 @@ public class TexturePreview extends JComponent implements MouseListener{
 	
 	private static final long serialVersionUID = 4743724722914037048L;
 
+	
 	private Image image;
     protected transient ChangeEvent changeEvent;
 
@@ -30,6 +31,7 @@ public class TexturePreview extends JComponent implements MouseListener{
 		Game.createDefaultTextureLibrary();
 		TextureLibrary.loadTextureLibrary(DataRef.defaultLibrary);
 		Vector4f vec = TextureLibrary.getTextureVector(name);
+		System.out.printf("%s\n",TextureLibrary.textureLibrary.textureName);
 		setMinimumSize(new Dimension(32,32));
 		setPreferredSize(new Dimension(32,32));
 		setMaximumSize(new Dimension(32,32));
@@ -56,10 +58,6 @@ public class TexturePreview extends JComponent implements MouseListener{
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if(e.getButton() == MouseEvent.BUTTON1 && this.contains(e.getPoint())){
-			
-		}
-		
 	}
 
 	public void addChangeListener(ChangeListener l){
