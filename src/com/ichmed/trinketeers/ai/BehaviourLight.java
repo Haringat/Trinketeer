@@ -26,7 +26,6 @@ public class BehaviourLight extends Behaviour
 		
 		this.brightness = Float.valueOf(objects[4]);
 		this.flicker = Float.valueOf(objects[5]);
-		System.out.println("I'ma torch I'ma I'ma I'ma torch");
 		w.addLight(light);
 		this.light.setActive(false);
 	}

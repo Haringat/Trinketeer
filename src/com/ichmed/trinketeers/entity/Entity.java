@@ -390,12 +390,11 @@ public class Entity implements IWorldGraphic, Waypoint
 		
 		for(String b : universalData.behaviours)
 		{
-			System.out.println(b);
 			String[] s = new String[b.split(" ").length - 1];
 			for(int i = 1; i < b.split(" ").length; i++)s[i - 1] = b.split(" ")[i];
 			try
 			{
-				dummy.behaviours.add((Behaviour) Class.forName("com.ichmed.trinketeers.ai.Behaviour" + b).getConstructor(World.class, Object[].class).newInstance(w, s));
+				dummy.behaviours.add((Behaviour) Class.forName("com.ichmed.trinketeers.ai.Behaviour" + b.split(" ")[0]).getConstructor(World.class, String[].class).newInstance(w, s));
 			} catch (Exception e)
 			{
 				e.printStackTrace();
