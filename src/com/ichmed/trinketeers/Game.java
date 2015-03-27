@@ -42,6 +42,7 @@ public class Game
 	// The window handle
 	public static long window;
 	public static boolean debugMode = false;
+	public static boolean isEditor = false;
 
 	public void run()
 	{
@@ -183,6 +184,7 @@ public class Game
 		{
 			if (arg.equals("-editor"))
 			{
+				isEditor = true;
 				new Editor();
 				return;
 			}

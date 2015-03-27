@@ -23,6 +23,7 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
+import com.ichmed.trinketeers.Game;
 import com.ichmed.trinketeers.savefile.DataLoader;
 
 public class TextureLibrary
@@ -108,7 +109,7 @@ public class TextureLibrary
 	{
 		textureLibrary = new TextureLibrary();
 		textureLibrary.textureName = path + ".png";
-		bindTexture(textureLibrary.textureName);
+		if(!Game.isEditor)bindTexture(textureLibrary.textureName);
 		File f = new File(path + ".tld");
 		try
 		{
