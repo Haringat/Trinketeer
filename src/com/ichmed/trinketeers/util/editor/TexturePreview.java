@@ -91,10 +91,10 @@ public class TexturePreview extends JComponent implements MouseListener{
 		int osy = (int) (getHeight() / 2 - (hitbox.getY() > rendersize.getY() ? hitbox.getY() : offset.getY() + rendersize.getY()) / 2);
 		int sizex = (int) (osx + offset.getX() + rendersize.getX());
 		int sizey = (int) (osy + offset.getY() + rendersize.getY());
-		int th = (int) (texcoords.getW() / (double) TextureLibrary.LIBRARY_SIZE * rendersize.getX());
-		int tw = (int) (texcoords.getX() / (double) TextureLibrary.LIBRARY_SIZE * rendersize.getY());
-		int tx = (int) (texcoords.getY() / (double) TextureLibrary.LIBRARY_SIZE);
-		int ty = (int) (texcoords.getZ() / (double) TextureLibrary.LIBRARY_SIZE);
+		int tx = (int) texcoords.getW();
+		int ty = (int) texcoords.getX();
+		int tw = (int) texcoords.getY();
+		int th = (int) texcoords.getZ();
 		System.out.printf("rendering image at (%d|%d) with %fx%f\n", osx, osy, rendersize.getX(), rendersize.getY());
 		System.out.printf("source image is at (%f|%f) with %fx%f\n", texcoords.getW(), texcoords.getX(), texcoords.getY(), texcoords.getZ());
 		g1.setColor(new Color(255,0,255));
