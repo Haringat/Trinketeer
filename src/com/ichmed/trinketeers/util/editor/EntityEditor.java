@@ -66,6 +66,8 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 		fields.put("type", new JTextField(10));
 		fields.put("offsetx", new JTextField(10));
 		fields.put("offsety", new JTextField(10));
+		fields.put("tex", new TexturePreview());
+		
 		
 		fields.get("class").setToolTipText("use \"root\" as prefix for the default package");
 		
@@ -161,18 +163,33 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 		
 		add(behaveremove, c);
 		
+		c.gridx = RELATIVE;
+		c.gridy = 0;
+		c.gridheight = REMAINDER;
+		c.fill = NONE;
+		add(fields.get("tex"), c);
+		
 		entityselector.addItemListener(this);
 		entityadd.addActionListener(this);
 		behaveadd.addActionListener(this);
 		rename.addActionListener(this);
 		entityremove.addActionListener(this);
 		behaveremove.addActionListener(this);
-		selectEntity(EntityData.entityData.get(entityselector.getSelectedItem().toString()));
+		
+		if(!EntityData.entityData.isEmpty()){
+			entityselector.setSelectedIndex(0);
+			selectEntity((EntityData) entityselector.getSelectedItem());
+
+			((TexturePreview) fields.get("tex")).setTexture("steamProjectile");
+			((TexturePreview) fields.get("tex")).setRenderSize(Float.valueOf(((JTextField) fields.get("rendersizex")).getText()), Float.valueOf(((JTextField) fields.get("rendersizey")).getText()));
+			((TexturePreview) fields.get("tex")).setHitBox(Float.valueOf(((JTextField) fields.get("sizex")).getText()), Float.valueOf(((JTextField) fields.get("sizey")).getText()));
+			((TexturePreview) fields.get("tex")).setOffset(Float.valueOf(((JTextField) fields.get("offsetx")).getText()), Float.valueOf(((JTextField) fields.get("offsety")).getText()));
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
 	private void refreshEntityData(EntityData e){
-		if(!EntityData.entityData.isEmpty() && entityselector.getModel().getSelectedItem() != null){
+		if(!EntityData.entityData.isEmpty()){
 			EntityData.entityData.get(e.getName()).setRarity(Integer.valueOf(((JTextField)fields.get("rarity")).getText()));
 			EntityData.entityData.get(e.getName()).setRenderSize(new Vector2f(Float.valueOf(((JTextField)fields.get("rendersizex")).getText()),Float.valueOf(((JTextField)fields.get("rendersizey")).getText())));
 			EntityData.entityData.get(e.getName()).setSize(new Vector2f(Float.valueOf(((JTextField)fields.get("sizex")).getText()),Float.valueOf(((JTextField)fields.get("sizey")).getText())));

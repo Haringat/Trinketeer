@@ -1,7 +1,10 @@
 package com.ichmed.trinketeers.util.editor;
 
+import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.Window;
 
@@ -12,86 +15,83 @@ public class TextureSelectDialog extends JDialog {
 	private static final long serialVersionUID = -8328775335452798021L;
 
 	public TextureSelectDialog() {
-		// TODO Auto-generated constructor stub
+		this((Window) null);
 	}
 
 	public TextureSelectDialog(Frame owner) {
-		super(owner);
-		// TODO Auto-generated constructor stub
+		this(owner, "");
 	}
 
 	public TextureSelectDialog(Dialog owner) {
-		super(owner);
-		// TODO Auto-generated constructor stub
+		this(owner, "");
 	}
 
 	public TextureSelectDialog(Window owner) {
-		super(owner);
-		// TODO Auto-generated constructor stub
+		this(owner, "");
 	}
 
 	public TextureSelectDialog(Frame owner, boolean modal) {
-		super(owner, modal);
-		// TODO Auto-generated constructor stub
+		this(owner, "", modal);
 	}
 
 	public TextureSelectDialog(Frame owner, String title) {
-		super(owner, title);
-		// TODO Auto-generated constructor stub
+		this(owner, title, ModalityType.MODELESS);
 	}
 
 	public TextureSelectDialog(Dialog owner, boolean modal) {
-		super(owner, modal);
-		// TODO Auto-generated constructor stub
+		this(owner, "", modal);
 	}
 
 	public TextureSelectDialog(Dialog owner, String title) {
-		super(owner, title);
-		// TODO Auto-generated constructor stub
+		this(owner, title, ModalityType.MODELESS);
 	}
 
 	public TextureSelectDialog(Window owner, ModalityType modalityType) {
-		super(owner, modalityType);
-		// TODO Auto-generated constructor stub
+		this(owner, "", modalityType);
 	}
 
 	public TextureSelectDialog(Window owner, String title) {
-		super(owner, title);
-		// TODO Auto-generated constructor stub
+		this(owner, title, ModalityType.MODELESS);
 	}
 
 	public TextureSelectDialog(Frame owner, String title, boolean modal) {
-		super(owner, title, modal);
-		// TODO Auto-generated constructor stub
+		this(owner, title, modal ? DEFAULT_MODALITY_TYPE : ModalityType.MODELESS, (GraphicsConfiguration) null);
 	}
 
 	public TextureSelectDialog(Dialog owner, String title, boolean modal) {
-		super(owner, title, modal);
-		// TODO Auto-generated constructor stub
+		this(owner, title, modal ? DEFAULT_MODALITY_TYPE : ModalityType.MODELESS, (GraphicsConfiguration) null);
 	}
 
 	public TextureSelectDialog(Window owner, String title,
 			ModalityType modalityType) {
-		super(owner, title, modalityType);
-		// TODO Auto-generated constructor stub
+		this(owner, title, modalityType, (GraphicsConfiguration) null);
 	}
 
 	public TextureSelectDialog(Frame owner, String title, boolean modal,
 			GraphicsConfiguration gc) {
-		super(owner, title, modal, gc);
-		// TODO Auto-generated constructor stub
+		this(owner, title, modal ? DEFAULT_MODALITY_TYPE : ModalityType.MODELESS, gc);
 	}
 
 	public TextureSelectDialog(Dialog owner, String title, boolean modal,
 			GraphicsConfiguration gc) {
-		super(owner, title, modal, gc);
-		// TODO Auto-generated constructor stub
+		this(owner, title, modal ? DEFAULT_MODALITY_TYPE : ModalityType.MODELESS, gc);
 	}
 
 	public TextureSelectDialog(Window owner, String title,
 			ModalityType modalityType, GraphicsConfiguration gc) {
 		super(owner, title, modalityType, gc);
-		// TODO Auto-generated constructor stub
+		setSize(100, 100);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setVisible(true);
+		repaint();
+	}
+	
+	@Override
+	public void paint(Graphics graphic){
+		super.paint(graphic);
+		Graphics2D g = (Graphics2D) this.getContentPane().getGraphics();
+		g.setColor(new Color(0,0,0));
+		g.drawRect(10, 10, 80, 80);
 	}
 
 }

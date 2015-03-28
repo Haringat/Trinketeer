@@ -10,8 +10,6 @@ import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
-import java.io.File;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +32,7 @@ public class DataLoader
 	 *            the path to the image file
 	 * @param observer
 	 *            the observer which should be notified
-	 * @return the loaded image or null if an error occured
+	 * @return the loaded image or null if an error occurred
 	 */
 	public static Image loadImage(String path, ImageObserver observer)
 	{
@@ -45,9 +43,7 @@ public class DataLoader
 		try
 		{
 			tracker.waitForAll();
-		} catch (InterruptedException e)
-		{
-		}
+		} catch (InterruptedException e){}
 		if (tracker.isErrorAny())
 		{
 			return null;
