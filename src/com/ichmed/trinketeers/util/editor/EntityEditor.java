@@ -181,7 +181,7 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 			selectEntity((EntityData) entityselector.getSelectedItem());
 
 			((TexturePreview) fields.get("tex")).setTexture("steamProjectile");
-			((TexturePreview) fields.get("tex")).setRenderSize(Float.valueOf(((JTextField) fields.get("rendersizex")).getText()), Float.valueOf(((JTextField) fields.get("rendersizey")).getText()));
+			((TexturePreview) fields.get("tex")).setSize(Float.valueOf(((JTextField) fields.get("rendersizex")).getText()), Float.valueOf(((JTextField) fields.get("rendersizey")).getText()));
 			((TexturePreview) fields.get("tex")).setHitBox(Float.valueOf(((JTextField) fields.get("sizex")).getText()), Float.valueOf(((JTextField) fields.get("sizey")).getText()));
 			((TexturePreview) fields.get("tex")).setOffset(Float.valueOf(((JTextField) fields.get("offsetx")).getText()), Float.valueOf(((JTextField) fields.get("offsety")).getText()));
 		}
