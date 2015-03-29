@@ -122,72 +122,61 @@ public class DataLoader
 			{
 				JSONObject e = (JSONObject) a.get(i);
 				EntityData entityGame = new EntityData();
-				try
-				{
+				try{
 					entityGame.setName(e.getString("name"));
-				} catch (JSONException ex)
-				{
+				} catch (JSONException ex){
 					entityGame.setName("unknown entity");
 				}
-				try
-				{
+				try{
 					entityGame.setType(e.getString("type"));
-				} catch (JSONException ex)
-				{
+				} catch (JSONException ex){
 					entityGame.setType("misc");
 				}
-				try
-				{
+				try{
 					entityGame.setStrength(e.getInt("strength"));
-				} catch (JSONException ex)
-				{
+				} catch (JSONException ex){
 					entityGame.setStrength(0);
 				}
-				try
-				{
+				try{
 					entityGame.setSize(new Vector2f((float) e.getDouble("sizex"), (float) e.getDouble("sizey")));
-				} catch (JSONException ex)
-				{
+				} catch (JSONException ex){
 					entityGame.setSize(new Vector2f(0f, 0f));
 				}
-				try
-				{
+				try{
 					entityGame.setRenderSize(new Vector2f((float) e.getDouble("rendersizex"), (float) e.getDouble("rendersizey")));
-				} catch (JSONException ex)
-				{
+				} catch (JSONException ex){
 					entityGame.setRenderSize(new Vector2f(0f, 0f));
 				}
-				try
-				{
+				try{
 					entityGame.setRarity(e.getInt("rarity"));
-				} catch (JSONException ex)
-				{
+				} catch (JSONException ex){
 					entityGame.setRarity(0);
 				}
-				try
-				{
+				try{
 					entityGame.setRenderOffset(new Vector2f((float) e.getDouble("offsetx"), (float) e.getDouble("offsety")));
-				} catch (JSONException ex)
-				{
+				} catch (JSONException ex){
 					entityGame.setRenderOffset(new Vector2f(0f, 0f));
 				}
-				try
-				{
+				try{
 					entityGame.setClasspath(e.getString("classpath"));
-				} catch (Exception ex)
-				{
+				} catch (Exception ex){
 					entityGame.setClasspath("com.ichmed.trinketeers.entity.Entity");
 				}
-				try
-				{
+				try{
 					JSONArray behavioursjson = e.getJSONArray("behaviours");
 					List<String> behaviours = new ArrayList<>();
 					for (int j = 0; j < behavioursjson.length(); j++)
 						behaviours.add(behavioursjson.getString(j));
 					entityGame.setBehaviours(behaviours);
-				} catch (JSONException ex)
-				{
+				} catch (JSONException ex){
 					entityGame.setBehaviours(new ArrayList<String>());
+				}
+				try{
+					JSONArray texturesjson = e.getJSONArray("textures");
+					for (int j = 0; j < texturesjson.length(); j++)
+						entityGame.setTexture(texturesjson.getJSONObject(j).getString("action"), texturesjson.getJSONObject(j).getString("texname"));
+				} catch (JSONException ex){
+					// do nothing
 				}
 				EntityData.entityData.put(entityGame.getName(), entityGame);
 			}
@@ -219,6 +208,14 @@ public class DataLoader
 				for (String behaviour : entitys.get(key).getBehaviours())
 					behavioursjson.put(behaviour);
 				e.put("behaviours", behavioursjson);
+				JSONArray texturesjson = new JSONArray();
+				for(String action: entitys.get(key).getTexturedActions()){
+					JSONObject texture = new JSONObject();
+					texture.put("action", action);
+					texture.put("texname", entitys.get(key).getTexture(action));
+					texturesjson.put(texture);
+				}
+				e.put("textures", texturesjson);
 				e.put("offsetx", entitys.get(key).getRenderOffset().getX());
 				e.put("offsety", entitys.get(key).getRenderOffset().getY());
 				a.put(e);

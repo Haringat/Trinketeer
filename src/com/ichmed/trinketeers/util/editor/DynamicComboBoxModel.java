@@ -9,14 +9,18 @@ import javax.swing.MutableComboBoxModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
-public class DynamicComboBoxModel<I,E> extends AbstractListModel<E> implements MutableComboBoxModel<E> {
+public class DynamicComboBoxModel<E> extends AbstractListModel<E> implements MutableComboBoxModel<E> {
 
 	private static final long serialVersionUID = 5381750179378656750L;
 	private List<E> data;
 	private E selectedItem;
 	
-	public DynamicComboBoxModel(HashMap<I, E> data){
-		this.data = new ArrayList<E>();
+	public DynamicComboBoxModel(){
+		data = new ArrayList<E>();
+	}
+	
+	public <I> DynamicComboBoxModel(HashMap<I, E> data){
+		this();
 		for(I key : data.keySet()){
 			this.data.add(data.get(key));
 		}

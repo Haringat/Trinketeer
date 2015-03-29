@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -193,6 +194,12 @@ public class Game
 				debugMode = true;
 			}
 
+		}
+		try {
+			System.load(new File(".").getCanonicalPath()+File.separatorChar+"natives"+File.separatorChar+System.mapLibraryName("lwjgl"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		DataLoader.loadElements();
 		DataLoader.loadEntitys();

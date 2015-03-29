@@ -19,10 +19,8 @@ public class Texture extends JComponent {
 	
 	private static final long serialVersionUID = 4743724722914037048L;
 
-	private Vector2f hitbox = new Vector2f(0f,0f);
 	private Vector4f texcoords = new Vector4f(0f,0f,0f,0f);
 	private Vector2f rendersize = new Vector2f(0f,0f);
-	private Vector2f offset = new Vector2f(0f,0f);
 	private Image texlib;
 
 	public Texture() {
@@ -38,8 +36,13 @@ public class Texture extends JComponent {
 	}
 	
 	public void setSize(float x, float y){
-		rendersize.set(x * this.getWidth() * 4, y * this.getHeight() * 4);
-		this.setSize((int) (offset.getX() + rendersize.getX() > hitbox.getX() ? offset.getX() + rendersize.getX() : hitbox.getX()), (int) (offset.getY() + rendersize.getY() > hitbox.getY() ? offset.getY() + rendersize.getY() : hitbox.getY()));
+		rendersize.set(x * 100, y * 100);
+		System.out.printf("setting size to %fx%f", rendersize.getX(), rendersize.getY());
+		setSize((int) rendersize.getX(), (int) rendersize.getY());
+		this.setSize(new Dimension((int) rendersize.getX(), (int) rendersize.getY()));
+		this.setMinimumSize(new Dimension((int) rendersize.getX(), (int) rendersize.getY()));
+		this.setPreferredSize(new Dimension((int) rendersize.getX(), (int) rendersize.getY()));
+		this.setMaximumSize(new Dimension((int) rendersize.getX(), (int) rendersize.getY()));
 		repaint();
 	}
 	
@@ -49,27 +52,23 @@ public class Texture extends JComponent {
 	}
 	
 	@Override
-	public void paintComponent(Graphics g1) {
-		paintComponent(g1, new Vector2f(0f,0f));
+	public void paint(Graphics g) {
+		paintTexture(g, new Vector2f(0f,0f));
 	}
 
-	public void paintComponent(Graphics g, Vector2f offset){
-		super.paintComponent(g);
+	protected void paintTexture(Graphics g, Vector2f offset){
 		int tx = (int) texcoords.getX();
 		int ty = (int) texcoords.getY();
 		int tw = (int) texcoords.getZ();
 		int th = (int) texcoords.getW();
-		int osx = (int) (getWidth() / 2 - (hitbox.getX() > rendersize.getX() ? hitbox.getX() : offset.getX() + rendersize.getX()) / 2);
-		int osy = (int) (getHeight() / 2 - (hitbox.getY() > rendersize.getY() ? hitbox.getY() : offset.getY() + rendersize.getY()) / 2);
+		int osx = (int) (getWidth() / 2 - (offset.getX() + rendersize.getX()) / 2);
+		int osy = (int) (getHeight() / 2 - (offset.getY() + rendersize.getY()) / 2);
 		g.setColor(new Color(0,0,0));
 		g.fillRect(0, 0, getWidth(), getHeight());
 		g.setColor(new Color(255,0,255));
-		g.fillRect(osx, osy, (int) (hitbox.getX() > rendersize.getX() ? hitbox.getX() : rendersize.getX()), (int) (hitbox.getY() > rendersize.getY() ? hitbox.getY() : rendersize.getY()));
+		g.fillRect(osx, osy, (int) rendersize.getX(), (int) rendersize.getY());
 		g.drawImage(texlib, osx, osy, osx + (int) rendersize.getX(), osy + (int) rendersize.getY(), tx, ty, tx + tw, ty + th, this);
-		g.setColor(new Color(0,0,255));
-		g.drawRect( osx + (int) rendersize.getX() / 2 - (int) hitbox.getX() / 2, osy + (int) rendersize.getY() / 2 - (int) hitbox.getY() / 2, (int) hitbox.getX(), (int) hitbox.getY());
 		System.out.printf("rendering image at (%d|%d) with %fx%f\n", osx, osy, rendersize.getX(), rendersize.getY());
 		System.out.printf("source image is at (%f|%f) with %fx%f\n", texcoords.getX(), texcoords.getY(), texcoords.getZ(), texcoords.getW());
-		System.out.printf("drawing hitbox with %dx%d\n", (int) hitbox.getX(), (int) hitbox.getY());
 	}
 }

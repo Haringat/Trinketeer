@@ -44,10 +44,13 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 	private HashMap<String, JComponent> fields = new HashMap<>();
 	private JButton entityadd = new JButton("+");
 	private JButton behaveadd = new JButton("+");
+	private JButton actionadd = new JButton("+");
 	private JButton rename = new JButton("rename");
 	private JButton behaveremove = new JButton("-");
 	private JButton entityremove = new JButton("-");
-
+	private JButton actionremove = new JButton("-");
+	
+	@SuppressWarnings("unchecked")
 	public EntityEditor(){
 		
 		loadEntitys();
@@ -67,7 +70,9 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 		fields.put("offsetx", new JTextField(10));
 		fields.put("offsety", new JTextField(10));
 		fields.put("tex", new TexturePreview());
-		
+		fields.put("texturetype", new JComboBox<String>());
+
+		((JComboBox<String>) fields.get("texturetype")).setModel(new DynamicComboBoxModel<String>());
 		
 		fields.get("class").setToolTipText("use \"root\" as prefix for the default package");
 		
@@ -140,11 +145,26 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 		c.gridy = 11;
 		add(fields.get("offsety"), c);
 		
-		c.gridx = 0;
+		c.gridwidth = 1;
+		c.fill = NONE;
 		c.gridy = 12;
+		c.gridx = 0;
+		add(new JLabel("texture"), c);
+		c.gridx = 1;
+		add(fields.get("tex"), c);
+		c.gridx = 2;
+		add(fields.get("texturetype"), c);
+		c.gridx = 3;
+		add(actionremove,c);
+		c.gridx = 4;
+		add(actionadd, c);
+		
+		c.gridwidth = REMAINDER;
+		c.gridx = 0;
+		c.gridy = 13;
 		add(new JLabel("behaviours"), c);
 		
-		c.gridy = 13;
+		c.gridy = 14;
 		c.fill = BOTH;
 		((JList<?>) fields.get("behaviours")).setLayoutOrientation(JList.VERTICAL);
 		((JList<?>) fields.get("behaviours")).setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -154,7 +174,7 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 		
 		c.fill = HORIZONTAL;
 		c.gridwidth = 3;
-		c.gridy = 14;
+		c.gridy = 15;
 		add(behaviourfield, c);
 		
 		c.gridwidth = 1;
@@ -163,18 +183,14 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 		
 		add(behaveremove, c);
 		
-		c.gridx = RELATIVE;
-		c.gridy = 0;
-		c.gridheight = REMAINDER;
-		c.fill = NONE;
-		add(fields.get("tex"), c);
-		
 		entityselector.addItemListener(this);
 		entityadd.addActionListener(this);
 		behaveadd.addActionListener(this);
+		actionadd.addActionListener(this);
 		rename.addActionListener(this);
 		entityremove.addActionListener(this);
 		behaveremove.addActionListener(this);
+		actionremove.addActionListener(this);
 		
 		if(!EntityData.entityData.isEmpty()){
 			entityselector.setSelectedIndex(0);
@@ -184,7 +200,13 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 			((TexturePreview) fields.get("tex")).setSize(Float.valueOf(((JTextField) fields.get("rendersizex")).getText()), Float.valueOf(((JTextField) fields.get("rendersizey")).getText()));
 			((TexturePreview) fields.get("tex")).setHitBox(Float.valueOf(((JTextField) fields.get("sizex")).getText()), Float.valueOf(((JTextField) fields.get("sizey")).getText()));
 			((TexturePreview) fields.get("tex")).setOffset(Float.valueOf(((JTextField) fields.get("offsetx")).getText()), Float.valueOf(((JTextField) fields.get("offsety")).getText()));
+			for(String action: EntityData.entityData.get(((EntityData) entityselector.getSelectedItem()).getName()).getTexturedActions()){
+				((JComboBox<String>) fields.get("texturetype")).addItem(action);
+			}
+			((JComboBox<String>) fields.get("texturetype")).setSelectedIndex(0);
 		}
+
+		
 	}
 	
 	@SuppressWarnings("unchecked")

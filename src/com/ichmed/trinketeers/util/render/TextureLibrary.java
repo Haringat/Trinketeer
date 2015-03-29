@@ -121,7 +121,6 @@ public class TextureLibrary
 					String floats = s.split(":")[1].trim();
 					textureLibrary.textureCoords.put(s.split(":")[0],
 							new Vector4f(Float.valueOf(floats.split(" ")[0]), Float.valueOf(floats.split(" ")[1]), Float.valueOf(floats.split(" ")[2]), Float.valueOf(floats.split(" ")[3])));
-					System.out.printf("The texture %s has the values %s %s %s %s\n", s.split(":")[0], floats.split(" ")[0], floats.split(" ")[1], floats.split(" ")[2], floats.split(" ")[3]);
 				}
 		} catch (FileNotFoundException e)
 		{
@@ -149,7 +148,6 @@ public class TextureLibrary
 				stringBuilder.append(s + ": ");
 				Vector4f v = t.textureCoords.get(s);
 				stringBuilder.append(v.x + " " + v.y + " " + v.z + " " + v.w + "|");
-				System.out.print(v.x + " " + v.y + " " + v.z + " " + v.w + "|\n");
 			}
 			FileWriter fw = new FileWriter(outputFileData);
 			fw.append(stringBuilder);
