@@ -17,6 +17,7 @@ public class Ladder extends Pickup
 	public Ladder(World w, boolean down)
 	{
 		super(w);
+		this.entityType = "ladder";
 		this.down = down;
 	}
 

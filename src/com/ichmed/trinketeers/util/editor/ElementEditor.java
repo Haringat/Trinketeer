@@ -1,13 +1,8 @@
 package com.ichmed.trinketeers.util.editor;
 
-import static java.awt.GridBagConstraints.HORIZONTAL;
 import static java.awt.GridBagConstraints.NORTH;
-import static java.awt.GridBagConstraints.REMAINDER;
-import static java.awt.GridBagConstraints.SOUTH;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
@@ -16,10 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -31,8 +23,6 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -44,9 +34,6 @@ public class ElementEditor extends JPanel
 	private static final long serialVersionUID = -1549438543620749797L;
 
 	JPanel view = new JPanel();
-
-	private HashMap<String, ElementData> elements = new HashMap<String, ElementData>();
-	private HashMap<String, Component[]> id = new HashMap<String, Component[]>();
 
 	ElementData currentElementData;
 	JComboBox<Object> list;
@@ -63,7 +50,6 @@ public class ElementEditor extends JPanel
 	public ElementEditor()
 	{
 		DataLoader.loadElements();
-		elements = ElementData.elements;
 
 		JPanel elementList = new JPanel();
 		list = new JComboBox<>(ElementData.elements.keySet().toArray());
