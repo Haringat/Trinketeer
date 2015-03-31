@@ -1,7 +1,6 @@
 package com.ichmed.trinketeers.util.editor;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 
 import javax.swing.event.ChangeEvent;
@@ -51,7 +50,6 @@ public class TexturePreview extends Texture{
 		int osy = (int) (getHeight() / 2 - (hitbox.getY() > rendersize.getY() ? hitbox.getY() : offset.getY() + rendersize.getY()) / 2);
 		g.setColor(new Color(0,0,255));
 		g.drawRect( osx, osy, (int) hitbox.getX(), (int) hitbox.getY());
-		System.out.printf("drawing hitbox at %d|%d with %dx%d\n", osx, osy, (int) hitbox.getX(), (int) hitbox.getY());
 	}
 
 	public void addChangeListener(ChangeListener l){

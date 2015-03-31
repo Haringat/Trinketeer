@@ -27,7 +27,6 @@ public class Texture extends JComponent {
 		Game.createDefaultTextureLibrary();
 		TextureLibrary.loadTextureLibrary(DataRef.defaultLibrary);
 		texlib = DataLoader.loadImage(DataRef.defaultLibrary + ".png", this);
-		System.out.printf("Texture library is %dx%d\n", texlib.getWidth(this), texlib.getHeight(this));
 		this.setMinimumSize(new Dimension(32, 32));
 		this.setPreferredSize(new Dimension(32, 32));
 		this.setMaximumSize(new Dimension(32, 32));
@@ -37,7 +36,6 @@ public class Texture extends JComponent {
 	
 	public void setSize(float x, float y){
 		rendersize.set(x * 100, y * 100);
-		System.out.printf("setting size to %fx%f", rendersize.getX(), rendersize.getY());
 		setSize((int) rendersize.getX(), (int) rendersize.getY());
 		this.setSize(new Dimension((int) rendersize.getX(), (int) rendersize.getY()));
 		this.setMinimumSize(new Dimension((int) rendersize.getX(), (int) rendersize.getY()));
@@ -68,7 +66,5 @@ public class Texture extends JComponent {
 		g.setColor(new Color(255,0,255));
 		g.fillRect(osx, osy, (int) rendersize.getX(), (int) rendersize.getY());
 		g.drawImage(texlib, osx, osy, osx + (int) rendersize.getX(), osy + (int) rendersize.getY(), tx, ty, tx + tw, ty + th, this);
-		System.out.printf("rendering image at (%d|%d) with %fx%f\n", osx, osy, rendersize.getX(), rendersize.getY());
-		System.out.printf("source image is at (%f|%f) with %fx%f\n", texcoords.getX(), texcoords.getY(), texcoords.getZ(), texcoords.getW());
 	}
 }

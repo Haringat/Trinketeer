@@ -2,12 +2,11 @@ package com.ichmed.trinketeers.world.generator;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import com.ichmed.trinketeers.entity.pickup.Chest;
-import com.ichmed.trinketeers.entity.pickup.Ladder;
 import com.ichmed.trinketeers.entity.pickup.SpellScroll;
-import com.ichmed.trinketeers.entity.pickup.Torch;
+import com.ichmed.trinketeers.util.Direction;
 import com.ichmed.trinketeers.world.Chunk;
 import com.ichmed.trinketeers.world.World;
+import com.ichmed.trinketeers.world.generator.dungeon.DungeonRoom;
 
 public class WorldGenerator
 {
@@ -34,15 +33,25 @@ public class WorldGenerator
 				}
 				if (z != 0) Chunk.setTile(world, -2 + i, -11, z, 3);
 			}
-			world.spawn((new Torch(world)).setCenter(new Vector3f(x + 0.1f, y + 0.8f, z)));
-			world.spawn((new Torch(world)).setCenter(new Vector3f(x - 0.1f, y + 0.8f, z)));
-			world.spawn((new Torch(world)).setCenter(new Vector3f(x - 0.1f, y - 0.8f, z)));
-			world.spawn((new Torch(world)).setCenter(new Vector3f(x + 0.1f, y - 0.8f, z)));
-			world.spawn((new Ladder(world, z % 2 == 0)).setCenter(new Vector3f(x, y + 1.1f, z)), false);
-			if(z < 0) world.spawn((new Ladder(world, z % 2 != 0)).setCenter(new Vector3f(x, y - .9f, z)), false);
-			world.spawn((new Chest(world)).setCenter(new Vector3f(x + 0.0f, y + 0.6f, z)));
-			world.generateZombies(-z + 1, z);
-			world.generateFlameElementals(-z / 5, z);
+			if(x == 0 && y == 0 && z == 0)
+			{
+				DungeonRoom.testRoom2.createRoom(world, x - 2, y - 2, z);
+				DungeonRoom.testRoom2.attachRoom(world, DungeonRoom.testRoom1, Direction.NORTH);
+				DungeonRoom.testRoom2.attachRoom(world, DungeonRoom.testRoom1.rotate(), Direction.EAST);
+				DungeonRoom.testRoom2.attachRoom(world, DungeonRoom.testRoom1.rotate(), Direction.SOUTH);
+				DungeonRoom.testRoom2.attachRoom(world, DungeonRoom.testRoom1.rotate(), Direction.WEST);
+				
+			}
+			
+//			world.spawn((new Torch(world)).setCenter(new Vector3f(x + 0.1f, y + 0.8f, z)));
+//			world.spawn((new Torch(world)).setCenter(new Vector3f(x - 0.1f, y + 0.8f, z)));
+//			world.spawn((new Torch(world)).setCenter(new Vector3f(x - 0.1f, y - 0.8f, z)));
+//			world.spawn((new Torch(world)).setCenter(new Vector3f(x + 0.1f, y - 0.8f, z)));
+//			world.spawn((new Ladder(world, z % 2 == 0)).setCenter(new Vector3f(x, y + 1.1f, z)), false);
+//			if(z < 0) world.spawn((new Ladder(world, z % 2 != 0)).setCenter(new Vector3f(x, y - .9f, z)), false);
+//			world.spawn((new Chest(world)).setCenter(new Vector3f(x + 0.0f, y + 0.6f, z)));
+//			world.generateZombies(-z + 1, z);
+//			world.generateFlameElementals(-z / 5, z);
 
 			if (z == 0)
 			{

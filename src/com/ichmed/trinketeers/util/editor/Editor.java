@@ -29,8 +29,6 @@ public class Editor extends JFrame implements ActionListener
 
 	private static final long serialVersionUID = -5209002133921099055L;
 	private final String createtexliblabel = "Create texturelibrary...";
-	private final String elementeditorconstraints = "ElementEditor";
-	private final String entityeditorconstraints = "EntityEditor";
 	private final String saveelementslabel = "Save elements";
 	private final String saveentityslabel = "Save entitys";
 	private final String closelabel = "Exit";
@@ -38,6 +36,7 @@ public class Editor extends JFrame implements ActionListener
 
 	private ElementEditor elementeditor;
 	private EntityEditor entityeditor;
+	private RoomEditor roomEditor;
 
 	private JPanel cp = new JPanel();
 	private JTabbedPane cl = new JTabbedPane();
@@ -47,6 +46,7 @@ public class Editor extends JFrame implements ActionListener
 		JScrollPane sp = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		elementeditor = new ElementEditor();
 		entityeditor = new EntityEditor();
+		roomEditor = new RoomEditor();
 		JViewport vp = new JViewport();
 		JMenuBar mb = new JMenuBar();
 		JMenuItem createtexlib = new JMenuItem(createtexliblabel);
@@ -82,8 +82,9 @@ public class Editor extends JFrame implements ActionListener
 		this.getContentPane().add(sp);
 		cp.add(cl);
 
-		cl.add(elementeditor, elementeditorconstraints);
-		cl.add(entityeditor, entityeditorconstraints);
+		cl.add(elementeditor, "Elements");
+		cl.add(entityeditor, "Entities");
+		cl.add(roomEditor, "Rooms");
 		vp.setView(cp);
 		this.pack();
 		this.setVisible(true);

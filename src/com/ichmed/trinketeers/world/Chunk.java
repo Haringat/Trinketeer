@@ -87,10 +87,12 @@ public class Chunk
 
 	public void populate()
 	{
-		if (this.posZ == 0) for (int i = 0; i < chunkSize * chunkSize; i++)
-			tiles[i] = 4;
-		else for (int i = 0; i < chunkSize * chunkSize; i++)
-			tiles[i] = 2;
+		if (this.posZ == 0)
+		{
+			for (int i = 0; i < chunkSize * chunkSize; i++)
+				if (tiles[i] == 0) tiles[i] = 4;
+		} else for (int i = 0; i < chunkSize * chunkSize; i++)
+			if (tiles[i] == 0) tiles[i] = 2;
 	}
 
 	public static String getHashString(int x, int y, int z)
@@ -164,6 +166,7 @@ public class Chunk
 	{
 		return getChunk(world, x, y, z, true, true);
 	}
+
 	public static Chunk getChunk(World world, int x, int y, int z, boolean generate, boolean loadFromDisk)
 	{
 		Chunk c = chunks.get(getHashString(x, y, z));
@@ -189,7 +192,7 @@ public class Chunk
 				{
 					Chunk c = chunks.get(getHashString(i + (x * clusterSize), j + (y * clusterSize), k + (z * clusterSize)));
 					c.onUnload(w);
-					chunks.put(getHashString(i + (x * clusterSize), j + (y * clusterSize), k + (z * clusterSize)), null);					
+					chunks.put(getHashString(i + (x * clusterSize), j + (y * clusterSize), k + (z * clusterSize)), null);
 				}
 	}
 
