@@ -222,9 +222,8 @@ public class DataLoader
 			}
 			root.put("entities", a);
 			JSONUtil.putJSONObjectIntoFile(entitiesFile, root);
-
-		} catch (JSONException e)
-		{
-		}
+		} catch (JSONException e){}
 	}
+
+	public static native byte[] loadTextureFile( String file );
 }

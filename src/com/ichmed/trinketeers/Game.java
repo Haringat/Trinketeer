@@ -29,6 +29,16 @@ import com.ichmed.trinketeers.world.World;
 
 public class Game
 {
+	
+	static{
+		try {
+			System.load(new File(".").getCanonicalPath()+File.separator+"natives"+File.separator+"libtargaloader.so");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	private World world;
 	// We need to strongly reference callback instances.
 	private GLFWErrorCallback errorCallback;
@@ -159,13 +169,11 @@ public class Game
 		glEnable(GL_STENCIL_TEST);
 	}
 
-	private void loop()
-	{
+	private void loop(){
 		// GLContext.createFromCurrent();
 		// glClearColor(1f, 0f, 0f, 0f);
 
-		while (glfwWindowShouldClose(window) == GL_FALSE)
-		{
+		while (glfwWindowShouldClose(window) == GL_FALSE){
 
 			// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the
 			// framebuffer
@@ -179,28 +187,30 @@ public class Game
 		}
 	}
 
-	public static void main(String[] args)
-	{
-		for (String arg : args)
-		{
-			if (arg.equals("-editor"))
-			{
+	public static void main(String[] args){
+		
+		for(int i = 0; i < args.length; i++){
+			switch(args[i]){
+			case "-loadtex":
+				byte[] texdata = DataLoader.loadTextureFile(DataRef.defaultLibrary+".tga");
+				System.out.printf("loaded %d bytes of data\n", texdata.length);
+				for(byte part: texdata){
+					System.out.printf("%d",part);
+				}
+				System.out.print('\n');
+				return;
+			case "-editor":
 				isEditor = true;
 				new Editor();
 				return;
-			}
-			if (arg.equals("-debug"))
-			{
+			case "-debug":
 				debugMode = true;
+				break;
+			default:
+				System.out.printf("unknown parameter %s\n", args[i]);
+				return;
 			}
-
 		}
-		/*try {
-			System.load(new File(".").getCanonicalPath()+File.separatorChar+"natives"+File.separatorChar+System.mapLibraryName("lwjgl"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
 		DataLoader.loadElements();
 		DataLoader.loadEntitys();
 		new Game().run();

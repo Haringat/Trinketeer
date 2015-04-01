@@ -9,9 +9,11 @@ public class TileEditor extends JComponent
 	public TileEditor()
 	{
 		super();
-		setSize(100, 200);
+//		setSize(100, 200);
 		Texture t = new Texture();
-		t.setTexture("ZombieIdle_0");
+		t.setTexture("zombieIdle_0");
+		t.setSize(1f, 1f);
 		add(t);
+		t.repaint();
 	}
 }

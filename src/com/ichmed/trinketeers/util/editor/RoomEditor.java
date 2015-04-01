@@ -8,6 +8,7 @@ public class RoomEditor extends JPanel
 	
 	public RoomEditor()
 	{
-		add(new TileEditor());
+		super();
+		this.add(new TileEditor());
 	}
 }
