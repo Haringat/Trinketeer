@@ -31,8 +31,15 @@ public class Game
 {
 	
 	static{
+		/*try{
+			System.loadLibrary("targaloader");
+		} catch(UnsatisfiedLinkError e){
+			System.out.printf("could not find the targaloader library\n");
+			System.exit(-1);
+		}*/
 		try {
 			System.load(new File(".").getCanonicalPath()+File.separator+"natives"+File.separator+"libtargaloader.so");
+			System.out.printf("libtarga loaded\n");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -192,10 +199,12 @@ public class Game
 		for(int i = 0; i < args.length; i++){
 			switch(args[i]){
 			case "-loadtex":
-				byte[] texdata = DataLoader.loadTextureFile(DataRef.defaultLibrary+".tga");
-				System.out.printf("loaded %d bytes of data\n", texdata.length);
-				for(byte part: texdata){
-					System.out.printf("%d",part);
+				System.out.printf("loading targa texture\n");
+				byte[] texdata = null;
+				try{
+					texdata = DataLoader.loadTextureFile(DataRef.defaultLibrary+".tga");
+				}finally{
+					System.out.printf("loaded %d bytes of data\n", texdata.length);
 				}
 				System.out.print('\n');
 				return;
