@@ -132,54 +132,122 @@ JNIEXPORT jbyteArray JNICALL
             }
         } else {
             switch(bpp){
-            case 1:
-                uint8_t *pixelbuffer = malloc(picwidth * picheight / 8 *
-                        sizeof(uint8_t));
-                fread(pixelbuffer, sizeof(uint8_t), picwidth * picheight / 8,
-                        texfile);
-                uint32_t white = 0b11111111111111111111111111111111;
-                uint32_t black = 0b00000000000000000000000011111111;
-                uint8_t buffer;
-                for(int i = 0; i < picwidth * picheight; i++){
-                    if((( pixelbuffer[( i / 8 ) + ( i % 8 )] >> i % 8 )
-                            & 0b00000001) == 1){
-                        pixeldata[i] = white;
-                    } else {
-                        pixeldata[i] = black;
+                case 1: {
+                    uint8_t *pixelbuffer = malloc(picwidth * picheight / 8
+                            * sizeof(uint8_t));
+                    fread(pixelbuffer, sizeof(uint8_t),
+                            picwidth * picheight / 8, texfile);
+                    uint32_t white = 0b11111111111111111111111111111111;
+                    uint32_t black = 0b11111111000000000000000000000000;
+                    for(int i = 0; i < picwidth * picheight; i++){
+                        if((( pixelbuffer[( i / 8 ) + ( i % 8 )] >> i % 8 )
+                                & 0b00000001) == 1){
+                            pixeldata[i] = white;
+                        } else {
+                            pixeldata[i] = black;
+                        }
                     }
+                    free(pixelbuffer);
+                    break;
+                }case 8:{
+                    printf("not yet implemented\n");
+                    break;
+                }case 15:{
+                    uint16_t *pixelbuffer = malloc(picwidth * picheight *
+                            sizeof(uint16_t));
+                    fread(pixelbuffer, sizeof(uint16_t), picwidth * picheight,
+                            texfile);
+                    uint32_t buffer;
+                    for(int i = 0; i < picwidth * picheight; i++){
+                        uint8_t blue  = (  pixelbuffer[i] & 0b0000000000011111 )
+                                * 256 / 32;
+                        uint8_t green = (( pixelbuffer[i] & 0b0000001111100000 )
+                                >>  5) * 256 / 32;
+                        uint8_t red   = (( pixelbuffer[i] & 0b0111110000000000 )
+                                >> 10) * 256 / 32;
+                        uint8_t alpha = (( pixelbuffer[i] & 0b1000000000000000 )
+                                >> 15) * 255;
+                        buffer = blue | ( green << 8 ) | ( red << 16 )
+                                | ( alpha << 24 );
+                        pixeldata[i] = buffer;
+                    }
+                    free(pixelbuffer);
+                    break;
+                }case 16:{
+                    uint16_t *pixelbuffer = malloc(picwidth * picheight *
+                            sizeof(uint16_t));
+                    fread(pixelbuffer, sizeof(uint16_t), picwidth * picheight,
+                            texfile);
+                    uint32_t buffer;
+                    for(int i = 0; i < picwidth * picheight; i++){
+                        uint8_t blue  = (  pixelbuffer[i] & 0b0000000000011111 )
+                                * 256 / 32;
+                        uint8_t green = (( pixelbuffer[i] & 0b0000011111100000 )
+                                >>  5) * 256 / 64;
+                        uint8_t red   = (( pixelbuffer[i] & 0b1111100000000000 )
+                                >> 10) * 256 / 32;
+                        uint8_t alpha = 255;
+                        buffer = blue | ( green << 8 ) | ( red << 16 )
+                                | ( alpha << 24 );
+                        pixeldata[i] = buffer;
+                    }
+                    free(pixelbuffer);
+                    break;
+                }case 24:{
+                    uint8_t *pixelbuffer = malloc(picwidth * picheight * 3 *
+                            sizeof(uint8_t));
+                    fread(pixelbuffer, sizeof(uint8_t),
+                            picwidth * picheight * 3, texfile);
+                    uint32_t buffer;
+                    for(int i = 0; i < picwidth * picheight; i++){
+                        uint8_t blue  = pixelbuffer[i * 3];
+                        uint8_t green = pixelbuffer[i * 3 + 1];
+                        uint8_t red   = pixelbuffer[i * 3 + 2];
+                        uint8_t alpha = 255;
+                        buffer = blue | ( green << 8 ) | ( red << 16 )
+                                | ( alpha << 24 );
+                        pixeldata[i] = buffer;
+                    }
+                    break;
+                }case 32:{
+                    printf("yay! I can just copy+paste:D\n");
+                    fread(pixeldata, sizeof(uint32_t), picwidth * picheight,
+                            texfile);
+                    break;
                 }
-                break;
-            case 8:
-                printf("not yet implemented\n");
-                break;
-            case 15:
-                uint16_t *pixelbuffer = malloc(picwidth * picheight *
-                        sizeof(uint16_t));
-                uint32_t buffer;
-                for(int i = 0; i < picwidth * picheight; i++){
-                    uint8_t red = pixelbuffer[i] & 0b0000000000111110;
-                    uint8_t green;
-                    uint8_t blue;
-                    uint8_t alpha = pixel;
-                    &buffer = 
-            case 16:
-            fread(pixeldata, sizeof(uint32_t), picwidth * picheight
+            }
+        }
     }
     if(zerov == 0){
         printf("reverting line order\n");
+        uint32_t buffer[picwidth];
         for(int i = 0; i < picheight / 2; i++){
-            uint32_t buffer[picwidth];
-            memcpy(buffer, pixeldata[i * picwidth], picwidth*sizeof(uint32_t));
-        if(zeroh == 0){
-            printf("reverting lines\n");
-            
+            memcpy(&buffer, &pixeldata[i * picwidth],
+                    picwidth * sizeof(uint32_t));
+            memcpy(&pixeldata[i * picwidth], &pixeldata[( picheight * picwidth )
+                    - ( i + 1 ) * picwidth], picwidth * sizeof(uint32_t));
+            memcpy(&pixeldata[( picheight * picwidth ) - ( i + 1 ) * picwidth],
+                    &buffer, picwidth * sizeof(uint32_t));
         }
     } else {
         printf("keeping line order\n");
     }
+    if(zeroh == 0){
+        printf("reverting lines\n");
+        uint32_t buffer;
+        for( int i = 0; i < picheight; i++ ){
+            for( int j = 0; j < picwidth; j++ ){
+                buffer = pixeldata[( i * picwidth ) + j];
+                pixeldata[( i * picwidth ) + j] = pixeldata[( i * picwidth )
+                        + picwidth - ( j + 1 )];
+                pixeldata[( i * picwidth ) + picwidth - ( j + 1 )] = buffer;
+            }
+        }
+    } else {
+        printf("keeping bytes in order\n");
+    }
     jbyteArray ret = (*env)->NewByteArray(env, picwidth * picheight * 4);
-    jbyte buffer = 1;
-    (*env)->SetByteArrayRegion(env, ret, 0, picwidth * picheight,
+    (*env)->SetByteArrayRegion(env, ret, 0, picwidth * picheight * 4,
             (jbyte *)pixeldata );
     free(pixeldata);
     return ret;

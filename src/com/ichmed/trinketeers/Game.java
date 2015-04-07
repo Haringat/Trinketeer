@@ -31,19 +31,19 @@ public class Game
 {
 	
 	static{
-		/*try{
+		try{
 			System.loadLibrary("targaloader");
 		} catch(UnsatisfiedLinkError e){
 			System.out.printf("could not find the targaloader library\n");
 			System.exit(-1);
-		}*/
-		try {
+		}
+		/*try {
 			System.load(new File(".").getCanonicalPath()+File.separator+"natives"+File.separator+"libtargaloader.so");
 			System.out.printf("libtarga loaded\n");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	private World world;
@@ -205,6 +205,10 @@ public class Game
 					texdata = DataLoader.loadTextureFile(DataRef.defaultLibrary+".tga");
 				}finally{
 					System.out.printf("loaded %d bytes of data\n", texdata.length);
+					for(int j= 0; j < 100; j++){
+						System.out.print(Integer.toBinaryString(texdata[i]));
+					}
+					System.out.print('\n');
 				}
 				System.out.print('\n');
 				return;
