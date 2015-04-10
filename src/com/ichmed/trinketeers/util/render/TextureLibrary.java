@@ -14,21 +14,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
+//import java.util.Set;
 
 import javax.imageio.ImageIO;
 
 import org.lwjgl.util.vector.Vector4f;
-import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.TextureLoader;
-import org.newdawn.slick.util.ResourceLoader;
+//import org.newdawn.slick.opengl.Texture;
+//import org.newdawn.slick.opengl.TextureLoader;
+//import org.newdawn.slick.util.ResourceLoader;
 
 import com.ichmed.trinketeers.Game;
 import com.ichmed.trinketeers.savefile.DataLoader;
 
 public class TextureLibrary
 {
-	private static HashMap<String, Texture> libraryTextures = new HashMap<>();
+//TODO:	private static HashMap<String, Texture> libraryTextures = new HashMap<>();
 	private HashMap<String, Vector4f> textureCoords = new HashMap<>();
 	public static TextureLibrary textureLibrary;
 	public String textureName;
@@ -86,19 +86,19 @@ public class TextureLibrary
 	public static boolean bindTexture(String path)
 	{
 		if (currentTexture.equals(path)) return true;
-		if (!libraryTextures.containsKey(path))
+//TODO:		if (!libraryTextures.containsKey(path))
 		{
-			try
-			{
-				libraryTextures.put(path, TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream(path)));
-			} catch (IOException e)
-			{
-				System.out.println("Could not load \"" + path + "\"");
-				e.printStackTrace();
-				return false;
-			}
+//			try
+//			{
+//TODO:				libraryTextures.put(path, TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream(path)));
+//			} catch (IOException e)
+//			{
+//				System.out.println("Could not load \"" + path + "\"");
+//				e.printStackTrace();
+//				return false;
+//			}
 		}
-		libraryTextures.get(path).bind();
+//TODO:		libraryTextures.get(path).bind();
 		currentTexture = path;
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -244,9 +244,9 @@ public class TextureLibrary
 
 	}
 
-	public Set<String> getNameSet(){
-		return libraryTextures.keySet();
-	}
+//	public Set<String> getNameSet(){
+//TODO:		return libraryTextures.keySet();
+//	}
 	
 	public boolean isPixelTransparent(int x, int y, BufferedImage bfrdImg)
 	{
@@ -259,6 +259,6 @@ public class TextureLibrary
 	{
 //		System.out.println(currentTexture);
 		bindTexture("resc/textures/shadow.png");
-		libraryTextures.get(currentTexture).bind();
+//TODO:		libraryTextures.get(currentTexture).bind();
 	}
 }

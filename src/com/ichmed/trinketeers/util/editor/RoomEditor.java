@@ -15,27 +15,7 @@ public class RoomEditor extends JPanel
 
 	public RoomEditor()
 	{
-		Texture t = new Texture();
-		t.setTexture("floorGrass");
-		t.setSize(20, 20);
-		t.setVisible(true);
-		JPanel p = new JPanel();
-		p.setBorder(BorderFactory.createBevelBorder(1));
-		
-		p.add(t);
-		add(t);
-		JButton b = new JButton("Test");
-		b.addActionListener(new ActionListener()
-		{			
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				t.setTexture("floorGrass");
-				t.setSize(50, 50);
-				t.setVisible(true);
-				t.repaint();
-			}
-		});
-		add(b);
+		super();
+		this.add(new TileEditor());
 	}
 }

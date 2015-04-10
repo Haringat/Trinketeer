@@ -14,6 +14,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +37,7 @@ import org.lwjgl.util.vector.Vector2f;
 import com.ichmed.trinketeers.savefile.DataLoader;
 import com.ichmed.trinketeers.savefile.data.EntityData;
 
-public class EntityEditor extends JPanel implements ItemListener, ActionListener {
+public class EntityEditor extends JPanel implements ItemListener, ActionListener, MouseListener {
 
 	private static final long serialVersionUID = 1840428064298141218L;
 
@@ -191,6 +193,7 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 		entityremove.addActionListener(this);
 		behaveremove.addActionListener(this);
 		actionremove.addActionListener(this);
+		fields.get("tex").addMouseListener(this);
 		
 		if(!EntityData.entityData.isEmpty()){
 			entityselector.setSelectedIndex(0);
@@ -319,6 +322,34 @@ public class EntityEditor extends JPanel implements ItemListener, ActionListener
 			entityselector.removeItem(buffer);
 			EntityData.entityData.remove(buffer.getName());
 		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
