@@ -11,7 +11,7 @@ public class TileEditor extends JComponent
 		super();
 		setSize(100, 200);
 		Texture t = new Texture();
-		t.setTexture("ZombieIdle_0");
+		t.setTexture("zombieIdle_0");
 		add(t);
 	}
 }

@@ -31,4 +31,19 @@ public class MathUtil
 		}
 		return ret;
 	}
+	
+	public static int[][] rotateCCW(int[][] mat)
+	{
+		final int M = mat.length;
+		final int N = mat[0].length;
+		int[][] ret = new int[N][M];
+		for (int r = 0; r < M; r++)
+		{
+			for (int c = 0; c < N; c++)
+			{
+				ret[N - 1 - c][M - 1 - r] = mat[r][c];
+			}
+		}
+		return ret;
+	}
 }

@@ -37,7 +37,7 @@ public class TextureLibrary
 
 	public static final int LIBRARY_SIZE = 1024;
 	private Graphics2D destGraphics;
-	private List<String> nonExistentTextures = new ArrayList<>();
+	public List<String> nonExistentTextures = new ArrayList<>();
 
 	public static Vector4f getTextureVector(String name)
 	{

@@ -14,7 +14,7 @@ import com.ichmed.trinketeers.world.World;
 
 public class DungeonRoom
 {
-	List<Door> doors = new ArrayList<Door>();
+	public List<Door> doors = new ArrayList<Door>();
 	Vector2f size;
 	int[] tiles;
 	Vector2f pos;
@@ -22,30 +22,6 @@ public class DungeonRoom
 	int defaultWall = 2;
 	int defaultFloor = 5;
 	boolean isRotatable = true;
-	
-	public static DungeonRoom testRoom1 = new DungeonRoom();
-	public static DungeonRoom testRoom2 = new DungeonRoom();
-	static
-	{
-		testRoom1.tiles = new int[]{2, 5, 5, 2,
-								    2, 5, 5, 2,
-								    2, 5, 5, 2,
-								    2, 5, 5, 2};
-		testRoom1.size = new Vector2f(4, 4);
-		testRoom1.doors.add(new Door(1, 0, 2, 1, NORTH));
-		testRoom1.doors.add(new Door(1, 4, 2, 1, SOUTH));
-		
-		testRoom2.tiles = new int[]{2, 5, 5, 2,
-								    5, 5, 5, 5,
-								    5, 5, 5, 5,
-								    2, 5, 5, 2};
-		
-		testRoom2.size = new Vector2f(4, 4);
-		testRoom2.doors.add(new Door(1, 0, 2, 1, NORTH));
-		testRoom2.doors.add(new Door(0, 1, 1, 2, EAST));
-		testRoom2.doors.add(new Door(2, 4, 2, 1, SOUTH));
-		testRoom2.doors.add(new Door(4, 2, 1, 2, WEST));
-	}
 	
 	public DungeonRoom rotate()
 	{
@@ -65,8 +41,8 @@ public class DungeonRoom
 		
 		for(Door d : this.doors)
 		{
-			d.dir = d.dir == NORTH ? WEST : d.dir == WEST ? SOUTH : d.dir == SOUTH ? EAST : NORTH;
-			d.pos = new Vector2f(this.size.x - d.pos.y, d.pos.x);
+			d.dir = d.dir == NORTH ? EAST : d.dir == EAST ? SOUTH : d.dir == SOUTH ? WEST : NORTH;
+			d.pos = new Vector2f(d.pos.y, d.pos.x);
 			d.size = new Vector2f(d.size.y, d.size.x);
 		}
 		
@@ -88,10 +64,8 @@ public class DungeonRoom
 				{
 					doorA.connected = true;
 					doorB.connected = true;
-					int shiftX = (int)((this.pos.x + doorA.pos.x) - doorB.pos.x);
-					int shiftY = (int)(this.pos.y + doorA.pos.y - doorB.pos.y);
-					if(doorB.dir == NORTH) shiftX += (doorB.size.x - 1);
-					if(doorB.dir == EAST) shiftY += (doorB.size.y - 1);
+					int shiftX = (int)(this.pos.x - doorA.pos.x + doorB.pos.x);
+					int shiftY = (int)(this.pos.y - doorA.pos.y - (doorB.size.y - 1) + doorB.pos.y);
 					if(room.createRoom(w, shiftX, shiftY, this.height))
 					return true;
 				}
@@ -105,19 +79,23 @@ public class DungeonRoom
 		this.pos = new Vector2f(x, y);
 		this.height = z;
 		for(int i = 0; i < size.x * size.y; i++)
-		{
-			Chunk.setTile(world, (int)(x + (i % size.x)), (int)y + (int)(i / size.x), z, tiles[i]);
-		}
+			Chunk.setTile(world, (int)(x + (i % size.x)), (int)y - (int)(i / size.x), z, tiles[i]);
 //		for(Door d : this.doors) if(!d.connected) Chunk.setTile(world, (int)(this.pos.x + d.pos.x), (int)(this.pos.y + d.pos.y), this.height, this.defaultWall);
+		for(Door d : this.doors)
+		{
+			for(int i = 0; i < d.size.x; i++)
+				for(int j = 0; j < d.size.y; j++)
+					Chunk.setTile(world, x + (int)d.pos.x + i, y - (int)d.pos.y - ((int)d.size.y - 1) + j, z, 4);
+		}
 		return true;
 	}
 	
-	private static class Door
+	public static class Door
 	{
 		Vector2f pos;
 		Vector2f size;
-		Direction dir;
-		boolean connected = false;
+		public Direction dir;
+		public boolean connected = false;
 		
 		public Door(int x, int y, int width, int height,  Direction d)
 		{
