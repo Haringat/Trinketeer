@@ -6,7 +6,6 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -198,20 +197,6 @@ public class Game
 		
 		for(int i = 0; i < args.length; i++){
 			switch(args[i]){
-			case "-loadtex":
-				System.out.printf("loading targa texture\n");
-				byte[] texdata = null;
-				try{
-					texdata = DataLoader.loadTextureFile(DataRef.defaultLibrary+".tga");
-				}finally{
-					System.out.printf("loaded %d bytes of data\n", texdata.length);
-					for(int j= 0; j < 100; j++){
-						System.out.print(Integer.toBinaryString(texdata[i]));
-					}
-					System.out.print('\n');
-				}
-				System.out.print('\n');
-				return;
 			case "-editor":
 				isEditor = true;
 				new Editor();
