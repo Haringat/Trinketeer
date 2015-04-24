@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Scanner;
 //import java.util.Set;
 
+
 import javax.imageio.ImageIO;
 
 import org.lwjgl.util.vector.Vector4f;
@@ -23,12 +24,14 @@ import org.lwjgl.util.vector.Vector4f;
 //import org.newdawn.slick.opengl.TextureLoader;
 //import org.newdawn.slick.util.ResourceLoader;
 
+
 import com.ichmed.trinketeers.Game;
 import com.ichmed.trinketeers.savefile.DataLoader;
+import com.ichmed.trinketeers.util.Texture;
 
 public class TextureLibrary
 {
-//TODO:	private static HashMap<String, Texture> libraryTextures = new HashMap<>();
+	private static HashMap<String, Texture> libraryTextures = new HashMap<>();
 	private HashMap<String, Vector4f> textureCoords = new HashMap<>();
 	public static TextureLibrary textureLibrary;
 	public String textureName;
@@ -86,19 +89,12 @@ public class TextureLibrary
 	public static boolean bindTexture(String path)
 	{
 		if (currentTexture.equals(path)) return true;
-//TODO:		if (!libraryTextures.containsKey(path))
+		if (!libraryTextures.containsKey(path))
 		{
-//			try
-//			{
-//TODO:				libraryTextures.put(path, TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream(path)));
-//			} catch (IOException e)
-//			{
-//				System.out.println("Could not load \"" + path + "\"");
-//				e.printStackTrace();
-//				return false;
-//			}
+				//libraryTextures.put(path, TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream(path)));
+			libraryTextures.put(path, new Texture(path));
 		}
-//TODO:		libraryTextures.get(path).bind();
+		libraryTextures.get(path).bind();
 		currentTexture = path;
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -108,7 +104,7 @@ public class TextureLibrary
 	public static void loadTextureLibrary(String path)
 	{
 		textureLibrary = new TextureLibrary();
-		textureLibrary.textureName = path + ".png";
+		textureLibrary.textureName = path + ".tga";
 		if(!Game.isEditor)bindTexture(textureLibrary.textureName);
 		File f = new File(path + ".tld");
 		try
