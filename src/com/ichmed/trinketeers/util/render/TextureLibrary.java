@@ -1,6 +1,10 @@
 package com.ichmed.trinketeers.util.render;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_NEAREST;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
+import static org.lwjgl.opengl.GL11.glTexParameteri;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -14,15 +18,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
-//import java.util.Set;
 
 
 import javax.imageio.ImageIO;
 
 import org.lwjgl.util.vector.Vector4f;
-//import org.newdawn.slick.opengl.Texture;
-//import org.newdawn.slick.opengl.TextureLoader;
-//import org.newdawn.slick.util.ResourceLoader;
 
 
 import com.ichmed.trinketeers.Game;
@@ -45,20 +45,20 @@ public class TextureLibrary
 	public static Vector4f getTextureVector(String name)
 	{
 		Vector4f v = textureLibrary.textureCoords.get(name);
-		if(v == null)
+		if (v == null)
 		{
 			String s = name.split("_")[0];
 			s += "_0";
-			v = textureLibrary.textureCoords.get(s);			
-		}
-		if(v == null)
-		{
-			String s = name.split("_")[0];
-			v = textureLibrary.textureCoords.get(s);			
+			v = textureLibrary.textureCoords.get(s);
 		}
 		if (v == null)
 		{
-			if(!textureLibrary.nonExistentTextures.contains(name))textureLibrary.nonExistentTextures.add(name);
+			String s = name.split("_")[0];
+			v = textureLibrary.textureCoords.get(s);
+		}
+		if (v == null)
+		{
+			if (!textureLibrary.nonExistentTextures.contains(name)) textureLibrary.nonExistentTextures.add(name);
 			v = new Vector4f(0, 0, 16, 16);
 		}
 		return v;
@@ -70,8 +70,7 @@ public class TextureLibrary
 		{
 			try
 			{
-				String p = textureName.split("\\.")[0].split("/")
-						[textureName.split("\\.")[0].split("/").length - 1];
+				String p = textureName.split("\\.")[0].split("/")[textureName.split("\\.")[0].split("/").length - 1];
 				File f = new File("resc/error/" + p + "_Textures_Not_Found.tef");
 				f.getParentFile().mkdirs();
 				f.createNewFile();
@@ -89,9 +88,7 @@ public class TextureLibrary
 	public static boolean bindTexture(String path)
 	{
 		if (currentTexture.equals(path)) return true;
-		if (!libraryTextures.containsKey(path))
-		{
-				//libraryTextures.put(path, TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream(path)));
+		if (!libraryTextures.containsKey(path)){
 			libraryTextures.put(path, new Texture(path));
 		}
 		libraryTextures.get(path).bind();
@@ -240,21 +237,21 @@ public class TextureLibrary
 
 	}
 
-//	public Set<String> getNameSet(){
-//TODO:		return libraryTextures.keySet();
-//	}
-	
+	// public Set<String> getNameSet(){
+	// TODO: return libraryTextures.keySet();
+	// }
+
 	public boolean isPixelTransparent(int x, int y, BufferedImage bfrdImg)
 	{
-		if(x >= LIBRARY_SIZE || y >= LIBRARY_SIZE) return false;
+		if (x >= LIBRARY_SIZE || y >= LIBRARY_SIZE) return false;
 		Color c = new Color(bfrdImg.getRGB(x, y));
 		return c.getRed() == 255 && c.getBlue() == 255;
 	}
 
 	public static void rebind()
 	{
-//		System.out.println(currentTexture);
+		// System.out.println(currentTexture);
 		bindTexture("resc/textures/shadow.png");
-//TODO:		libraryTextures.get(currentTexture).bind();
+		// TODO: libraryTextures.get(currentTexture).bind();
 	}
 }

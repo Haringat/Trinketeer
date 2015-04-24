@@ -1,13 +1,6 @@
 package com.ichmed.trinketeers.util.editor;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JPanel;
-
-import com.ichmed.trinketeers.util.render.TextureLibrary;
 
 public class RoomEditor extends JPanel
 {

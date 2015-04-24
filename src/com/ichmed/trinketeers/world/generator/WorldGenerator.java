@@ -1,18 +1,11 @@
 package com.ichmed.trinketeers.world.generator;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.lwjgl.util.vector.Vector3f;
 
 import com.ichmed.trinketeers.entity.pickup.SpellScroll;
-import com.ichmed.trinketeers.util.Direction;
 import com.ichmed.trinketeers.world.Chunk;
 import com.ichmed.trinketeers.world.World;
-import com.ichmed.trinketeers.world.generator.dungeon.DungeonRoom;
-import com.ichmed.trinketeers.world.generator.dungeon.TestRoom1;
-import com.ichmed.trinketeers.world.generator.dungeon.TestRoom2;
-import com.ichmed.trinketeers.world.generator.dungeon.TestRoom3;
+import com.ichmed.trinketeers.world.generator.dungeon.DungeonManager;
 
 public class WorldGenerator
 {
@@ -41,58 +34,8 @@ public class WorldGenerator
 			}
 			if (x == 0 && y == 0 && z == 0)
 			{
-				List<DungeonRoom> rooms = new ArrayList<>();
-
-				DungeonRoom start = new TestRoom3();
-				start.rotate().rotate().rotate().createRoom(world, -2, 2, 0);
-//				start.attachRoom(world, new TestRoom3(), Direction.SOUTH);
-				rooms.add(start);
-
-				boolean b = true;
-
-//				while (b)
-//				{
-//					List<DungeonRoom> roomTemp = new ArrayList<DungeonRoom>(rooms);
-//					b = false;
-//					for (DungeonRoom r : rooms)
-//					{
-//						for (DungeonRoom.Door d : r.doors)
-//						{
-//							if (!d.connected)
-//							{
-//								b = true;
-//								DungeonRoom nr;
-//								int i = (int) (Math.random() * 10);
-//								switch (i)
-//								{
-////								case 0:
-////									nr = new TestRoom2();
-////									break;
-////								case 1:
-////									nr = new TestRoom3();
-////									break;
-//								default:
-//									nr = new TestRoom3();
-//								}
-//								
-//								System.out.println("Creating new Room");
-//								System.out.println("Rooms: " + roomTemp.size());
-//								if(!r.attachRoom(world, nr, d.dir)) 
-//									if(!r.attachRoom(world, nr.rotate(), d.dir)) 
-//										if(!r.attachRoom(world, nr.rotate(), d.dir))
-//											if(!r.attachRoom(world, nr.rotate(), d.dir)) 
-//												{
-//													d.connected = true;
-//													System.out.println("Failed to attach room");
-//													continue;
-//												}
-//								roomTemp.add(nr);
-//							}
-//						}
-//					}
-//					rooms = roomTemp;
-//				}
-
+				DungeonManager d = new DungeonManager(40, 40, 1, 0, 0, 0);
+				d.populate(world);
 			}
 
 			// world.spawn((new Torch(world)).setCenter(new Vector3f(x + 0.1f, y
