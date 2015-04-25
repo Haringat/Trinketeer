@@ -89,7 +89,11 @@ public class TextureLibrary
 	{
 		if (currentTexture.equals(path)) return true;
 		if (!libraryTextures.containsKey(path)){
-			libraryTextures.put(path, new Texture(path));
+			try {
+				libraryTextures.put(path, new Texture(path));
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 		}
 		libraryTextures.get(path).bind();
 		currentTexture = path;
