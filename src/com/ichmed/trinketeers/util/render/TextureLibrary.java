@@ -237,21 +237,10 @@ public class TextureLibrary
 
 	}
 
-	// public Set<String> getNameSet(){
-	// TODO: return libraryTextures.keySet();
-	// }
-
 	public boolean isPixelTransparent(int x, int y, BufferedImage bfrdImg)
 	{
 		if (x >= LIBRARY_SIZE || y >= LIBRARY_SIZE) return false;
 		Color c = new Color(bfrdImg.getRGB(x, y));
 		return c.getRed() == 255 && c.getBlue() == 255;
-	}
-
-	public static void rebind()
-	{
-		// System.out.println(currentTexture);
-		bindTexture("resc/textures/shadow.png");
-		// TODO: libraryTextures.get(currentTexture).bind();
 	}
 }

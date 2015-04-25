@@ -124,6 +124,5 @@ public class RenderUtil
 	public static void renderText(float x, float y, String text, float scaleX, float scaleY, int allignMode)
 	{
 		ttf.drawString(x, y, text, 0, text.length() - 1, scaleX, scaleY, allignMode);
-		TextureLibrary.rebind();
 	}
 }

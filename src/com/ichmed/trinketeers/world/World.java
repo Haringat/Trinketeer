@@ -16,6 +16,7 @@ import com.ichmed.trinketeers.entity.mob.FlameElemental;
 import com.ichmed.trinketeers.entity.mob.Zombie;
 import com.ichmed.trinketeers.entity.pickup.Torch;
 import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
+import com.ichmed.trinketeers.util.DataRef;
 import com.ichmed.trinketeers.util.InputUtil;
 import com.ichmed.trinketeers.util.render.RenderUtil;
 import com.ichmed.trinketeers.util.render.GraphicSorterYAxis;
@@ -245,7 +246,7 @@ public class World
 		renderChunks(true);
 		glPopMatrix();
 		LightRenderer.renderLights(this, lights);
-		TextureLibrary.rebind();
+		TextureLibrary.bindTexture(DataRef.defaultLibrary + ".tga");
 		for (IGraphic g : uiGraphics)
 			g.render();
 	}
