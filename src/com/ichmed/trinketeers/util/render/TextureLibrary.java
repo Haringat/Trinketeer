@@ -20,18 +20,23 @@ import java.util.List;
 import java.util.Scanner;
 
 
+
+
 import javax.imageio.ImageIO;
 
 import org.lwjgl.util.vector.Vector4f;
 
 
+
+
 import com.ichmed.trinketeers.Game;
 import com.ichmed.trinketeers.savefile.DataLoader;
-import com.ichmed.trinketeers.util.Texture;
+import com.ichmed.trinketeers.util.ITexture;
+import com.ichmed.trinketeers.util.KTXTexture;
 
 public class TextureLibrary
 {
-	private static HashMap<String, Texture> libraryTextures = new HashMap<>();
+	private static HashMap<String, ITexture> libraryTextures = new HashMap<>();
 	private HashMap<String, Vector4f> textureCoords = new HashMap<>();
 	public static TextureLibrary textureLibrary;
 	public String textureName;
@@ -90,7 +95,7 @@ public class TextureLibrary
 		if (currentTexture.equals(path)) return true;
 		if (!libraryTextures.containsKey(path)){
 			try {
-				libraryTextures.put(path, new Texture(path));
+				libraryTextures.put(path, new KTXTexture(path));
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
@@ -105,7 +110,7 @@ public class TextureLibrary
 	public static void loadTextureLibrary(String path)
 	{
 		textureLibrary = new TextureLibrary();
-		textureLibrary.textureName = path + ".tga";
+		textureLibrary.textureName = path + ".ktx";
 		if(!Game.isEditor)bindTexture(textureLibrary.textureName);
 		File f = new File(path + ".tld");
 		try

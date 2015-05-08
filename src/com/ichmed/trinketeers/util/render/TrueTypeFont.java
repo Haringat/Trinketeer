@@ -1,5 +1,9 @@
 package com.ichmed.trinketeers.util.render;
 
+import static org.lwjgl.opengl.GL11.GL_BYTE;
+import static org.lwjgl.opengl.GL11.GL_RGBA;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -461,6 +465,7 @@ public class TrueTypeFont
 
 			GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
 
+			GL11.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_BYTE, byteBuffer);
 			//GLU.gluBuild2DMipmaps(GL11.GL_TEXTURE_2D, internalFormat, width, height, format, GL11.GL_UNSIGNED_BYTE, byteBuffer);
 			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
 			return textureId.get(0);

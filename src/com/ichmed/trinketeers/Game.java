@@ -5,11 +5,21 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import java.awt.Canvas;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 import org.lwjgl.Sys;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -21,6 +31,7 @@ import org.lwjgl.util.vector.Vector3f;
 import com.ichmed.trinketeers.savefile.ChunkSave;
 import com.ichmed.trinketeers.savefile.DataLoader;
 import com.ichmed.trinketeers.util.DataRef;
+import com.ichmed.trinketeers.util.KTXTexture;
 import com.ichmed.trinketeers.util.editor.Editor;
 import com.ichmed.trinketeers.util.render.TextureLibrary;
 import com.ichmed.trinketeers.world.Chunk;
@@ -31,18 +42,11 @@ public class Game
 	
 	static{
 		try{
-			System.loadLibrary("targaloader");
+			System.loadLibrary("ktxlibwrapper");
 		} catch(UnsatisfiedLinkError e){
-			System.out.printf("could not find the targaloader library\n");
+			System.out.printf("could not find the texture loader library\n");
 			System.exit(-1);
 		}
-		/*try {
-			System.load(new File(".").getCanonicalPath()+File.separator+"natives"+File.separator+"libtargaloader.so");
-			System.out.printf("libtarga loaded\n");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
 	}
 
 	private World world;
@@ -197,6 +201,9 @@ public class Game
 		
 		for(int i = 0; i < args.length; i++){
 			switch(args[i]){
+			case "-loadtex":
+				testloadtexlib();
+				return;
 			case "-editor":
 				isEditor = true;
 				new Editor();
@@ -212,6 +219,16 @@ public class Game
 		DataLoader.loadElements();
 		DataLoader.loadEntitys();
 		new Game().run();
+	}
+
+	private static void testloadtexlib() {
+		new Game().init();
+		try {
+			new KTXTexture("resc/textures/defaultLibrary.ktx");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public static boolean isKeyDown(int key)

@@ -246,7 +246,7 @@ public class World
 		renderChunks(true);
 		glPopMatrix();
 		LightRenderer.renderLights(this, lights);
-		TextureLibrary.bindTexture(DataRef.defaultLibrary + ".tga");
+		TextureLibrary.bindTexture(DataRef.defaultLibrary + ".ktx");
 		for (IGraphic g : uiGraphics)
 			g.render();
 	}
