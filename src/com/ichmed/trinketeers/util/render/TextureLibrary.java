@@ -22,6 +22,10 @@ import java.util.Scanner;
 
 
 
+
+
+
+
 import javax.imageio.ImageIO;
 
 import org.lwjgl.util.vector.Vector4f;
@@ -29,14 +33,19 @@ import org.lwjgl.util.vector.Vector4f;
 
 
 
+
+
+
+
 import com.ichmed.trinketeers.Game;
 import com.ichmed.trinketeers.savefile.DataLoader;
-import com.ichmed.trinketeers.util.ITexture;
-import com.ichmed.trinketeers.util.KTXTexture;
+import com.ichmed.trinketeers.util.texturesystem.Texture;
+import com.ichmed.trinketeers.util.texturesystem.TextureCodecRegistry;
+import com.ichmed.trinketeers.util.texturesystem.ktxplugin.KTXTexture;
 
 public class TextureLibrary
 {
-	private static HashMap<String, ITexture> libraryTextures = new HashMap<>();
+	private static HashMap<String, Texture> libraryTextures = new HashMap<>();
 	private HashMap<String, Vector4f> textureCoords = new HashMap<>();
 	public static TextureLibrary textureLibrary;
 	public String textureName;
@@ -94,16 +103,10 @@ public class TextureLibrary
 	{
 		if (currentTexture.equals(path)) return true;
 		if (!libraryTextures.containsKey(path)){
-			try {
-				libraryTextures.put(path, new KTXTexture(path));
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
+			libraryTextures.put(path, TextureCodecRegistry.createTexture(path));
 		}
 		libraryTextures.get(path).bind();
 		currentTexture = path;
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		return true;
 	}
 

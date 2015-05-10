@@ -31,9 +31,10 @@ import org.lwjgl.util.vector.Vector3f;
 import com.ichmed.trinketeers.savefile.ChunkSave;
 import com.ichmed.trinketeers.savefile.DataLoader;
 import com.ichmed.trinketeers.util.DataRef;
-import com.ichmed.trinketeers.util.KTXTexture;
 import com.ichmed.trinketeers.util.editor.Editor;
 import com.ichmed.trinketeers.util.render.TextureLibrary;
+import com.ichmed.trinketeers.util.texturesystem.TextureCodecRegistry;
+import com.ichmed.trinketeers.util.texturesystem.ktxplugin.KTXTexture;
 import com.ichmed.trinketeers.world.Chunk;
 import com.ichmed.trinketeers.world.World;
 
@@ -74,7 +75,7 @@ public class Game
 			init();
 			world = new World();
 			createDefaultTextureLibrary();
-			TextureLibrary.loadTextureLibrary("resc/textures/defaultLibrary");
+			TextureLibrary.loadTextureLibrary(DataRef.defaultLibrary);
 			loop();
 
 			// Release window and window callbacks
@@ -223,12 +224,7 @@ public class Game
 
 	private static void testloadtexlib() {
 		new Game().init();
-		try {
-			new KTXTexture("resc/textures/defaultLibrary.ktx");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		TextureCodecRegistry.createTexture("resc/textures/defaultLibrary.ktx");
 	}
 
 	public static boolean isKeyDown(int key)
