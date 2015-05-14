@@ -1,7 +1,16 @@
 package com.ichmed.trinketeers.util.render;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL31.*;
+import static org.lwjgl.opengl.GL32.*;
+import static org.lwjgl.opengl.GL33.*;
+
 import java.awt.Font;
+import java.nio.IntBuffer;
+import java.nio.*;
+
 import org.lwjgl.util.vector.Vector4f;
 
 import com.ichmed.trinketeers.Game;
@@ -57,6 +66,17 @@ public class RenderUtil
 
 	public static void drawRect(float x, float y, float width, float height)
 	{
+		/*FloatBuffer vertices = FloatBuffer.wrap(new float[]{x, y,
+				x + width, y,
+				x + width, y + height,
+				x, y + height});
+		int vertexbufferobject = glGenBuffers();
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbufferobject);
+		glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);*/
+	}
+
+	/*public static void drawRect(float x, float y, float width, float height)
+	{
 		glBegin(GL_QUADS);
 		glTexCoord2d(0, 1);
 		glVertex2f(x, y);
@@ -67,12 +87,12 @@ public class RenderUtil
 		glTexCoord2d(0, 0);
 		glVertex2f(x, y + height);
 		glEnd();
-	}
+	}*/
 
 	public static void clearBuffer()
 	{
 		glClearColor(0f, 0f, 0f, 0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	}
 
 	public static void setColor256Bit(float r, float g, float b)
