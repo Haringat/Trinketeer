@@ -1,14 +1,18 @@
 package com.ichmed.trinketeers.util.render;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL12.*;
+import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL14.*;
 import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL21.*;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL31.*;
 import static org.lwjgl.opengl.GL32.*;
 import static org.lwjgl.opengl.GL33.*;
 
 import java.awt.Font;
-import java.nio.IntBuffer;
 import java.nio.*;
 
 import org.lwjgl.util.vector.Vector4f;
@@ -21,7 +25,7 @@ public class RenderUtil
 
 	static Font font = new Font("Arial Black", Font.BOLD, 24);
 	static TrueTypeFont ttf = new TrueTypeFont(font, false);
-
+	
 	public static void drawRect(float width, float height)
 	{
 		drawRect(0, 0, width, height);
@@ -66,13 +70,13 @@ public class RenderUtil
 
 	public static void drawRect(float x, float y, float width, float height)
 	{
-		/*FloatBuffer vertices = FloatBuffer.wrap(new float[]{x, y,
+		FloatBuffer vertices = FloatBuffer.wrap(new float[]{x, y,
 				x + width, y,
 				x + width, y + height,
 				x, y + height});
 		int vertexbufferobject = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbufferobject);
-		glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);*/
+		glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
 	}
 
 	/*public static void drawRect(float x, float y, float width, float height)
