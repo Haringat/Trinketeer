@@ -26,7 +26,7 @@ natives/*
 hs_err_pid*
 
 # jni required binary files
-.o
-.so
-.so.*
-.dll
+*.o
+*.so
+*.so.*
+*.dll
