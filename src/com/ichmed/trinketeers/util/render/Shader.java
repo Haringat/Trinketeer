@@ -14,6 +14,7 @@ import static org.lwjgl.opengl.GL33.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.IntBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -57,9 +58,22 @@ public class Shader {
 		for(int i: shaders){
 			glAttachShader(program, i);
 		}
-		//TODO: glBindFragDataLocation
 		glLinkProgram(program);
+		//TODO: glBindFragDataLocation
+		glBindFragDataLocation();
 		glUseProgram(program);
+	}
+	
+	public static void deleteShaderProgram(String name){
+		IntBuffer shaders = glGetAttachedShaders(programs.get(name));
+		for(int i: shaders.array()){
+			glDetachShader(programs.get(name), i);
+		}
+		glDeleteProgram(programs.get(name));
+	}
+	
+	public int getShaderID(){
+		return shaderid;
 	}
 	
 	public static void useShaderProgram(String name){
