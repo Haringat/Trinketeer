@@ -2,7 +2,9 @@ package com.ichmed.trinketeers.world.generator.dungeon;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
+import com.ichmed.trinketeers.Game;
 import com.ichmed.trinketeers.util.Direction;
 import com.ichmed.trinketeers.world.World;
 
@@ -29,7 +31,9 @@ public class DungeonManager
 		DungeonRoom start = new TestRoomJunction();
 		List<DungeonRoom> roomsLeftToConnect = new ArrayList<DungeonRoom>();
 		roomsLeftToConnect.add(start);
-		System.out.println(start.createRoom(w, this.posX + this.sizeX / 2, this.posY + this.sizeY / 2, startingHeight, this));
+		if(start.createRoom(w, this.posX + this.sizeX / 2, this.posY + this.sizeY / 2, startingHeight, this)){
+			Game.logger.log(Level.FINEST, "new room created");
+		}
 
 		while (roomsLeftToConnect.size() > 0)
 		{
@@ -87,7 +91,7 @@ public class DungeonManager
 					if (occupiedTiles[x + i][y + j][z] == true) return true;
 			return false;
 		}
-		System.out.println(x + " " + y);
+		Game.logger.log(Level.FINEST, x + " " + y);
 		return true;
 	}
 }

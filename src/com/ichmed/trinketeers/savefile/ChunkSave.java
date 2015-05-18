@@ -4,6 +4,8 @@ import static com.ichmed.trinketeers.world.Chunk.*;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.logging.Level;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,7 +44,7 @@ public class ChunkSave
 				}
 			} catch (JSONException e)
 			{
-				e.printStackTrace();
+				Game.logger.throwing(ChunkSave.class.getName(), "isChunkOnDisk", e);
 			}
 
 		}
@@ -65,9 +67,9 @@ public class ChunkSave
 						Chunk c = getChunk(w, i + (x * clusterSize), j + (y * clusterSize), k + (z * clusterSize), true, false);
 						if (c == null)
 						{
-							System.err.println("Chunk was null");
+							Game.logger.log(Level.SEVERE, "Chunk was null");
 							for (StackTraceElement e : Thread.currentThread().getStackTrace())
-								System.err.println(e.toString());
+								Game.logger.log(Level.SEVERE, e.toString());
 							continue;
 						}
 						for (int l = 0; l < chunkSize * chunkSize; l++)
@@ -88,7 +90,7 @@ public class ChunkSave
 					}
 		} catch (JSONException e1)
 		{
-			e1.printStackTrace();
+			Game.logger.throwing(ChunkSave.class.getName(), "saveChunkClusterToDisk", e1);
 		}
 		File f = new File("resc/data/world/" + w.name + "/" + x + "x" + y + "x" + z + ".ccd");
 		try
@@ -101,7 +103,7 @@ public class ChunkSave
 			fw.close();
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			Game.logger.throwing(ChunkSave.class.getName(), "saveChunkClusterToDisk", e);
 		}
 	}
 
@@ -114,9 +116,9 @@ public class ChunkSave
 
 			if (Game.debugMode)
 			{
-				System.out.println("loaded cluster " + f);
+				Game.logger.log(Level.FINEST, "loaded cluster " + f);
 				for (StackTraceElement e : Thread.currentThread().getStackTrace())
-					System.out.println(e);
+					Game.logger.log(Level.SEVERE, e.toString());
 			}
 
 			JSONArray jsa = jso.getJSONArray("chunks");
@@ -139,7 +141,7 @@ public class ChunkSave
 			}
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			Game.logger.throwing(ChunkSave.class.getName(), "loadCluster", e);
 		}
 	}
 }

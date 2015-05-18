@@ -7,6 +7,9 @@ import java.util.Set;
 
 import org.reflections.Reflections;
 
+import com.ichmed.trinketeers.Game;
+import com.ichmed.trinketeers.util.render.light.LightRenderer;
+
 /**
  * This is the registry for all format decoder classes. It is also used to instantiate new Textures.<br>
  * Note: It is NOT a texture management class.
@@ -77,16 +80,16 @@ public abstract class TextureCodecRegistry {
 							+" does not follow the method conventions. Thus"
 							+" it cannot be used.", e);
 				} catch (SecurityException e) {
-					e.printStackTrace();
+					Game.logger.throwing(TextureCodecRegistry.class.getName(), "createTexture", e);
 					throw new RuntimeException(e);
 				} catch (IllegalAccessException e) {
-					e.printStackTrace();
+					Game.logger.throwing(TextureCodecRegistry.class.getName(), "createTexture", e);
 					throw new RuntimeException(e);
 				} catch (IllegalArgumentException e) {
-					e.printStackTrace();
+					Game.logger.throwing(TextureCodecRegistry.class.getName(), "createTexture", e);
 					throw new RuntimeException(e);
 				} catch (InvocationTargetException e) {
-					e.printStackTrace();
+					Game.logger.throwing(TextureCodecRegistry.class.getName(), "createTexture", e);
 					throw new RuntimeException(e);
 				}
 			}else{

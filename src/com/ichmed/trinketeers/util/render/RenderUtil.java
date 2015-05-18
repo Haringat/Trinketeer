@@ -14,7 +14,10 @@ import static org.lwjgl.opengl.GL33.*;
 
 import java.awt.Font;
 import java.nio.*;
+import java.util.logging.Level;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Vector4f;
 
 import com.ichmed.trinketeers.Game;
@@ -44,19 +47,19 @@ public class RenderUtil
 	public static void renderTexturedQuad(float x, float y, float width, float height, Vector4f v, float textureOffSetX, float textureOffSetY, float scaleX, float scaleY)
 	{
 		TextureLibrary.bindTexture(TextureLibrary.textureLibrary.textureName);
-		double tx = (v.x + textureOffSetX) / (double) TextureLibrary.LIBRARY_SIZE;
-		double ty = (v.y + textureOffSetY) / (double) TextureLibrary.LIBRARY_SIZE;
-		double th = v.z / (double) TextureLibrary.LIBRARY_SIZE * scaleX;
-		double tw = v.w / (double) TextureLibrary.LIBRARY_SIZE * scaleY;
+		float tx = (v.x + textureOffSetX) / (float) TextureLibrary.LIBRARY_SIZE;
+		float ty = (v.y + textureOffSetY) / (float) TextureLibrary.LIBRARY_SIZE;
+		float th = v.z / (float) TextureLibrary.LIBRARY_SIZE * scaleX;
+		float tw = v.w / (float) TextureLibrary.LIBRARY_SIZE * scaleY;
 
 		int min = Math.min(Game.HEIGHT, Game.WIDTH);
 
-		double qx = x + (1 - Game.WIDTH / min) * 0.5;
-		double qy = y + (1 - Game.HEIGHT / min) * 0.5;
-		double qw = width;
-		double qh = height;
-
-		glBegin(GL_QUADS);
+		float qx = x + (1 - Game.WIDTH / min) * 0.5f;
+		float qy = y + (1 - Game.HEIGHT / min) * 0.5f;
+		float qw = width;
+		float qh = height;
+		
+		/*glBegin(GL_QUADS);
 		glTexCoord2d(tx, ty + tw);
 		glVertex2d(qx, qy);
 		glTexCoord2d(tx + th, ty + tw);
@@ -65,7 +68,27 @@ public class RenderUtil
 		glVertex2d(qx + qw, qy + qh);
 		glTexCoord2d(tx, ty);
 		glVertex2d(qx, qy + qh);
-		glEnd();
+		glEnd();*/
+		
+		FloatBuffer vertices = FloatBuffer.wrap(new float[]{
+				tx, ty + tw, qy, qy,
+				tx + th, ty + tw, qx + qw, qy,
+				tx + th, ty, qx + qw, qy +qh,
+				tx, ty, qx, qy + qh				
+		});
+		
+		int vertexbufferobject = glGenBuffers();
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbufferobject);
+		glBufferData(GL_ARRAY_BUFFER, vertices, GL_STREAM_DRAW);
+		try{
+		int posatt = glGetAttribLocation(Shader.getShaderProgramId("default"), "position");
+		int texatt = glGetAttribLocation(Shader.getShaderProgramId("default"), "texturecoords");
+		glVertexAttribPointer(posatt, 2, GL_FLOAT, false, 2, 0);
+		glVertexAttribPointer(texatt, 2, GL_FLOAT, false, 2, 2);
+		}catch(Throwable t){
+			Game.logger.log(Level.SEVERE, "Exception occured", t);
+		}
+		glDrawArrays(GL_QUADS, 0, 4 );
 	}
 
 	public static void drawRect(float x, float y, float width, float height)
@@ -76,7 +99,7 @@ public class RenderUtil
 				x, y + height});
 		int vertexbufferobject = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbufferobject);
-		glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vertices, GL_STREAM_DRAW);
 	}
 
 	/*public static void drawRect(float x, float y, float width, float height)

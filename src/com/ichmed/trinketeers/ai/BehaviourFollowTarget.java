@@ -1,5 +1,6 @@
 package com.ichmed.trinketeers.ai;
 
+import com.ichmed.trinketeers.Game;
 import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.world.World;
 
@@ -17,7 +18,7 @@ public class BehaviourFollowTarget extends Behaviour
 			this.targetClass = (Class<? extends Entity>)Class.forName(args[1]);
 		} catch (ClassNotFoundException e)
 		{
-			e.printStackTrace();
+			Game.logger.throwing(BehaviourFollowTarget.class.getName(), "<init>", e);
 		}
 	}
 	

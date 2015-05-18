@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -112,7 +113,7 @@ public class Entity implements IWorldGraphic, Waypoint
 
 	public void onSpawn(World w)
 	{
-		System.out.println("Spawned \"" + this.entityType + "\" at " + this.position); 
+		Game.logger.log(Level.FINEST, "Spawned \"" + this.entityType + "\" at " + this.position); 
 	}
 
 	public void damage(float damage)
@@ -360,19 +361,19 @@ public class Entity implements IWorldGraphic, Waypoint
 			}
 		} catch (JSONException e)
 		{
-			e.printStackTrace();
+			Game.logger.throwing(Entity.class.getName(), "getSaveData", e);
 		}
 		return j;
 	}
 	
 	public static Entity createEntityFromSaveData(World w, String entityName, JSONObject jso)
 	{
-		System.out.println(entityName);
+		Game.logger.log(Level.FINEST, entityName);
 		EntityData universalData = EntityData.entityData.get(entityName);
 		Entity dummy = null;
 		if(universalData == null)
 		{
-			System.out.println("No data found");
+			Game.logger.log(Level.WARNING, "No data found");
 			return null;
 		}
 		try
@@ -397,7 +398,7 @@ public class Entity implements IWorldGraphic, Waypoint
 				dummy.behaviours.add((Behaviour) Class.forName("com.ichmed.trinketeers.ai.Behaviour" + b.split(" ")[0]).getConstructor(World.class, String[].class).newInstance(w, s));
 			} catch (Exception e)
 			{
-				e.printStackTrace();
+				Game.logger.throwing(Entity.class.getName(), "createEntityFromSaveData", e);
 			}
 		}
 		try
@@ -408,7 +409,7 @@ public class Entity implements IWorldGraphic, Waypoint
 			dummy.age = jso.getInt("age");
 		} catch (JSONException e)
 		{
-			e.printStackTrace();
+			Game.logger.throwing(Entity.class.getName(), "createEntityFromSaveData", e);
 		}
 		
 		return dummy;

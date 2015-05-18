@@ -6,6 +6,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -20,6 +21,7 @@ import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
+import com.ichmed.trinketeers.Game;
 import com.ichmed.trinketeers.savefile.DataLoader;
 import com.ichmed.trinketeers.savefile.data.ElementData;
 import com.ichmed.trinketeers.util.render.TextureLibrary;
@@ -115,9 +117,7 @@ public class Editor extends JFrame implements ActionListener
 						TextureLibrary.generateTextureLibrary(f.getAbsolutePath(), textures);
 					} catch (Exception e1)
 					{
-						e1.printStackTrace();
-						JDialog dia = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), e1.getLocalizedMessage());
-						dia.setVisible(true);
+						Game.logger.throwing(this.getClass().getName(), "actionPerformed", e1);
 					}
 				}
 			}
@@ -125,11 +125,11 @@ public class Editor extends JFrame implements ActionListener
 			{
 				elementeditor.safeCurrentElement();
 				DataLoader.saveElements(ElementData.elements);
-				System.out.println("Saving elements");
+				Game.logger.log(Level.FINEST, "Saving elements");
 			}
 			if (src.getName().equals(saveentityslabel))
 			{
-				System.out.println("Saving entitys");
+				Game.logger.log(Level.FINEST, "Saving entitys");
 				entityeditor.saveEntitys();
 			}
 			if (src.getName().equals(closelabel))

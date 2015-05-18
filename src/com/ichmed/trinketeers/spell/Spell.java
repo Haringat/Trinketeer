@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.ichmed.trinketeers.Game;
 import com.ichmed.trinketeers.ai.BehaviourLight;
 import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.entity.Projectile;
@@ -304,7 +305,7 @@ public class Spell
 			jso.put("mode", this.mode);
 		} catch (JSONException e)
 		{
-			e.printStackTrace();
+			Game.logger.throwing(this.getClass().getName(), "getSaveData", e);
 		}
 
 		return jso;
@@ -333,7 +334,7 @@ public class Spell
 			s.mode = SpellMode.valueOf(jso.getString("mode"));
 		} catch (JSONException e)
 		{
-			e.printStackTrace();
+			Game.logger.throwing(Spell.class.getName(), "getSpellFromSaveData", e);
 		}
 		return s;
 	}

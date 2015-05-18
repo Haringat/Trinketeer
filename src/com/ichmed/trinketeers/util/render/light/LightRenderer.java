@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
@@ -168,17 +169,17 @@ public class LightRenderer
 			}
 		} catch (FileNotFoundException e)
 		{
-			e.printStackTrace();
+			Game.logger.throwing(LightRenderer.class.getName(), "<clinit>", e);
 		} catch (IOException e)
 		{
-			e.printStackTrace();
+			Game.logger.throwing(LightRenderer.class.getName(), "<clinit>", e);
 		}
 
 		glShaderSource(fragmentShader, fragmentShaderSource);
 		glCompileShader(fragmentShader);
 		if (glGetShaderi(fragmentShader, GL_COMPILE_STATUS) == GL_FALSE)
 		{
-			System.err.println("Fragment shader not compiled!");
+			Game.logger.log(Level.WARNING, "Fragment shader not compiled!");
 		}
 
 		glAttachShader(shaderProgram, fragmentShader);

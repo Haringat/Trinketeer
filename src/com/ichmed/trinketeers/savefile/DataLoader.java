@@ -19,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.lwjgl.util.vector.Vector2f;
 
+import com.ichmed.trinketeers.Game;
 import com.ichmed.trinketeers.savefile.data.ElementData;
 import com.ichmed.trinketeers.savefile.data.EntityData;
 import com.ichmed.trinketeers.util.JSONUtil;
@@ -79,7 +80,7 @@ public class DataLoader
 			}
 		} catch (JSONException e)
 		{
-			e.printStackTrace();
+			Game.logger.throwing(DataLoader.class.getName(), "loadElements", e);
 		}
 	}
 
@@ -107,11 +108,11 @@ public class DataLoader
 
 		} catch (JSONException e)
 		{
-			e.printStackTrace();
+			Game.logger.throwing(DataLoader.class.getName(), "saveElements", e);
 		}
 	}
 
-	public static void loadEntitys()
+	public static void loadEntities()
 	{
 		try
 		{
@@ -182,47 +183,49 @@ public class DataLoader
 			}
 		} catch (JSONException e)
 		{
-			e.printStackTrace();
+			Game.logger.throwing(DataLoader.class.getName(), "loadEntities", e);
 		}
 	}
 
-	public static void saveEntitys(HashMap<String, EntityData> entitys)
+	public static void saveEntities(HashMap<String, EntityData> entities)
 	{
 		try
 		{
 			JSONObject root = new JSONObject();
 			JSONArray a = new JSONArray();
-			for (String key : entitys.keySet().toArray(new String[0]))
+			for (String key : entities.keySet().toArray(new String[0]))
 			{
 				JSONObject e = new JSONObject();
-				e.put("name", entitys.get(key).getName());
-				e.put("type", entitys.get(key).getType());
-				e.put("strength", entitys.get(key).getStrength());
-				e.put("sizex", entitys.get(key).getSize().getX());
-				e.put("sizey", entitys.get(key).getSize().getY());
-				e.put("rendersizex", entitys.get(key).getRenderSize().getX());
-				e.put("rendersizey", entitys.get(key).getRenderSize().getY());
-				e.put("rarity", entitys.get(key).getRarity());
-				e.put("classpath", entitys.get(key).getClasspath().getName());
+				e.put("name", entities.get(key).getName());
+				e.put("type", entities.get(key).getType());
+				e.put("strength", entities.get(key).getStrength());
+				e.put("sizex", entities.get(key).getSize().getX());
+				e.put("sizey", entities.get(key).getSize().getY());
+				e.put("rendersizex", entities.get(key).getRenderSize().getX());
+				e.put("rendersizey", entities.get(key).getRenderSize().getY());
+				e.put("rarity", entities.get(key).getRarity());
+				e.put("classpath", entities.get(key).getClasspath().getName());
 				JSONArray behavioursjson = new JSONArray();
-				for (String behaviour : entitys.get(key).getBehaviours())
+				for (String behaviour : entities.get(key).getBehaviours())
 					behavioursjson.put(behaviour);
 				e.put("behaviours", behavioursjson);
 				JSONArray texturesjson = new JSONArray();
-				for(String action: entitys.get(key).getTexturedActions()){
+				for(String action: entities.get(key).getTexturedActions()){
 					JSONObject texture = new JSONObject();
 					texture.put("action", action);
-					texture.put("texname", entitys.get(key).getTexture(action));
+					texture.put("texname", entities.get(key).getTexture(action));
 					texturesjson.put(texture);
 				}
 				e.put("textures", texturesjson);
-				e.put("offsetx", entitys.get(key).getRenderOffset().getX());
-				e.put("offsety", entitys.get(key).getRenderOffset().getY());
+				e.put("offsetx", entities.get(key).getRenderOffset().getX());
+				e.put("offsety", entities.get(key).getRenderOffset().getY());
 				a.put(e);
 			}
 			root.put("entities", a);
 			JSONUtil.putJSONObjectIntoFile(entitiesFile, root);
-		} catch (JSONException e){}
+		} catch (JSONException e){
+			Game.logger.throwing(DataLoader.class.getName(), "saveEntities", e);
+		}
 	}
 
 	public static native byte[] loadTextureFile( String file );

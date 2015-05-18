@@ -1,7 +1,11 @@
 package com.ichmed.trinketeers.util.texturesystem;
 
-import org.lwjgl.opengl.GL11;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_NEAREST;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glDeleteTextures;
+import static org.lwjgl.opengl.GL11.glTexParameteri;
 
 /**
  * The class to use for saving textures of all kinds.
@@ -34,7 +38,7 @@ public abstract class Texture {
 	 * graphics memory needs to be cleaned. 
 	 */
 	public void destruct() {
-		GL11.glDeleteTextures(id);
+		glDeleteTextures(id);
 	}
 	
 }

@@ -19,11 +19,14 @@ import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.glu.GLU;
+
+import com.ichmed.trinketeers.Game;
 
 /**
  * A TrueType font implementation originally for Slick, edited for Bobjob's
@@ -242,8 +245,7 @@ public class TrueTypeFont
 
 		} catch (Exception e)
 		{
-			System.err.println("Failed to create font.");
-			e.printStackTrace();
+			Game.logger.log(Level.SEVERE, "Failed to create font.",	e);
 		}
 	}
 
@@ -453,7 +455,7 @@ public class TrueTypeFont
 
 			int internalFormat = GL11.GL_RGBA8, format = GL11.GL_RGBA;
 			IntBuffer textureId = BufferUtils.createIntBuffer(1);
-			;
+			
 			GL11.glGenTextures(textureId);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId.get(0));
 
@@ -472,7 +474,7 @@ public class TrueTypeFont
 
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			Game.logger.throwing(TrueTypeFont.class.getName(), "loadImage", e);
 			System.exit(-1);
 		}
 

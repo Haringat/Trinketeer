@@ -94,7 +94,7 @@ public class TextureLibrary
 				writer.close();
 			} catch (IOException e)
 			{
-				e.printStackTrace();
+				Game.logger.throwing(this.getClass().getName(), "cleanUp", e);
 			}
 		}
 	}
@@ -129,7 +129,7 @@ public class TextureLibrary
 				}
 		} catch (FileNotFoundException e)
 		{
-			e.printStackTrace();
+			Game.logger.throwing(TextureLibrary.class.getName(), "loadTextureLibrary", e);
 		}
 	}
 
@@ -159,7 +159,7 @@ public class TextureLibrary
 			fw.close();
 		} catch (IOException e)
 		{
-			e.printStackTrace();
+			Game.logger.throwing(TextureLibrary.class.getName(), "generateTextureLibrary", e);
 		}
 	}
 

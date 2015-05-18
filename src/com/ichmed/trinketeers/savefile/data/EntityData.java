@@ -8,7 +8,9 @@ import java.util.Set;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector4f;
 
+import com.ichmed.trinketeers.Game;
 import com.ichmed.trinketeers.entity.Entity;
+import com.ichmed.trinketeers.savefile.ChunkSave;
 import com.ichmed.trinketeers.util.render.TextureLibrary;
 
 public class EntityData
@@ -151,7 +153,7 @@ public class EntityData
 			if (classpath.contains("root.")) clazz = (Class<? extends Entity>) Class.forName(classpath.replace("root.", "com.ichmed.trinketeers.entity."));
 			else clazz = (Class<? extends Entity>) Class.forName(classpath);
 		} catch (ClassNotFoundException e){
-			e.printStackTrace();
+			Game.logger.throwing(this.getClass().getName(), "setClasspath", e);
 		}
 	}
 

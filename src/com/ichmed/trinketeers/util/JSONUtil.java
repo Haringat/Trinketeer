@@ -10,6 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.ichmed.trinketeers.Game;
+
 public class JSONUtil
 {
 	public static JSONObject getForNameFromArray(String name, JSONArray a)
@@ -21,7 +23,7 @@ public class JSONUtil
 				if (((JSONObject) a.get(i)).getString("name").equals(name)) return (JSONObject) a.get(i);
 			} catch (JSONException e)
 			{
-				e.printStackTrace();
+				Game.logger.throwing(JSONUtil.class.getName(), "GetForNameFromArray", e);
 			}
 		}
 		return null;
@@ -36,7 +38,7 @@ public class JSONUtil
 			return new JSONObject(content);
 		} catch (FileNotFoundException | JSONException e)
 		{
-			e.printStackTrace();
+			Game.logger.throwing(JSONUtil.class.getName(), "getJSONObjectFromFile", e);
 		}
 
 		return null;
@@ -51,6 +53,8 @@ public class JSONUtil
 				w.write(res);
 				w.close();
 			}
-		}catch(IOException e){e.printStackTrace();}
+		}catch(IOException e){
+			Game.logger.throwing(JSONUtil.class.getName(), "putJSONObjectIntoFile", e);
+		}
 	}
 }

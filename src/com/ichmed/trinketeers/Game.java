@@ -5,21 +5,13 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-import java.awt.Canvas;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-import javax.swing.WindowConstants;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.lwjgl.Sys;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -28,24 +20,30 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.ichmed.trinketeers.logging.LogHandler;
 import com.ichmed.trinketeers.savefile.ChunkSave;
 import com.ichmed.trinketeers.savefile.DataLoader;
 import com.ichmed.trinketeers.util.DataRef;
 import com.ichmed.trinketeers.util.editor.Editor;
 import com.ichmed.trinketeers.util.render.TextureLibrary;
 import com.ichmed.trinketeers.util.texturesystem.TextureCodecRegistry;
-import com.ichmed.trinketeers.util.texturesystem.ktxplugin.KTXTexture;
 import com.ichmed.trinketeers.world.Chunk;
 import com.ichmed.trinketeers.world.World;
 
 public class Game
 {
 	
+	public static Logger logger;
+	
 	static{
+		logger = Logger.getLogger("Trinketeers");
+		logger.setUseParentHandlers(false);
+		logger.setLevel(Level.ALL);
+		logger.addHandler(new LogHandler(false, -1,"\\c[\\H:\\m:\\s]\\L:"));
 		try{
 			System.loadLibrary("ktxlibwrapper");
 		} catch(UnsatisfiedLinkError e){
-			System.out.printf("could not find the texture loader library\n");
+			logger.log(Level.SEVERE, "could not find the texture loader library\n");
 			System.exit(-1);
 		}
 	}
@@ -68,7 +66,7 @@ public class Game
 
 	public void run()
 	{
-		System.out.println("Hello LWJGL " + Sys.getVersion() + "!");
+		logger.log(Level.FINEST, "Hello LWJGL " + Sys.getVersion() + "!");
 
 		try
 		{
@@ -85,8 +83,7 @@ public class Game
 			keyCallback.release();
 		} catch (Exception e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.throwing(Game.class.getName(), "run", e);
 		} finally
 		{
 			// Terminate GLFW and release the GLFWerrorfun
@@ -213,12 +210,12 @@ public class Game
 				debugMode = true;
 				break;
 			default:
-				System.out.printf("unknown parameter %s\n", args[i]);
+				logger.log(Level.WARNING, "unknown parameter "+args[i]);
 				return;
 			}
 		}
 		DataLoader.loadElements();
-		DataLoader.loadEntitys();
+		DataLoader.loadEntities();
 		new Game().run();
 	}
 
@@ -249,13 +246,13 @@ public class Game
 					l.add(new String[]{f.getAbsolutePath(), f.getName().substring(0, f.getName().lastIndexOf('.'))});
 				try
 				{
-					if(debugMode) System.out.println("Found new Texture, generating texture library");
+					if(debugMode) logger.log(Level.FINE, "Found new Texture, generating texture library");
 					TextureLibrary.generateTextureLibrary(lib.getAbsolutePath().substring(0, lib.getAbsolutePath().lastIndexOf('.')), l);
-					if(debugMode) System.out.println("Succesfully generated texture library");
+					if(debugMode) logger.log(Level.FINE, "Succesfully generated texture library");
 					
 				} catch (Exception e)
 				{
-					e.printStackTrace();
+					logger.throwing(Game.class.getName(), "createDefaultTextureLibrary", e);
 				}
 				return true;
 			}
