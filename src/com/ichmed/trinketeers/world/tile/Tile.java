@@ -2,8 +2,6 @@ package com.ichmed.trinketeers.world.tile;
 
 import static org.lwjgl.opengl.GL11.glTranslated;
 
-import org.lwjgl.opengl.GL11;
-
 import com.ichmed.trinketeers.util.render.RenderUtil;
 import com.ichmed.trinketeers.world.Chunk;
 import com.ichmed.trinketeers.world.World;

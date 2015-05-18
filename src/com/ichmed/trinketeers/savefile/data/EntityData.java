@@ -10,7 +10,6 @@ import org.lwjgl.util.vector.Vector4f;
 
 import com.ichmed.trinketeers.Game;
 import com.ichmed.trinketeers.entity.Entity;
-import com.ichmed.trinketeers.savefile.ChunkSave;
 import com.ichmed.trinketeers.util.render.TextureLibrary;
 
 public class EntityData

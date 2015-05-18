@@ -1,7 +1,6 @@
 package com.ichmed.trinketeers.spell.formation;
 
 import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
 
 import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.entity.Projectile;

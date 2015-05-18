@@ -8,7 +8,6 @@ import com.ichmed.trinketeers.ai.BehaviourHiveMindFollowTarget;
 import com.ichmed.trinketeers.ai.BehaviourTurnToCurrentWaypoint;
 import com.ichmed.trinketeers.ai.BehaviourWander;
 import com.ichmed.trinketeers.entity.Entity;
-import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
 import com.ichmed.trinketeers.world.World;
 
 public class Zombie extends Entity

@@ -8,7 +8,6 @@ import java.util.Set;
 import org.reflections.Reflections;
 
 import com.ichmed.trinketeers.Game;
-import com.ichmed.trinketeers.util.render.light.LightRenderer;
 
 /**
  * This is the registry for all format decoder classes. It is also used to instantiate new Textures.<br>

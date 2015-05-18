@@ -5,7 +5,6 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import org.lwjgl.util.vector.Vector2f;
 
 import com.ichmed.trinketeers.Game;
-import com.ichmed.trinketeers.ai.BehaviourLight;
 import com.ichmed.trinketeers.entity.Player;
 import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
 import com.ichmed.trinketeers.world.World;

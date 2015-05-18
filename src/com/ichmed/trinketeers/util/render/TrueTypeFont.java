@@ -24,7 +24,6 @@ import java.util.logging.Level;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.util.glu.GLU;
 
 import com.ichmed.trinketeers.Game;
 

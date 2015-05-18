@@ -1,11 +1,5 @@
 package com.ichmed.trinketeers.util.render;
 
-import static org.lwjgl.opengl.GL11.GL_NEAREST;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
-import static org.lwjgl.opengl.GL11.glTexParameteri;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
@@ -41,7 +35,6 @@ import com.ichmed.trinketeers.Game;
 import com.ichmed.trinketeers.savefile.DataLoader;
 import com.ichmed.trinketeers.util.texturesystem.Texture;
 import com.ichmed.trinketeers.util.texturesystem.TextureCodecRegistry;
-import com.ichmed.trinketeers.util.texturesystem.ktxplugin.KTXTexture;
 
 public class TextureLibrary
 {
