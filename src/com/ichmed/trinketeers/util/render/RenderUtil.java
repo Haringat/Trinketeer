@@ -26,6 +26,17 @@ import com.ichmed.trinketeers.world.World;
 public class RenderUtil
 {
 
+	static{
+		try{
+			int posatt = glGetAttribLocation(Shader.getShaderProgramId("default"), "position");
+			int texatt = glGetAttribLocation(Shader.getShaderProgramId("default"), "texturecoords");
+			glVertexAttribPointer(posatt, 2, GL_FLOAT, false, 2, 0);
+			glVertexAttribPointer(texatt, 2, GL_FLOAT, false, 2, 2);
+		}catch(Throwable t){
+			Game.logger.throwing(RenderUtil.class.getName(), "<clinit>", t);
+		}
+	}
+	
 	static Font font = new Font("Arial Black", Font.BOLD, 24);
 	static TrueTypeFont ttf = new TrueTypeFont(font, false);
 	
@@ -74,21 +85,18 @@ public class RenderUtil
 				tx, ty + tw, qy, qy,
 				tx + th, ty + tw, qx + qw, qy,
 				tx + th, ty, qx + qw, qy +qh,
-				tx, ty, qx, qy + qh				
+				tx, ty, qx, qy + qh
 		});
 		
 		int vertexbufferobject = glGenBuffers();
+		checkerror("glGenBuffers");
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbufferobject);
+		checkerror("glBindBuffer");
 		glBufferData(GL_ARRAY_BUFFER, vertices, GL_STREAM_DRAW);
-		try{
-		int posatt = glGetAttribLocation(Shader.getShaderProgramId("default"), "position");
-		int texatt = glGetAttribLocation(Shader.getShaderProgramId("default"), "texturecoords");
-		glVertexAttribPointer(posatt, 2, GL_FLOAT, false, 2, 0);
-		glVertexAttribPointer(texatt, 2, GL_FLOAT, false, 2, 2);
-		}catch(Throwable t){
-			Game.logger.log(Level.SEVERE, "Exception occured", t);
-		}
+		checkerror("glBufferData");
+		
 		glDrawArrays(GL_QUADS, 0, 4 );
+		checkerror("glDrawArrays");
 	}
 
 	public static void drawRect(float x, float y, float width, float height)
@@ -99,7 +107,11 @@ public class RenderUtil
 				x, y + height});
 		int vertexbufferobject = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbufferobject);
+		//checkerror("glBindBuffer");
 		glBufferData(GL_ARRAY_BUFFER, vertices, GL_STREAM_DRAW);
+		checkerror("glBufferData");
+		glDrawArrays(GL_QUADS, 0, 4 );
+		checkerror("glDrawArrays");
 	}
 
 	/*public static void drawRect(float x, float y, float width, float height)
@@ -122,20 +134,15 @@ public class RenderUtil
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	}
 
-	public static void setColor256Bit(float r, float g, float b)
-	{
-		glColor3f(r / 255, g / 255, b / 255);
-	}
-
 	public static void renderBackground(World w)
 	{
 		TextureLibrary.bindTexture("resc/textures/floorMud.png");
 		glColor3f(1, 1, 1);
-		double textureScale = 8;
-		float x = w.player.position.x * 2;
-		float y = w.player.position.y * 2;
+		float textureScale = 8f;
+		float x = w.player.position.x * 2f;
+		float y = w.player.position.y * 2f;
 
-		glPushMatrix();
+		/*glPushMatrix();
 		glBegin(GL_QUADS);
 		glTexCoord2d(x, y);
 		glVertex2f(-2, -2);
@@ -146,7 +153,22 @@ public class RenderUtil
 		glTexCoord2d(x, textureScale + y);
 		glVertex2f(-2, 2);
 		glEnd();
-		glPopMatrix();
+		glPopMatrix();*/
+		FloatBuffer vertices = FloatBuffer.wrap(new float[]{
+				-2f, -2f, x, y,
+				2f, -2f, textureScale + x, y,
+				2f, 2f, textureScale + x, textureScale + y,
+				-2f, 2f, x, textureScale + y
+		});
+		int vertexbufferobject = glGenBuffers();
+		checkerror("glGenBuffer");
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbufferobject);
+		checkerror("glBindBuffer");
+		glBufferData(GL_ARRAY_BUFFER, vertices, GL_STREAM_DRAW);
+		checkerror("glBufferData");
+		glDrawArrays(GL_QUADS, 0, 4 );
+		checkerror("glDrawArrays");
+		
 	}
 
 	public static void renderBar(float x, float y, float width, float height)
@@ -161,11 +183,53 @@ public class RenderUtil
 		glTexCoord2d(0, height);
 		glVertex2f(x, y + height / 20f);
 		glEnd();
+		checkerror("glEnd");
 	}
 
 	public static void renderText(float x, float y, String text)
 	{
 		renderText(x, y, text, 0.001f, 0.001f, TrueTypeFont.ALIGN_LEFT);
+	}
+
+	public static boolean checkerror(String method){
+		switch(glGetError()){
+		case GL_NO_ERROR:
+		//	Game.logger.log(Level.FINEST, "no error occurred");
+			Game.logger.getHandlers()[0].flush();
+			return true;
+		case GL_INVALID_ENUM:
+			Game.logger.log(Level.WARNING, method+":invalid enum given");
+			Game.logger.getHandlers()[0].flush();
+			return false;
+		case GL_INVALID_VALUE:
+			Game.logger.log(Level.WARNING, method+":invalid value given");
+			Game.logger.getHandlers()[0].flush();
+			return false;
+		case GL_INVALID_OPERATION:
+			Game.logger.log(Level.WARNING, method+":invalid operation invoked");
+			Game.logger.getHandlers()[0].flush();
+			return false;
+		case GL_INVALID_FRAMEBUFFER_OPERATION:
+			Game.logger.log(Level.WARNING, method+":invalid framebuffer operation invoked");
+			Game.logger.getHandlers()[0].flush();
+			return false;
+		case GL_OUT_OF_MEMORY:
+			Game.logger.log(Level.SEVERE, method+":OpenGL ran out of memory");
+			Game.logger.getHandlers()[0].flush();
+			return false;
+		case GL_STACK_UNDERFLOW:
+			Game.logger.log(Level.WARNING, method+":Tried to perform a buffer underflow");
+			Game.logger.getHandlers()[0].flush();
+			return false;
+		case GL_STACK_OVERFLOW:
+			Game.logger.log(Level.WARNING, method+":Tried to perform a buffer overflow");
+			Game.logger.getHandlers()[0].flush();
+			return false;
+		default:
+			Game.logger.log(Level.SEVERE, method+":unknown error occured");
+			Game.logger.getHandlers()[0].flush();
+			return false;
+		}
 	}
 
 	public static void renderText(float x, float y, String text, float scaleX, float scaleY, int allignMode)

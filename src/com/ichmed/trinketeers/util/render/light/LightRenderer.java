@@ -17,6 +17,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.ichmed.trinketeers.Game;
+import com.ichmed.trinketeers.util.render.RenderUtil;
 import com.ichmed.trinketeers.world.World;
 
 public class LightRenderer
@@ -38,11 +39,10 @@ public class LightRenderer
 	public static void renderLights(World world, List<ILight> list)
 	{
 		glViewport(0, 0, Game.WIDTH, Game.HEIGHT); // set The Current Viewport
-													// to the fbo
-		// size
+												   // to the fbo size
 
 		glBindTexture(GL_TEXTURE_2D, 0); // unlink textures because if we dont
-											// it all is gonna fail
+										 // it all is gonna fail
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, lightFrameBuffer); // switch to
 																	// rendering
 																	// on our
@@ -60,34 +60,34 @@ public class LightRenderer
 			glStencilFunc(GL_ALWAYS, 1, 1);
 			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
-//			for (IShadow block : world.currentLevel.shadows)
-//			{
-//				Vector2f[] vertices = block.getVertices();
-//				for (int i = 0; i < vertices.length; i++)
-//				{
-//					Vector2f currentVertex = vertices[i];
-//					Vector2f nextVertex = vertices[(i + 1) % vertices.length];
-//					Vector2f edge = Vector2f.sub(nextVertex, currentVertex, null);
-//					Vector2f normal = new Vector2f(edge.getY(), -edge.getX());
-//					Vector2f lightToCurrent = Vector2f.sub(currentVertex, light.getPosition(), null);
-//					if (Vector2f.dot(normal, lightToCurrent) > 0)
-//					{
-//						Vector2f point1 = Vector2f.add(currentVertex, (Vector2f) Vector2f.sub(currentVertex, light.getPosition(), null).scale(800), null);
-//						Vector2f point2 = Vector2f.add(nextVertex, (Vector2f) Vector2f.sub(nextVertex, light.getPosition(), null).scale(800), null);
-//						glDisable(GL_TEXTURE_2D);
-//						glColor3f(0, 0, 0);
-//						glBegin(GL_QUADS);
-//						{
-//							glVertex2f(currentVertex.getX(), currentVertex.getY());
-//							glVertex2f(point1.getX(), point1.getY());
-//							glVertex2f(point2.getX(), point2.getY());
-//							glVertex2f(nextVertex.getX(), nextVertex.getY());
-//						}
-//						glEnd();
-//						glColor3f(1, 1, 1);
-//					}
-//				}
-//			}
+/*			for (IShadow block : world.currentLevel.shadows)
+			{
+				Vector2f[] vertices = block.getVertices();
+				for (int i = 0; i < vertices.length; i++)
+				{
+					Vector2f currentVertex = vertices[i];
+					Vector2f nextVertex = vertices[(i + 1) % vertices.length];
+					Vector2f edge = Vector2f.sub(nextVertex, currentVertex, null);
+					Vector2f normal = new Vector2f(edge.getY(), -edge.getX());
+					Vector2f lightToCurrent = Vector2f.sub(currentVertex, light.getPosition(), null);
+					if (Vector2f.dot(normal, lightToCurrent) > 0)
+					{
+						Vector2f point1 = Vector2f.add(currentVertex, (Vector2f) Vector2f.sub(currentVertex, light.getPosition(), null).scale(800), null);
+						Vector2f point2 = Vector2f.add(nextVertex, (Vector2f) Vector2f.sub(nextVertex, light.getPosition(), null).scale(800), null);
+						glDisable(GL_TEXTURE_2D);
+						glColor3f(0, 0, 0);
+						glBegin(GL_QUADS);
+						{
+							glVertex2f(currentVertex.getX(), currentVertex.getY());
+							glVertex2f(point1.getX(), point1.getY());
+							glVertex2f(point2.getX(), point2.getY());
+							glVertex2f(nextVertex.getX(), nextVertex.getY());
+						}
+						glEnd();
+						glColor3f(1, 1, 1);
+					}
+				}
+			}*/
 
 			glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 			glStencilFunc(GL_EQUAL, 0, 1);
@@ -136,6 +136,7 @@ public class LightRenderer
 
 		glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		glViewport(0, 0, Game.WIDTH, Game.HEIGHT);
+		RenderUtil.clearBuffer();
 		// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
@@ -176,6 +177,7 @@ public class LightRenderer
 		}
 
 		glShaderSource(fragmentShader, fragmentShaderSource);
+		RenderUtil.checkerror("glShaderSource");
 		glCompileShader(fragmentShader);
 		if (glGetShaderi(fragmentShader, GL_COMPILE_STATUS) == GL_FALSE)
 		{

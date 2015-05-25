@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDeleteTextures;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
+import static com.ichmed.trinketeers.util.render.RenderUtil.checkerror;
 
 /**
  * The class to use for saving textures of all kinds.
@@ -22,14 +23,23 @@ public abstract class Texture {
 		this.id = id;
 		this.textype = textype;
 	}
+	
+	protected abstract void generateMipmap();
+
+	protected int getTextype(){
+		return textype;
+	}
 
 	/**
 	 * binds the texture in the current OpenGL context
 	 */
 	public void bind() {
 		glBindTexture(textype, id);
+		checkerror("glBindTexture");
 		glTexParameteri(textype, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		checkerror("glTexParameteri");
 		glTexParameteri(textype, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		checkerror("glTexParameteri");
 	}
 
 	/**
@@ -39,6 +49,7 @@ public abstract class Texture {
 	 */
 	public void destruct() {
 		glDeleteTextures(id);
+		checkerror("glDeleteTextures");
 	}
 	
 }

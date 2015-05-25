@@ -12,6 +12,7 @@ import com.ichmed.trinketeers.Game;
 import com.ichmed.trinketeers.ai.BehaviourLight;
 import com.ichmed.trinketeers.spell.Spell;
 import com.ichmed.trinketeers.util.AxisAllignedBoundingBox;
+import com.ichmed.trinketeers.util.render.RenderUtil;
 import com.ichmed.trinketeers.world.World;
 
 public class Player extends Entity
@@ -67,6 +68,7 @@ public class Player extends Entity
 		DoubleBuffer b1 = BufferUtils.createDoubleBuffer(1);
 		DoubleBuffer b2 = BufferUtils.createDoubleBuffer(1);
 		glfwGetCursorPos(Game.window, b1, b2);
+		RenderUtil.checkerror("glfwGetCursorPos");
 
 		float min = Math.min(Game.WIDTH, Game.HEIGHT);
 

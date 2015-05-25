@@ -6,6 +6,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.ichmed.trinketeers.entity.Entity;
 import com.ichmed.trinketeers.entity.Player;
+import com.ichmed.trinketeers.util.render.RenderUtil;
 import com.ichmed.trinketeers.world.World;
 
 public abstract class Pickup extends Entity
@@ -68,7 +69,10 @@ public abstract class Pickup extends Entity
 	@Override
 	protected void renderHitBox(World w)
 	{
-		if (isPlayerInPickupRange(w.player)) GL11.glColor3f(1, 0, 0);
+		if (isPlayerInPickupRange(w.player)){
+			GL11.glColor3f(1, 0, 0);
+			RenderUtil.checkerror("glColor3f");
+		}
 		super.renderHitBox(w);
 	}
 

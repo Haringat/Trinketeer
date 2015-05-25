@@ -20,10 +20,10 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.ichmed.trinketeers.logging.LogHandler;
 import com.ichmed.trinketeers.savefile.ChunkSave;
 import com.ichmed.trinketeers.savefile.DataLoader;
 import com.ichmed.trinketeers.util.DataRef;
+import com.ichmed.trinketeers.util.LogHandler;
 import com.ichmed.trinketeers.util.editor.Editor;
 import com.ichmed.trinketeers.util.render.TextureLibrary;
 import com.ichmed.trinketeers.util.texturesystem.TextureCodecRegistry;
@@ -39,7 +39,8 @@ public class Game
 		logger = Logger.getLogger("Trinketeers");
 		logger.setUseParentHandlers(false);
 		logger.setLevel(Level.ALL);
-		logger.addHandler(new LogHandler(false, -1,"\\c[\\H:\\m:\\s]\\L:"));
+		//logger.addHandler(new LogHandler(false, -1,"[\\H:\\m:\\s]\\l:\\c.\\M:\\L:"));
+		logger.addHandler(new LogHandler(false, -1,"\\M"));
 		try{
 			System.loadLibrary("ktxlibwrapper");
 		} catch(UnsatisfiedLinkError e){

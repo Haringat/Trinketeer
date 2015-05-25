@@ -182,14 +182,22 @@ public class Entity implements IWorldGraphic, Waypoint
 	{
 		AxisAllignedBoundingBox renderArea = this.getRenderArea();
 		glPushMatrix();
+		RenderUtil.checkerror("glPushMatrix");
 		glColor3f(this.color.x, this.color.y, this.color.z);
+		RenderUtil.checkerror("glColor3f");
 		glTranslatef(renderArea.pos.x, renderArea.pos.y, 0);
+		RenderUtil.checkerror("glTranslatef");
 		glTranslated(renderArea.size.x / 2, renderArea.size.x / 2, 0);
+		RenderUtil.checkerror("glTranslated");
 		glRotated(this.rotation, 0, 0, 1);
+		RenderUtil.checkerror("glRotated");
 		glTranslated(-renderArea.size.x / 2, -renderArea.size.y / 2, 0);
+		RenderUtil.checkerror("glTranslated");
 		RenderUtil.renderTexturedQuad(0, 0, renderArea.size.x, renderArea.size.y, this.getTextureForState(w));
 		glColor3f(1, 1, 1);
+		RenderUtil.checkerror("glColor3f");
 		glPopMatrix();
+		RenderUtil.checkerror("glPopMatrix");
 	}
 
 	public String getTextureForState(World w)
@@ -203,14 +211,22 @@ public class Entity implements IWorldGraphic, Waypoint
 	protected void renderHitBox(World w)
 	{
 		glPushMatrix();
+		RenderUtil.checkerror("glPushMatrix");
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		RenderUtil.checkerror("glPolygonMode");
 		glDisable(GL_TEXTURE_2D);
+		RenderUtil.checkerror("glDisable");
 		glTranslatef(this.position.x, this.position.y, 0);
+		RenderUtil.checkerror("glTranslatef");
 		RenderUtil.renderTexturedQuad(0, 0, this.size.x, this.size.y, "test");
 		glColor3f(1, 1, 1);
+		RenderUtil.checkerror("glColor3f");
 		glEnable(GL_TEXTURE_2D);
+		RenderUtil.checkerror("glEnable");
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		RenderUtil.checkerror("glPolygonMode");
 		glPopMatrix();
+		RenderUtil.checkerror("glPopMatrix");
 	}
 
 	public boolean kill(World world)
@@ -374,6 +390,7 @@ public class Entity implements IWorldGraphic, Waypoint
 		if(universalData == null)
 		{
 			Game.logger.log(Level.WARNING, "No data found");
+			Game.logger.log(Level.INFO, "The entity name was " + entityName);
 			return null;
 		}
 		try

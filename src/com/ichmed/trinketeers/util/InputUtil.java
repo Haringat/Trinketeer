@@ -8,6 +8,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Vector2f;
 
 import com.ichmed.trinketeers.Game;
+import com.ichmed.trinketeers.util.render.RenderUtil;
 
 public class InputUtil
 {
@@ -17,6 +18,7 @@ public class InputUtil
 		DoubleBuffer b1 = BufferUtils.createDoubleBuffer(1);
 		DoubleBuffer b2 = BufferUtils.createDoubleBuffer(1);
 		glfwGetCursorPos(Game.window, b1, b2);
+		RenderUtil.checkerror("glfwGetCursorPos");
 		
 		return new Vector2f(((float) b1.get(0) - Game.WIDTH / 2) * 2 / Game.WIDTH, (Game.HEIGHT / 2 - (float) b2.get(0)) * 2 / Game.HEIGHT);
 	}

@@ -1,4 +1,4 @@
-package com.ichmed.trinketeers.logging;
+package com.ichmed.trinketeers.util;
 
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
@@ -28,13 +28,16 @@ public class LogHandler extends Handler{
 	 * @param format a format string. The following control strings are recognized:<br>
 	 * <table>
 	 * <tr><th>String component</th><th>explanation</th></tr>
+	 * <tr><td>\l</td><td>the name of the logger</td></tr>
 	 * <tr><td>\L</td><td>the {@link java.util.logging.Level Level} of the record</td></tr>
 	 * <tr><td>\H</td><td>hours (24 hour format)</td></tr>
 	 * <tr><td>\h</td><td>hours (12 hour format)</td></tr>
 	 * <tr><td>\m</td><td>minutes</td></tr>
 	 * <tr><td>\s</td><td>seconds</td></tr>
 	 * <tr><td>\S</td><td>milliseconds</td></tr>
-	 * <tr><td>\c</td><td>The name of the class which logged the message.</td></tr>
+	 * <tr><td>\C</td><td>The full classified name of the class which logged the message.</td></tr>
+	 * <tr><td>\c</td><td>The basename of the class which logged the message.</td></tr>
+	 * <tr><td>\M</td><td>The name of the invoking method</td></tr>
 	 * </table>
 	 * All other characters are taken as they are.<br>
 	 * Note: the message will be appended to the resulting string.
@@ -45,6 +48,11 @@ public class LogHandler extends Handler{
 		for(int i = 0; i < format.length(); i++){
 			if(format.charAt(i) == '\\'){
 				switch(format.charAt(i+1)){
+				case 'l':
+					printformat += "%s";
+					fields.add('l');
+					i++;
+					continue;
 				case 'L':
 					printformat += "%s";
 					fields.add('L');
@@ -80,6 +88,15 @@ public class LogHandler extends Handler{
 					fields.add('c');
 					i++;
 					continue;
+				case 'C':
+					printformat += "%s";
+					fields.add('C');
+					i++;
+					continue;
+				case 'M':
+					printformat += "%s";
+					fields.add('M');
+					i++;
 				default:
 					printformat += '\\';
 					continue;
@@ -103,7 +120,7 @@ public class LogHandler extends Handler{
 	 * hh:mm:ss:SSS:class:level:stacktrace...
 	 */
 	public LogHandler() {
-		this(true, -1, "\\H:\\m:\\s:\\S:\\c:\\L:");
+		this(true, -1, "\\H:\\m:\\s:\\S:\\c.\\M():\\L:");
 	}
 
 	@Override
@@ -113,8 +130,17 @@ public class LogHandler extends Handler{
 			String[] args = new String[fields.size()];
 			for(int i = 0; i < fields.size(); i++){
 				switch(fields.get(i)){
+				case 'l':
+					String lname = record.getLoggerName();
+					if(lname != null){
+						args[i] = record.getLoggerName();
+					}
+					break;
 				case 'L':
-					args[i] = record.getLevel().getName();
+					Level level = record.getLevel();
+					if(level != null){
+						args[i] = level.getName();
+					}
 					break;
 				case 'H':
 					args[i] = new SimpleDateFormat("HH").format(new Date(record.getMillis()));
@@ -131,9 +157,28 @@ public class LogHandler extends Handler{
 				case 'S':
 					args[i] = new SimpleDateFormat("SSS").format(new Date(record.getMillis()));
 					break;
-				case 'c':
-					args[i] = record.getSourceClassName();
+				case 'C':
+					String classname = record.getSourceClassName();
+					if(classname != null){
+						args[i] = classname;
+					}
 					break;
+				case 'c':
+					String classname1 = record.getSourceClassName();
+					if(classname1 != null){
+						args[i] = classname1.substring(record.getSourceClassName().lastIndexOf('.') + 1);
+					}
+					break;
+				case 'M':
+					String methodname = record.getSourceMethodName();
+					if(methodname != null && methodname.endsWith("\\")){
+						args[i] = methodname.replace('\\', ' ').trim();
+					} else {
+						args[i] = methodname;
+					}
+					break;
+				default:
+					break;	
 				}
 			}
 			PrintStream p;

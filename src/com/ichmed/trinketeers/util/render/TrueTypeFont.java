@@ -260,13 +260,18 @@ public class TrueTypeFont
 		float RenderHeight = (SrcHeight / textureHeight);
 
 		GL11.glTexCoord2f(TextureSrcX, TextureSrcY);
+		RenderUtil.checkerror("glTexCoord2f");
 		GL11.glVertex2f(drawX, drawY);
+		RenderUtil.checkerror("glVertex2f");
 		GL11.glTexCoord2f(TextureSrcX, TextureSrcY + RenderHeight);
+		RenderUtil.checkerror("glTexCoord2f");
 		GL11.glVertex2f(drawX, drawY + DrawHeight);
+		RenderUtil.checkerror("glVertex2f");
 		GL11.glTexCoord2f(TextureSrcX + RenderWidth, TextureSrcY + RenderHeight);
 		GL11.glVertex2f(drawX + DrawWidth, drawY + DrawHeight);
 		GL11.glTexCoord2f(TextureSrcX + RenderWidth, TextureSrcY);
 		GL11.glVertex2f(drawX + DrawWidth, drawY);
+		RenderUtil.checkerror("drawQuad");
 	}
 
 	public int getWidth(String whatchars)
@@ -469,6 +474,7 @@ public class TrueTypeFont
 			GL11.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_BYTE, byteBuffer);
 			//GLU.gluBuild2DMipmaps(GL11.GL_TEXTURE_2D, internalFormat, width, height, format, GL11.GL_UNSIGNED_BYTE, byteBuffer);
 			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+			RenderUtil.checkerror("loadImage");
 			return textureId.get(0);
 
 		} catch (Exception e)
@@ -506,5 +512,6 @@ public class TrueTypeFont
 		scratch.put(0, fontTextureID);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 		GL11.glDeleteTextures(scratch);
+		RenderUtil.checkerror("destroy");
 	}
 }
