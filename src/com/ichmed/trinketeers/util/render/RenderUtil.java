@@ -28,10 +28,10 @@ public class RenderUtil
 
 	static{
 		try{
-			int posatt = glGetAttribLocation(Shader.getShaderProgramId("default"), "position");
-			int texatt = glGetAttribLocation(Shader.getShaderProgramId("default"), "texturecoords");
-			glVertexAttribPointer(posatt, 2, GL_FLOAT, false, 2, 0);
-			glVertexAttribPointer(texatt, 2, GL_FLOAT, false, 2, 2);
+			//int posatt = glGetAttribLocation(Shader.getShaderProgramId("default"), "position");
+			//int texatt = glGetAttribLocation(Shader.getShaderProgramId("default"), "texturecoords");
+			//glVertexAttribPointer(posatt, 2, GL_FLOAT, false, 2, 0);
+			//glVertexAttribPointer(texatt, 2, GL_FLOAT, false, 2, 2);
 		}catch(Throwable t){
 			Game.logger.throwing(RenderUtil.class.getName(), "<clinit>", t);
 		}

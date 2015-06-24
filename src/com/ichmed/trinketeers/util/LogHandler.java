@@ -97,6 +97,7 @@ public class LogHandler extends Handler{
 					printformat += "%s";
 					fields.add('M');
 					i++;
+					continue;
 				default:
 					printformat += '\\';
 					continue;

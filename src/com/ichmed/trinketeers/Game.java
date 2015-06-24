@@ -39,8 +39,7 @@ public class Game
 		logger = Logger.getLogger("Trinketeers");
 		logger.setUseParentHandlers(false);
 		logger.setLevel(Level.ALL);
-		//logger.addHandler(new LogHandler(false, -1,"[\\H:\\m:\\s]\\l:\\c.\\M:\\L:"));
-		logger.addHandler(new LogHandler(false, -1,"\\M"));
+		logger.addHandler(new LogHandler(false, -1,"[\\H:\\m:\\s]\\l[\\L]:\\c.\\M:"));
 		try{
 			System.loadLibrary("ktxlibwrapper");
 		} catch(UnsatisfiedLinkError e){

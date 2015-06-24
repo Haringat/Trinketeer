@@ -9,4 +9,5 @@ public class DataRef
 	public static final File entitiesFile = new File("resc/data/entities.json");
 	public static final String defaultLibrary = new String("resc/textures/defaultLibrary");
 	public static final File defaultLibraryRaw = new File("resc/textures/raw/defaultLibrary");
+	public static final File shaderspecs = new File("resc/data/shaders.json");
 }

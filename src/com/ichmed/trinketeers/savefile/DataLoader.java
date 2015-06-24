@@ -10,6 +10,13 @@ import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +24,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Vector2f;
 
 import com.ichmed.trinketeers.Game;
@@ -24,7 +32,7 @@ import com.ichmed.trinketeers.savefile.data.ElementData;
 import com.ichmed.trinketeers.savefile.data.EntityData;
 import com.ichmed.trinketeers.util.JSONUtil;
 
-public class DataLoader
+public abstract class DataLoader
 {
 	/**
 	 * loads an image from the file at <code>path</code>.
@@ -228,5 +236,26 @@ public class DataLoader
 		}
 	}
 
-	public static native byte[] loadTextureFile( String file );
+	public static ByteBuffer loadShaderSource(String path){
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+			String src = "";
+			while(in.ready()){
+				src += in.readLine();
+				src += "\n";
+			}
+			in.close();
+			ByteBuffer ret = BufferUtils.createByteBuffer(src.length());
+			ret.put(src.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			Game.logger.throwing(DataLoader.class.getName(), "loadShaderSource", e);
+		} catch (FileNotFoundException e) {
+			Game.logger.throwing(DataLoader.class.getName(), "loadShaderSource", e);
+		} catch (IOException e) {
+			Game.logger.throwing(DataLoader.class.getName(), "loadShaderSource", e);
+		}
+		return null;
+		
+	}
+
 }

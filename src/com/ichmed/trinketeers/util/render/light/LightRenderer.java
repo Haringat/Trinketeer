@@ -95,6 +95,7 @@ public class LightRenderer
 
 			Vector2f pos = new Vector2f((light.getPosition().x - world.player.getCenter().x) / 2 + 0.5f, (light.getPosition().y - world.player.getCenter().y) / 2 + 0.5f);
 
+			shaderProgram = glCreateProgram();
 			glUseProgram(shaderProgram);
 			glUniform2f(glGetUniformLocation(shaderProgram, "lightLocation"), pos.x * Game.WIDTH, pos.y * Game.HEIGHT);
 			glUniform3f(glGetUniformLocation(shaderProgram, "lightColor"), light.getColor().x, light.getColor().y, light.getColor().z);
@@ -155,7 +156,8 @@ public class LightRenderer
 		glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL14.GL_DEPTH_COMPONENT24, Game.WIDTH, Game.HEIGHT);
 		glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, lightDepthBuffer);
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-		shaderProgram = glCreateProgram();
+		
+		/*shaderProgram = glCreateProgram();
 		fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 		StringBuilder fragmentShaderSource = new StringBuilder();
 
@@ -187,7 +189,7 @@ public class LightRenderer
 		glAttachShader(shaderProgram, fragmentShader);
 		glLinkProgram(shaderProgram);
 		glValidateProgram(shaderProgram);
-		glEnable(GL_STENCIL_TEST);
+		glEnable(GL_STENCIL_TEST);*/
 	}
 
 	public static void setAmbientLight(Vector3f light)

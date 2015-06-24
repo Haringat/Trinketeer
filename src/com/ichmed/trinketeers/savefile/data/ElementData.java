@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONString;
 import org.lwjgl.util.vector.Vector3f;
 
-public class ElementData
+public class ElementData implements JSONString
 {
 	public static HashMap<String, ElementData> elements = new HashMap<>();
 	
